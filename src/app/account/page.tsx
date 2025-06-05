@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 type AccountView = 'buyer' | 'seller';
@@ -109,7 +109,7 @@ export default function AccountPage() {
 function BuyerDashboard() {
   const { toast } = useToast();
   const profileInitialState: UpdateProfileResponse | null = null;
-  const [profileFormState, profileFormAction] = useFormState(updateBuyerProfile, profileInitialState);
+  const [profileFormState, profileFormAction] = useActionState(updateBuyerProfile, profileInitialState);
   const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
 
   // Mock current user data - in a real app, fetch this

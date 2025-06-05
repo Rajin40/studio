@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Container from '@/components/Container';
 import { BookOpen, LogIn } from 'lucide-react';
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect } from 'react';
 
@@ -52,7 +52,7 @@ async function loginUserAction(prevState: ActionResponse | null, formData: FormD
 export default function LoginPage() {
   const { toast } = useToast();
   const initialState: ActionResponse | null = null;
-  const [state, formAction] = useFormState(loginUserAction, initialState);
+  const [state, formAction] = useActionState(loginUserAction, initialState);
 
   useEffect(() => {
     if (state) {
@@ -135,3 +135,4 @@ export default function LoginPage() {
     </Container>
   );
 }
+

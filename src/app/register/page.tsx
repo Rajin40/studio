@@ -11,7 +11,7 @@ import { BookOpen, UserPlus } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ActionResponse {
@@ -66,7 +66,7 @@ async function registerUserAction(prevState: ActionResponse | null, formData: Fo
 export default function RegisterPage() {
   const { toast } = useToast();
   const initialState: ActionResponse | null = null;
-  const [state, formAction] = useFormState(registerUserAction, initialState);
+  const [state, formAction] = useActionState(registerUserAction, initialState);
   
   // Keep local state for controlled RadioGroup if needed, though `name` attribute is primary for form submission
   const [selectedAccountType, setSelectedAccountType] = useState<string | undefined>(undefined);
@@ -83,11 +83,14 @@ export default function RegisterPage() {
         // Optionally, redirect or clear form here
         // e.g., router.push('/login');
       } else {
-        toast({
-          title: "Registration Failed",
-          description: state.message || "An error occurred.",
-          variant: "destructive",
-        });
+        // Only show general toast if there are no specific field errors displayed inline
+        if (!state.errors || Object.keys(state.errors).length === 0) {
+            toast({
+              title: "Registration Failed",
+              description: state.message || "An error occurred.",
+              variant: "destructive",
+            });
+        }
         // Log specific field errors for debugging or more granular UI updates
         if (state.errors) {
           console.error("Validation errors:", state.errors);
@@ -164,6 +167,9 @@ export default function RegisterPage() {
               </Label>
             </div>
              {state?.errors?.terms && <p className="text-sm text-destructive">{state.errors.terms}</p>}
+             {state?.message && state.errors && Object.keys(state.errors).length > 0 && !state.errors.fullName && !state.errors.email && !state.errors.password && !state.errors.confirmPassword && !state.errors.accountType && !state.errors.terms && (
+                <p className="text-sm text-destructive text-center">{state.message}</p>
+             )}
 
 
             <Button type="submit" className="w-full text-lg py-6 bg-primary hover:bg-primary/90 text-primary-foreground">
@@ -183,3 +189,4 @@ export default function RegisterPage() {
     </Container>
   );
 }
+
