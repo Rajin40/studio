@@ -52,17 +52,17 @@ export default function HomePage() {
 
           <div className="lg:w-1/2 xl:w-2/5 space-y-4 w-full max-w-md lg:max-w-none">
             <div
-              className="bg-white/90 backdrop-blur-sm text-slate-800 p-4 shadow-xl flex items-center space-x-3 hover:shadow-2xl transition-shadow"
+              className="bg-white/90 backdrop-blur-sm text-slate-800 p-6 shadow-xl flex items-center space-x-3 hover:shadow-2xl transition-shadow"
               style={{ clipPath: 'polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%)' }}
             >
               <Star className="h-7 w-7 text-yellow-500 fill-yellow-400" />
               <span className="font-semibold text-lg">Favourites</span>
             </div>
-            <div className="bg-white/90 backdrop-blur-sm text-slate-800 p-4 rounded-lg shadow-xl flex items-center space-x-3 hover:shadow-2xl transition-shadow">
+            <div className="bg-white/90 backdrop-blur-sm text-slate-800 p-6 rounded-lg shadow-xl flex items-center space-x-3 hover:shadow-2xl transition-shadow">
               <Brush className="h-7 w-7 text-pink-500" />
               <span className="font-semibold text-lg">Lifestyle</span>
             </div>
-            <div className="bg-white/90 backdrop-blur-sm text-slate-800 p-5 rounded-lg shadow-xl space-y-3 hover:shadow-2xl transition-shadow">
+            <div className="bg-white/90 backdrop-blur-sm text-slate-800 p-6 rounded-lg shadow-xl space-y-3 hover:shadow-2xl transition-shadow">
               <div className="flex items-center space-x-3">
                 <Brush className="h-8 w-8 text-pink-500" />
                 <h3 className="text-xl font-semibold">Lifestyle</h3>
