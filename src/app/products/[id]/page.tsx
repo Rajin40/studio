@@ -1,4 +1,5 @@
 
+import { use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data';
@@ -45,14 +46,15 @@ async function getRelatedProducts(currentProductId: string, category?: string, c
   return recommendedProductsList.slice(0, count); // Ensure we don't exceed `count`
 }
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
+export default async function ProductPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
+  const params = use(paramsPromise);
   const product = await getProduct(params.id);
 
   if (!product) {
     return <Container className="py-12 text-center">Product not found.</Container>;
   }
 
-  const relatedProducts = await getRelatedProducts(product.id, product.category, 6); // Request more for denser display
+  const relatedProducts = await getRelatedProducts(params.id, product.category, 6); // Request more for denser display
 
   return (
     <Container className="py-8 md:py-12">
@@ -157,7 +159,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
       {relatedProducts.length > 0 && (
         <section className="py-12 mt-12 border-t">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center md:text-left">You Might Also Like</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
             {relatedProducts.map(p => (
               <ProductCard key={p.id} product={p} />
             ))}

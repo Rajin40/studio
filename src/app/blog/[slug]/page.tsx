@@ -1,4 +1,5 @@
 
+import { use } from 'react';
 import Image from 'next/image';
 import { mockArticles, Article } from '@/lib/data';
 import Container from '@/components/Container';
@@ -16,21 +17,22 @@ async function getRelatedArticles(currentArticleSlug: string, category?: string)
   return mockArticles.filter(a => a.slug !== currentArticleSlug && (category ? a.category === category : true)).slice(0, 3);
 }
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
+export default async function ArticlePage({ params: paramsPromise }: { params: Promise<{ slug: string }> }) {
+  const params = use(paramsPromise);
   const article = await getArticle(params.slug);
 
   if (!article) {
     return <Container className="py-12 text-center">Article not found.</Container>;
   }
 
-  const relatedArticles = await getRelatedArticles(article.slug, article.category);
+  const relatedArticles = await getRelatedArticles(params.slug, article.category);
 
   return (
     <Container className="py-8 md:py-12">
       <article className="max-w-3xl mx-auto">
         <header className="mb-8">
           <Link href="/blog" className="text-sm text-primary hover:underline mb-2 block">&larr; Back to Blog</Link>
-          <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold font-headline mb-3">{article.title}</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-headline mb-3">{article.title}</h1>
           <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
             <span className="flex items-center"><User className="w-4 h-4 mr-1.5" /> {article.author}</span>
             <span className="flex items-center"><Calendar className="w-4 h-4 mr-1.5" /> {article.date}</span>
