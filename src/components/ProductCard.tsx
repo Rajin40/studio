@@ -27,7 +27,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </Link>
       <CardContent className="p-4 flex-grow">
         <Link href={`/products/${product.id}`} className="block">
-          <CardTitle className="text-lg font-headline mb-1 leading-tight hover:text-primary transition-colors">{product.name}</CardTitle>
+          <CardTitle className="text-lg font-headline mb-1 leading-tight hover:text-accent transition-colors">{product.name}</CardTitle>
         </Link>
         <p className="text-sm text-muted-foreground mb-2">{product.category}</p>
         <div className="flex items-center mb-2">

@@ -28,7 +28,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
       <CardContent className="p-4 flex-grow">
         <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">{article.category}</p>
         <Link href={`/blog/${article.slug}`} className="block">
-          <CardTitle className="text-xl font-headline mb-2 leading-tight hover:text-primary transition-colors">{article.title}</CardTitle>
+          <CardTitle className="text-xl font-headline mb-2 leading-tight hover:text-accent transition-colors">{article.title}</CardTitle>
         </Link>
         <p className="text-sm text-muted-foreground mb-3 line-clamp-3">{article.excerpt}</p>
         <div className="text-xs text-muted-foreground flex items-center space-x-4">
