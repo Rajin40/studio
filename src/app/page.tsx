@@ -1,4 +1,6 @@
 
+"use client";
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -9,8 +11,81 @@ import { TrustBadgesSection } from '@/components/TrustBadge';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import { mockProducts, mockCategories, mockArticles } from '@/lib/data';
 import { ChevronRight, ArrowUpRight, ChevronLeft } from 'lucide-react';
+import { useState } from 'react';
+
+const slides = [
+  {
+    brand: "Nike",
+    productName: "Air Zoom Pegasus",
+    mainImage: "https://placehold.co/600x400.png?slide=1main",
+    mainImageHint: "yellow sneaker",
+    stripImages: [
+      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=1strip1', hint: 'shoe detail texture', z: '10', w: '30%' },
+      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=1strip2', hint: 'denim fashion style', z: '20', w: '30%' },
+      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=1strip3', hint: 'fashion clothing fabric', z: '10', w: '30%' },
+    ]
+  },
+  {
+    brand: "Adidas",
+    productName: "Ultraboost Light",
+    mainImage: "https://placehold.co/600x400.png?slide=2main",
+    mainImageHint: "running shoe",
+     stripImages: [
+      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=2strip1', hint: 'sport fabric weave', z: '10', w: '30%' },
+      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=2strip2', hint: 'active lifestyle', z: '20', w: '30%' },
+      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=2strip3', hint: 'modern footwear', z: '10', w: '30%' },
+    ]
+  },
+  {
+    brand: "Puma",
+    productName: "Suede Classic",
+    mainImage: "https://placehold.co/600x400.png?slide=3main",
+    mainImageHint: "classic sneaker",
+    stripImages: [
+      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=3strip1', hint: 'leather texture', z: '10', w: '30%' },
+      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=3strip2', hint: 'street style', z: '20', w: '30%' },
+      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=3strip3', hint: 'casual fashion', z: '10', w: '30%' },
+    ]
+  },
+  {
+    brand: "Reebok",
+    productName: "Club C 85",
+    mainImage: "https://placehold.co/600x400.png?slide=4main",
+    mainImageHint: "vintage sneaker",
+    stripImages: [
+      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=4strip1', hint: 'retro design', z: '10', w: '30%' },
+      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=4strip2', hint: 'tennis style', z: '20', w: '30%' },
+      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=4strip3', hint: 'white leather', z: '10', w: '30%' },
+    ]
+  },
+  {
+    brand: "New Balance",
+    productName: "574 Core",
+    mainImage: "https://placehold.co/600x400.png?slide=5main",
+    mainImageHint: "lifestyle sneaker",
+    stripImages: [
+      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=5strip1', hint: 'suede mesh', z: '10', w: '30%' },
+      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=5strip2', hint: 'comfort shoe', z: '20', w: '30%' },
+      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=5strip3', hint: 'everyday wear', z: '10', w: '30%' },
+    ]
+  },
+];
+const totalSlides = slides.length;
+
 
 export default function HomePage() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const handleNext = () => {
+    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+  };
+
+  const handlePrev = () => {
+    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
+  };
+
+  const activeSlide = slides[currentSlide];
+
   const featuredProducts = mockProducts.slice(0, 8);
   const newArrivals = [...mockProducts].reverse().slice(0, 8);
   const featuredCategories = mockCategories.slice(0, 4);
@@ -26,16 +101,15 @@ export default function HomePage() {
             <div className="grid grid-cols-12 gap-x-4 items-center flex-grow">
               {/* Left Vertical Elements */}
               <div className="col-span-1 hidden md:flex flex-col items-center justify-between self-stretch py-8">
-                <span className="transform -rotate-90 whitespace-nowrap tracking-widest text-xs opacity-75 uppercase">Nike</span>
+                <span className="transform -rotate-90 whitespace-nowrap tracking-widest text-xs opacity-75 uppercase">{activeSlide.brand}</span>
                 <div className="flex flex-col items-center space-y-3 text-xs opacity-75">
-                  <span>1 / 5</span>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white"><ChevronLeft className="h-4 w-4"/></Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white"><ChevronRight className="h-4 w-4"/></Button>
+                  <span>{currentSlide + 1} / {totalSlides}</span>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white" onClick={handlePrev}><ChevronLeft className="h-4 w-4"/></Button>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white" onClick={handleNext}><ChevronRight className="h-4 w-4"/></Button>
                   <div className="flex flex-col space-y-1 pt-2">
-                    <span className="h-1.5 w-1.5 bg-white rounded-full"></span>
-                    <span className="h-1.5 w-1.5 bg-white/50 rounded-full"></span>
-                    <span className="h-1.5 w-1.5 bg-white/50 rounded-full"></span>
-                    <span className="h-1.5 w-1.5 bg-white/50 rounded-full"></span>
+                    {slides.map((_, index) => (
+                       <span key={index} className={`h-1.5 w-1.5 rounded-full ${currentSlide === index ? 'bg-white' : 'bg-white/50'}`}></span>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -45,11 +119,7 @@ export default function HomePage() {
                 {/* Image Composition */}
                 <div className="absolute inset-0 flex justify-center items-center opacity-30 md:opacity-100">
                   <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-2xl h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
-                    {[
-                      { offset: '5%', image: 'https://placehold.co/300x500.png', hint: 'shoe detail texture', z: '10', w: '30%' },
-                      { offset: '30%', image: 'https://placehold.co/300x500.png', hint: 'denim fashion style', z: '20', w: '30%' },
-                      { offset: '55%', image: 'https://placehold.co/300x500.png', hint: 'fashion clothing fabric', z: '10', w: '30%' },
-                    ].map((strip, index) => (
+                    {activeSlide.stripImages.map((strip, index) => (
                       <div
                         key={index}
                         className="absolute top-0 h-full transform -skew-x-[15deg] overflow-hidden"
@@ -65,13 +135,14 @@ export default function HomePage() {
                     {/* Main Shoe Image */}
                     <div className="absolute right-[-10%] sm:right-[-5%] md:right-[-20%] lg:right-[-25%] top-1/2 transform -translate-y-1/2 z-30 w-[50%] sm:w-[45%] md:w-[250px] lg:w-[300px] xl:w-[380px]">
                       <Image
-                        src="https://placehold.co/600x400.png"
+                        key={activeSlide.mainImage} // Add key to help React identify changes
+                        src={activeSlide.mainImage}
                         alt="Featured Shoe"
                         width={600}
                         height={400}
                         className="object-contain"
-                        data-ai-hint="yellow sneaker"
-                        priority
+                        data-ai-hint={activeSlide.mainImageHint}
+                        priority={currentSlide === 0} // Only prioritize the first slide image for LCP
                       />
                     </div>
                   </div>
@@ -93,7 +164,7 @@ export default function HomePage() {
             <div className="grid grid-cols-12 gap-x-4 items-center pt-8 md:pt-4 pb-4">
               <div className="col-span-1 hidden md:block"></div> {/* Spacer for left nav */}
               <div className="col-span-12 md:col-span-11 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-                <p className="text-xs sm:text-sm opacity-75 mb-2 md:mb-0">Product name and Model</p>
+                <p className="text-xs sm:text-sm opacity-75 mb-2 md:mb-0">{activeSlide.productName}</p>
                 <Link href="/search" className="flex items-center text-xs sm:text-sm hover:underline hover:opacity-100 opacity-75">
                   View Products <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Link>
@@ -104,10 +175,10 @@ export default function HomePage() {
       </section>
 
       {/* Featured Categories */}
-      <section className="py-16">
+      <section className="py-12 md:py-16">
         <Container>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">Shop by Category</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {featuredCategories.map((category) => (
               <Link key={category.id} href={`/search?category=${category.id}`} className="group block">
                 <div className="aspect-square relative rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-shadow">
@@ -129,10 +200,10 @@ export default function HomePage() {
       </section>
 
       {/* Top Products / Featured Products */}
-      <section className="py-16 bg-muted/20">
+      <section className="py-12 md:py-16 bg-muted/20">
         <Container>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">Featured Products</h2>
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-6">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -141,7 +212,7 @@ export default function HomePage() {
       </section>
 
       {/* Promotional Section */}
-      <section className="py-16 bg-accent text-accent-foreground">
+      <section className="py-12 md:py-16 bg-accent text-accent-foreground">
         <Container className="text-center">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline mb-4">Limited Time Offer!</h2>
           <p className="text-lg mb-6">Get 20% off on selected items. Use code <span className="font-semibold">SAVE20</span> at checkout.</p>
@@ -152,10 +223,10 @@ export default function HomePage() {
       </section>
 
       {/* New Arrivals */}
-      <section className="py-16">
+      <section className="py-12 md:py-16">
         <Container>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">New Arrivals</h2>
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-6">
             {newArrivals.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -165,14 +236,14 @@ export default function HomePage() {
 
 
       {/* Trust Badges */}
-      <section className="py-16 bg-muted/20">
+      <section className="py-12 md:py-16 bg-muted/20">
         <Container>
           <TrustBadgesSection />
         </Container>
       </section>
 
       {/* Blog Highlights */}
-      <section className="py-16">
+      <section className="py-12 md:py-16">
         <Container>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">From Our Blog</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -189,7 +260,7 @@ export default function HomePage() {
       </section>
 
       {/* Newsletter Signup */}
-      <section className="py-16 bg-primary text-primary-foreground">
+      <section className="py-12 md:py-16 bg-primary text-primary-foreground">
         <Container className="max-w-xl mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline mb-4">Stay Updated!</h2>
           <p className="mb-6">Subscribe to our newsletter for the latest products, offers, and updates.</p>
