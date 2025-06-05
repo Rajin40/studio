@@ -1,25 +1,16 @@
 
 import Image from 'next/image';
-import Link from 'next/link'; 
-import type { mockProducts, Product } from '@/lib/data'; // Ensure 'type' import for mockProducts if it's only used for types
+import Link from 'next/link';
+import type { Product } from '@/lib/data';
 import { Button } from '@/components/ui/button';
-import { Star, ShoppingCart, Heart } from 'lucide-react'; // Removed ChevronLeft, ChevronRight as they are not used
+import { Star, ShoppingCart, Heart } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
-// Accordion is not used in this file, consider removing if not planned for future use.
-// import {
-//   Accordion,
-//   AccordionContent,
-//   AccordionItem,
-//   AccordionTrigger,
-// } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from '@/components/ui/badge';
-import Container from '@/components/Container'; // Added missing import for Container
+import Container from '@/components/Container';
 
 // Helper function to get product (replace with actual data fetching)
 async function getProduct(id: string): Promise<Product | undefined> {
-  // Assuming mockProducts is an array of Product, if it's not used as a value, it should be imported as type
-  // For this example, we'll keep it as is, but in a real app, data fetching would occur here.
   return (await import('@/lib/data')).mockProducts.find(p => p.id === id);
 }
 
@@ -50,18 +41,18 @@ async function getRelatedProducts(currentProductId: string, category?: string, c
     const needed = count - recommendedProductsList.length;
     recommendedProductsList.push(...otherProducts.slice(0, needed));
   }
-  
+
   return recommendedProductsList.slice(0, count); // Ensure we don't exceed `count`
 }
 
 export default async function ProductPage({ params }: { params: { id: string } }) {
   const product = await getProduct(params.id);
-  
+
   if (!product) {
     return <Container className="py-12 text-center">Product not found.</Container>;
   }
 
-  const relatedProducts = await getRelatedProducts(product.id, product.category);
+  const relatedProducts = await getRelatedProducts(product.id, product.category, 6); // Request more for denser display
 
   return (
     <Container className="py-8 md:py-12">
@@ -69,10 +60,10 @@ export default async function ProductPage({ params }: { params: { id: string } }
         {/* Product Images */}
         <div className="space-y-4">
           <div className="aspect-square relative w-full rounded-lg overflow-hidden shadow-lg">
-            <Image 
-              src={product.imageUrl} 
-              alt={product.name} 
-              layout="fill" 
+            <Image
+              src={product.imageUrl}
+              alt={product.name}
+              layout="fill"
               objectFit="cover"
               data-ai-hint={product.aiHint}
             />
@@ -91,7 +82,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
         {/* Product Details */}
         <div className="space-y-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline">{product.name}</h1>
-          
+
           <div className="flex items-center space-x-2">
             {[...Array(5)].map((_, i) => (
               <Star key={i} className={`h-5 w-5 ${i < Math.floor(product.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground'}`} />
@@ -155,7 +146,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
 
       {/* Customer Reviews (Placeholder) */}
       <section className="py-12 mt-12 border-t">
-        <h2 className="text-xl sm:text-2xl font-bold font-headline mb-6">Customer Reviews</h2>
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-6">Customer Reviews</h2>
         <div className="p-6 bg-card rounded-lg shadow text-center">
           <p className="text-muted-foreground">Customer reviews will be shown here.</p>
           <Button variant="outline" className="mt-4">Write a Review</Button>
@@ -165,8 +156,8 @@ export default async function ProductPage({ params }: { params: { id: string } }
       {/* Recommended Products */}
       {relatedProducts.length > 0 && (
         <section className="py-12 mt-12 border-t">
-          <h2 className="text-xl sm:text-2xl font-bold font-headline mb-8 text-center md:text-left">You Might Also Like</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center md:text-left">You Might Also Like</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
             {relatedProducts.map(p => (
               <ProductCard key={p.id} product={p} />
             ))}

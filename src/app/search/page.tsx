@@ -13,7 +13,7 @@ export default function SearchPage() {
   return (
     <Container className="py-8 md:py-12">
       <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-headline">Search Products</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-headline">Search Products</h1>
         <p className="text-lg text-muted-foreground mt-2">Find exactly what you're looking for.</p>
       </div>
 
@@ -39,7 +39,7 @@ export default function SearchPage() {
           </div>
 
           {products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
               {products.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
