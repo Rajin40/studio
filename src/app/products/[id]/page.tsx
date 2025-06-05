@@ -1,32 +1,36 @@
 
 import Image from 'next/image';
 import Link from 'next/link'; 
-import { mockProducts, Product } from '@/lib/data';
-import Container from '@/components/Container';
+import type { mockProducts, Product } from '@/lib/data'; // Ensure 'type' import for mockProducts if it's only used for types
 import { Button } from '@/components/ui/button';
-import { Star, ShoppingCart, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, ShoppingCart, Heart } from 'lucide-react'; // Removed ChevronLeft, ChevronRight as they are not used
 import ProductCard from '@/components/ProductCard';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+// Accordion is not used in this file, consider removing if not planned for future use.
+// import {
+//   Accordion,
+//   AccordionContent,
+//   AccordionItem,
+//   AccordionTrigger,
+// } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from '@/components/ui/badge';
+import Container from '@/components/Container'; // Added missing import for Container
 
 // Helper function to get product (replace with actual data fetching)
 async function getProduct(id: string): Promise<Product | undefined> {
-  return mockProducts.find(p => p.id === id);
+  // Assuming mockProducts is an array of Product, if it's not used as a value, it should be imported as type
+  // For this example, we'll keep it as is, but in a real app, data fetching would occur here.
+  return (await import('@/lib/data')).mockProducts.find(p => p.id === id);
 }
 
 // Helper function to get related products
 async function getRelatedProducts(currentProductId: string, category?: string, count: number = 4): Promise<Product[]> {
+  const allProducts = (await import('@/lib/data')).mockProducts;
   let recommendedProductsList: Product[] = [];
 
   // 1. Try to find products in the same category (excluding the current product)
   if (category) {
-    recommendedProductsList = mockProducts.filter(
+    recommendedProductsList = allProducts.filter(
       p => p.id !== currentProductId && p.category === category
     );
   }
@@ -39,7 +43,7 @@ async function getRelatedProducts(currentProductId: string, category?: string, c
     const existingIds = new Set(recommendedProductsList.map(p => p.id));
     existingIds.add(currentProductId); // Ensure current product is not chosen as an "other" product
 
-    const otherProducts = mockProducts.filter(
+    const otherProducts = allProducts.filter(
       p => !existingIds.has(p.id)
     );
 
@@ -95,7 +99,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
             <span className="text-sm text-muted-foreground">({product.reviewsCount} reviews)</span>
           </div>
 
-          <p className="text-3xl font-semibold text-primary">
+          <p className="text-3xl font-semibold text-foreground">
             ${product.price.toFixed(2)}
             {product.originalPrice && (
               <span className="ml-3 text-lg text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
@@ -174,7 +178,8 @@ export default async function ProductPage({ params }: { params: { id: string } }
 }
 
 export async function generateStaticParams() {
-  return mockProducts.map(product => ({
+  const products = (await import('@/lib/data')).mockProducts;
+  return products.map(product => ({
     id: product.id,
   }));
 }

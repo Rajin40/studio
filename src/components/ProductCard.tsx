@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Product } from '@/lib/data';
+import type { Product } from '@/lib/data';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star, ShoppingCart } from 'lucide-react';
@@ -39,7 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           ))}
           <span className="ml-1 text-xs text-muted-foreground">({product.reviewsCount})</span>
         </div>
-        <p className="text-xl font-semibold text-primary">
+        <p className="text-xl font-semibold text-foreground">
           ${product.price.toFixed(2)}
           {product.originalPrice && (
             <span className="ml-2 text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
