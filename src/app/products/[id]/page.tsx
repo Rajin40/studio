@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link'; // Added this line
 import { mockProducts, Product } from '@/lib/data';
 import Container from '@/components/Container';
 import { Button } from '@/components/ui/button';
