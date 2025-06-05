@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -10,8 +11,8 @@ import { mockProducts, mockCategories, mockArticles } from '@/lib/data';
 import { ChevronRight } from 'lucide-react';
 
 export default function HomePage() {
-  const featuredProducts = mockProducts.slice(0, 4);
-  const newArrivals = mockProducts.slice(2, 6); 
+  const featuredProducts = mockProducts.slice(0, 8);
+  const newArrivals = [...mockProducts].reverse().slice(0, 8); 
   const featuredCategories = mockCategories.slice(0, 4);
   const blogHighlights = mockArticles.slice(0, 2);
 
