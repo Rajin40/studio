@@ -1,5 +1,6 @@
+
 import Image from 'next/image';
-import Link from 'next/link'; // Added this line
+import Link from 'next/link'; 
 import { mockProducts, Product } from '@/lib/data';
 import Container from '@/components/Container';
 import { Button } from '@/components/ui/button';
@@ -20,8 +21,33 @@ async function getProduct(id: string): Promise<Product | undefined> {
 }
 
 // Helper function to get related products
-async function getRelatedProducts(currentProductId: string, category?: string): Promise<Product[]> {
-  return mockProducts.filter(p => p.id !== currentProductId && (category ? p.category === category : true)).slice(0, 4);
+async function getRelatedProducts(currentProductId: string, category?: string, count: number = 4): Promise<Product[]> {
+  let recommendedProductsList: Product[] = [];
+
+  // 1. Try to find products in the same category (excluding the current product)
+  if (category) {
+    recommendedProductsList = mockProducts.filter(
+      p => p.id !== currentProductId && p.category === category
+    );
+  }
+
+  // Slice to `count` here in case same category has more than `count` products
+  recommendedProductsList = recommendedProductsList.slice(0, count);
+
+  // 2. If not enough, fill with other products (excluding the current product and those already selected)
+  if (recommendedProductsList.length < count) {
+    const existingIds = new Set(recommendedProductsList.map(p => p.id));
+    existingIds.add(currentProductId); // Ensure current product is not chosen as an "other" product
+
+    const otherProducts = mockProducts.filter(
+      p => !existingIds.has(p.id)
+    );
+
+    const needed = count - recommendedProductsList.length;
+    recommendedProductsList.push(...otherProducts.slice(0, needed));
+  }
+  
+  return recommendedProductsList.slice(0, count); // Ensure we don't exceed `count`
 }
 
 export default async function ProductPage({ params }: { params: { id: string } }) {
