@@ -1,3 +1,4 @@
+
 export interface Product {
   id: string;
   name: string;
@@ -128,6 +129,34 @@ export const mockProducts: Product[] = [
     reviewsCount: 65,
     aiHint: 'leather bag'
   },
+  {
+    id: '7',
+    name: 'Smart Home Hub Controller',
+    category: 'Electronics',
+    price: 129.99,
+    imageUrl: 'https://placehold.co/600x600.png',
+    images: ['https://placehold.co/600x600.png', 'https://placehold.co/600x600.png'],
+    description: 'Control all your smart home devices from one central hub. Supports voice commands and various protocols.',
+    rating: 4.6,
+    reviewsCount: 95,
+    stock: 30,
+    details: { Compatibility: 'Alexa, Google Assistant, Zigbee, Z-Wave', Power: 'AC Adapter' },
+    aiHint: 'smart home'
+  },
+  {
+    id: '8',
+    name: 'Stylish Winter Coat',
+    category: 'Fashion',
+    price: 189.75,
+    originalPrice: 250.00,
+    imageUrl: 'https://placehold.co/600x600.png',
+    description: 'Stay warm and fashionable with this elegant winter coat. Features a faux fur collar and insulated lining.',
+    rating: 4.4,
+    reviewsCount: 55,
+    stock: 12,
+    details: { Material: 'Wool blend, Faux fur', Sizes: 'S, M, L, XL' },
+    aiHint: 'winter coat'
+  }
 ];
 
 export const mockArticles: Article[] = [
