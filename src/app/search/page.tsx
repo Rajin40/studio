@@ -1,3 +1,4 @@
+
 import Container from '@/components/Container';
 import ProductCard from '@/components/ProductCard';
 import SearchFilters from '@/components/SearchFilters';
@@ -12,7 +13,7 @@ export default function SearchPage() {
   return (
     <Container className="py-8 md:py-12">
       <div className="text-center mb-10">
-        <h1 className="text-4xl md:text-5xl font-bold font-headline">Search Products</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-headline">Search Products</h1>
         <p className="text-lg text-muted-foreground mt-2">Find exactly what you're looking for.</p>
       </div>
 

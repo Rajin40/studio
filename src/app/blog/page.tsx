@@ -1,3 +1,4 @@
+
 import Container from '@/components/Container';
 import ArticleCard from '@/components/ArticleCard';
 import { mockArticles, mockCategories } from '@/lib/data';
@@ -20,7 +21,7 @@ export default function BlogPage() {
   return (
     <Container className="py-8 md:py-12">
       <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold font-headline">Our Blog</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-headline">Our Blog</h1>
         <p className="text-lg text-muted-foreground mt-2">Insights, tips, and stories from the Shopstream team.</p>
       </div>
 

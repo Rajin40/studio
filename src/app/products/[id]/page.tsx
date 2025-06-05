@@ -90,7 +90,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
 
         {/* Product Details */}
         <div className="space-y-6">
-          <h1 className="text-3xl md:text-4xl font-bold font-headline">{product.name}</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline">{product.name}</h1>
           
           <div className="flex items-center space-x-2">
             {[...Array(5)].map((_, i) => (
@@ -155,7 +155,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
 
       {/* Customer Reviews (Placeholder) */}
       <section className="py-12 mt-12 border-t">
-        <h2 className="text-2xl font-bold font-headline mb-6">Customer Reviews</h2>
+        <h2 className="text-xl sm:text-2xl font-bold font-headline mb-6">Customer Reviews</h2>
         <div className="p-6 bg-card rounded-lg shadow text-center">
           <p className="text-muted-foreground">Customer reviews will be shown here.</p>
           <Button variant="outline" className="mt-4">Write a Review</Button>
@@ -165,7 +165,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
       {/* Recommended Products */}
       {relatedProducts.length > 0 && (
         <section className="py-12 mt-12 border-t">
-          <h2 className="text-2xl font-bold font-headline mb-8 text-center md:text-left">You Might Also Like</h2>
+          <h2 className="text-xl sm:text-2xl font-bold font-headline mb-8 text-center md:text-left">You Might Also Like</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {relatedProducts.map(p => (
               <ProductCard key={p.id} product={p} />

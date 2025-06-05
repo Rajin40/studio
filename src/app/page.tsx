@@ -81,7 +81,7 @@ export default function HomePage() {
       {/* Featured Categories */}
       <section className="py-16">
         <Container>
-          <h2 className="text-3xl font-bold font-headline text-center mb-10">Shop by Category</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold font-headline text-center mb-10">Shop by Category</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {featuredCategories.map((category) => (
               <Link key={category.id} href={`/search?category=${category.id}`} className="group block">
@@ -106,7 +106,7 @@ export default function HomePage() {
       {/* Top Products / Featured Products */}
       <section className="py-16 bg-muted/20">
         <Container>
-          <h2 className="text-3xl font-bold font-headline text-center mb-10">Featured Products</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold font-headline text-center mb-10">Featured Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
@@ -118,7 +118,7 @@ export default function HomePage() {
       {/* Promotional Section */}
       <section className="py-16 bg-accent text-accent-foreground">
         <Container className="text-center">
-          <h2 className="text-3xl font-bold font-headline mb-4">Limited Time Offer!</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold font-headline mb-4">Limited Time Offer!</h2>
           <p className="text-lg mb-6">Get 20% off on selected items. Use code <span className="font-semibold">SAVE20</span> at checkout.</p>
           <Button size="lg" variant="outline" asChild className="border-accent-foreground text-accent-foreground hover:bg-accent-foreground hover:text-accent">
             <Link href="/search?promo=save20">Shop Deals</Link>
@@ -129,7 +129,7 @@ export default function HomePage() {
       {/* New Arrivals */}
       <section className="py-16">
         <Container>
-          <h2 className="text-3xl font-bold font-headline text-center mb-10">New Arrivals</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold font-headline text-center mb-10">New Arrivals</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {newArrivals.map((product) => (
               <ProductCard key={product.id} product={product} />
@@ -149,7 +149,7 @@ export default function HomePage() {
       {/* Blog Highlights */}
       <section className="py-16">
         <Container>
-          <h2 className="text-3xl font-bold font-headline text-center mb-10">From Our Blog</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold font-headline text-center mb-10">From Our Blog</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {blogHighlights.map((article) => (
               <ArticleCard key={article.id} article={article} />
@@ -166,7 +166,7 @@ export default function HomePage() {
       {/* Newsletter Signup */}
       <section className="py-16 bg-primary text-primary-foreground">
         <Container className="max-w-xl mx-auto text-center">
-          <h2 className="text-3xl font-bold font-headline mb-4">Stay Updated!</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold font-headline mb-4">Stay Updated!</h2>
           <p className="mb-6">Subscribe to our newsletter for the latest products, offers, and updates.</p>
           <NewsletterSignup />
         </Container>

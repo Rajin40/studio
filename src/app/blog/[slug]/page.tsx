@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { mockArticles, Article } from '@/lib/data';
 import Container from '@/components/Container';
@@ -29,7 +30,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       <article className="max-w-3xl mx-auto">
         <header className="mb-8">
           <Link href="/blog" className="text-sm text-primary hover:underline mb-2 block">&larr; Back to Blog</Link>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-headline mb-3">{article.title}</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold font-headline mb-3">{article.title}</h1>
           <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
             <span className="flex items-center"><User className="w-4 h-4 mr-1.5" /> {article.author}</span>
             <span className="flex items-center"><Calendar className="w-4 h-4 mr-1.5" /> {article.date}</span>
@@ -71,7 +72,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
       {/* Comments Section Placeholder */}
       <section className="mt-12 max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold font-headline mb-6">Comments</h2>
+        <h2 className="text-xl sm:text-2xl font-bold font-headline mb-6">Comments</h2>
         <div className="p-6 bg-card rounded-lg shadow">
           <p className="text-muted-foreground text-center">Comments section coming soon. Join the conversation!</p>
           {/* Placeholder for comment form */}
@@ -81,7 +82,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       {/* Related Posts */}
       {relatedArticles.length > 0 && (
         <section className="py-12 mt-12 border-t">
-          <h2 className="text-2xl font-bold font-headline mb-8 text-center">Related Posts</h2>
+          <h2 className="text-xl sm:text-2xl font-bold font-headline mb-8 text-center">Related Posts</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {relatedArticles.map(related => (
               <ArticleCard key={related.id} article={related} />
