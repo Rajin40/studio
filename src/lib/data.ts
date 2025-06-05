@@ -45,6 +45,7 @@ export const mockCategories: Category[] = [
   { id: 'fashion', name: 'Fashion', imageUrl: 'https://placehold.co/400x300.png', aiHint: 'stylish clothing' },
   { id: 'home-decor', name: 'Home Decor', imageUrl: 'https://placehold.co/400x300.png', aiHint: 'modern interior' },
   { id: 'books', name: 'Books', imageUrl: 'https://placehold.co/400x300.png', aiHint: 'library books' },
+  { id: 'tech-courses', name: 'Technical Courses', imageUrl: 'https://placehold.co/400x300.png', aiHint: 'online learning' },
 ];
 
 export const mockProducts: Product[] = [
@@ -230,3 +231,4 @@ export const returnPolicy = `
 <h3 class="text-xl font-headline mt-4 mb-2">Refunds:</h3>
 <p>Once we receive and inspect your return, we will notify you of the approval or rejection of your refund. If approved, your refund will be processed, and a credit will automatically be applied to your original method of payment within a certain number of days.</p>
 `;
+
