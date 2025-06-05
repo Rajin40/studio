@@ -15,8 +15,6 @@ import { useState } from 'react';
 
 const slides = [
   {
-    brand: "Nike",
-    productName: "Air Zoom Pegasus",
     mainImage: "https://placehold.co/600x400.png?slide=1main",
     mainImageHint: "yellow sneaker",
     stripImages: [
@@ -26,8 +24,6 @@ const slides = [
     ]
   },
   {
-    brand: "Adidas",
-    productName: "Ultraboost Light",
     mainImage: "https://placehold.co/600x400.png?slide=2main",
     mainImageHint: "running shoe",
      stripImages: [
@@ -37,8 +33,6 @@ const slides = [
     ]
   },
   {
-    brand: "Puma",
-    productName: "Suede Classic",
     mainImage: "https://placehold.co/600x400.png?slide=3main",
     mainImageHint: "classic sneaker",
     stripImages: [
@@ -48,8 +42,6 @@ const slides = [
     ]
   },
   {
-    brand: "Reebok",
-    productName: "Club C 85",
     mainImage: "https://placehold.co/600x400.png?slide=4main",
     mainImageHint: "vintage sneaker",
     stripImages: [
@@ -59,8 +51,6 @@ const slides = [
     ]
   },
   {
-    brand: "New Balance",
-    productName: "574 Core",
     mainImage: "https://placehold.co/600x400.png?slide=5main",
     mainImageHint: "lifestyle sneaker",
     stripImages: [
@@ -101,7 +91,8 @@ export default function HomePage() {
             <div className="grid grid-cols-12 gap-x-4 items-center flex-grow">
               {/* Left Vertical Elements */}
               <div className="col-span-1 hidden md:flex flex-col items-center justify-between self-stretch py-8">
-                <span className="transform -rotate-90 whitespace-nowrap tracking-widest text-xs opacity-75 uppercase">{activeSlide.brand}</span>
+                {/* Brand name removed here */}
+                <div className="flex-grow"></div> {/* Add a spacer to push controls down if brand was the only top element */}
                 <div className="flex flex-col items-center space-y-3 text-xs opacity-75">
                   <span>{currentSlide + 1} / {totalSlides}</span>
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white" onClick={handlePrev}><ChevronLeft className="h-4 w-4"/></Button>
@@ -135,14 +126,14 @@ export default function HomePage() {
                     {/* Main Shoe Image */}
                     <div className="absolute right-[-10%] sm:right-[-5%] md:right-[-20%] lg:right-[-25%] top-1/2 transform -translate-y-1/2 z-30 w-[50%] sm:w-[45%] md:w-[250px] lg:w-[300px] xl:w-[380px]">
                       <Image
-                        key={activeSlide.mainImage} // Add key to help React identify changes
+                        key={activeSlide.mainImage} 
                         src={activeSlide.mainImage}
                         alt="Featured Shoe"
                         width={600}
                         height={400}
                         className="object-contain"
                         data-ai-hint={activeSlide.mainImageHint}
-                        priority={currentSlide === 0} // Only prioritize the first slide image for LCP
+                        priority={currentSlide === 0} 
                       />
                     </div>
                   </div>
@@ -164,7 +155,8 @@ export default function HomePage() {
             <div className="grid grid-cols-12 gap-x-4 items-center pt-8 md:pt-4 pb-4">
               <div className="col-span-1 hidden md:block"></div> {/* Spacer for left nav */}
               <div className="col-span-12 md:col-span-11 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-                <p className="text-xs sm:text-sm opacity-75 mb-2 md:mb-0">{activeSlide.productName}</p>
+                {/* Product name removed here */}
+                <div className="flex-grow"></div> {/* Add a spacer if product name was the only left element */}
                 <Link href="/search" className="flex items-center text-xs sm:text-sm hover:underline hover:opacity-100 opacity-75">
                   View Products <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Link>
