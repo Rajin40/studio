@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useActionState } from 'react';
+import { useState, useEffect, useActionState, use } from 'react'; // Added 'use'
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data';
@@ -87,7 +87,12 @@ async function submitReviewAction(prevState: SubmitReviewResponse | null, formDa
 }
 
 
-export default function ProductPage({ params }: { params: { id: string } }) {
+export default function ProductPage({ params: paramsFromProps }: { params: { id: string } }) {
+  // Unwrap the params prop using React.use() as recommended by the Next.js warning.
+  // The `as any` is used because TypeScript's static type for paramsFromProps ({id: string})
+  // doesn't reflect Next.js's runtime behavior where it might be a Promise here.
+  const params = use(paramsFromProps as any);
+
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const { toast } = useToast();
@@ -98,6 +103,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     async function loadData() {
+      // Now 'params' is the resolved object.
       if (params && params.id) {
         const fetchedProduct = await getProduct(params.id);
         if (fetchedProduct) {
@@ -107,10 +113,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         }
       }
     }
+    // Ensure params (resolved) and params.id exist before loading data.
     if (params?.id) {
         loadData();
     }
-  }, [params?.id]);
+  }, [params?.id]); // Depend on the id from the resolved params.
 
   useEffect(() => {
     if (reviewFormState) {
@@ -119,7 +126,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           title: "Review Submitted!",
           description: reviewFormState.message,
         });
-        setIsReviewFormVisible(false); 
+        setIsReviewFormVisible(false);
       } else {
         if (!reviewFormState.errors || Object.keys(reviewFormState.errors).length === 0) {
           toast({
@@ -133,6 +140,8 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   }, [reviewFormState, toast]);
 
   if (!product) {
+    // If params is resolved but product is still loading (or not found), show loading.
+    // If paramsFromProps was a promise, use(paramsFromProps) would suspend until it resolves.
     return <Container className="py-12 text-center">Loading product details...</Container>;
   }
 
@@ -315,4 +324,3 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 */
-
