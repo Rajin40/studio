@@ -1,5 +1,7 @@
 
-import { Suspense } from 'react'; // Added Suspense just in case, though may not be strictly needed here.
+"use client";
+
+import { Suspense, useState, useEffect, useActionState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data';
@@ -9,10 +11,14 @@ import ProductCard from '@/components/ProductCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from '@/components/ui/badge';
 import Container from '@/components/Container';
+import { useToast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Helper function to get product (replace with actual data fetching)
 async function getProduct(id: string): Promise<Product | undefined> {
-  // Ensure mockProducts is correctly imported and accessed
   const data = await import('@/lib/data');
   return data.mockProducts.find(p => p.id === id);
 }
@@ -23,20 +29,16 @@ async function getRelatedProducts(currentProductId: string, category?: string, c
   const allProducts = data.mockProducts;
   let recommendedProductsList: Product[] = [];
 
-  // 1. Try to find products in the same category (excluding the current product)
   if (category) {
     recommendedProductsList = allProducts.filter(
       p => p.id !== currentProductId && p.category === category
     );
   }
-
-  // Slice to `count` here in case same category has more than `count` products
   recommendedProductsList = recommendedProductsList.slice(0, count);
 
-  // 2. If not enough, fill with other products (excluding the current product and those already selected)
   if (recommendedProductsList.length < count) {
     const existingIds = new Set(recommendedProductsList.map(p => p.id));
-    existingIds.add(currentProductId); // Ensure current product is not chosen as an "other" product
+    existingIds.add(currentProductId);
 
     const otherProducts = allProducts.filter(
       p => !existingIds.has(p.id)
@@ -45,32 +47,105 @@ async function getRelatedProducts(currentProductId: string, category?: string, c
     const needed = count - recommendedProductsList.length;
     recommendedProductsList.push(...otherProducts.slice(0, needed));
   }
-
-  return recommendedProductsList.slice(0, count); // Ensure we don't exceed `count`
+  return recommendedProductsList.slice(0, count);
 }
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
-  const product = await getProduct(params.id);
+interface SubmitReviewResponse {
+  success: boolean;
+  message: string;
+  errors?: Record<string, string>;
+}
 
-  if (!product) {
-    return <Container className="py-12 text-center">Product not found.</Container>;
+async function submitReviewAction(prevState: SubmitReviewResponse | null, formData: FormData): Promise<SubmitReviewResponse> {
+  const rating = formData.get('rating') as string;
+  const title = formData.get('title') as string;
+  const comment = formData.get('comment') as string;
+  const productId = formData.get('productId') as string;
+
+  const errors: Record<string, string> = {};
+
+  if (!rating || parseInt(rating, 10) < 1 || parseInt(rating, 10) > 5) {
+    errors.rating = "Please select a rating between 1 and 5.";
+  }
+  if (!comment) {
+    errors.comment = "Review comment cannot be empty.";
+  }
+  if (!productId) {
+    // This should ideally not happen if form is set up correctly
+    errors.form = "Product ID is missing. Cannot submit review.";
   }
 
-  const relatedProducts = await getRelatedProducts(params.id, product.category, 6); // Request more for denser display
+  if (Object.keys(errors).length > 0) {
+    return { success: false, message: "Please correct the errors below.", errors };
+  }
+
+  // Simulate API call to submit review
+  console.log("Submitting review:", { productId, rating, title, comment });
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  return { success: true, message: "Review submitted successfully! It will be reviewed shortly." };
+}
+
+
+export default function ProductPage({ params }: { params: { id: string } }) {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const { toast } = useToast();
+
+  const reviewInitialState: SubmitReviewResponse | null = null;
+  const [reviewFormState, reviewFormAction] = useActionState(submitReviewAction, reviewInitialState);
+  const [isReviewFormVisible, setIsReviewFormVisible] = useState(false); // To toggle form
+
+  useEffect(() => {
+    async function loadData() {
+      const fetchedProduct = await getProduct(params.id);
+      if (fetchedProduct) {
+        setProduct(fetchedProduct);
+        const fetchedRelatedProducts = await getRelatedProducts(params.id, fetchedProduct.category, 6);
+        setRelatedProducts(fetchedRelatedProducts);
+      }
+    }
+    loadData();
+  }, [params.id]);
+
+  useEffect(() => {
+    if (reviewFormState) {
+      if (reviewFormState.success) {
+        toast({
+          title: "Review Submitted!",
+          description: reviewFormState.message,
+        });
+        setIsReviewFormVisible(false); // Hide form on success
+        // Potentially reset form fields if needed, though `useActionState` handles this for new submissions
+      } else {
+        if (!reviewFormState.errors || Object.keys(reviewFormState.errors).length === 0) {
+          toast({
+            title: "Submission Failed",
+            description: reviewFormState.message || "An error occurred while submitting your review.",
+            variant: "destructive",
+          });
+        }
+      }
+    }
+  }, [reviewFormState, toast]);
+
+  if (!product) {
+    return <Container className="py-12 text-center">Loading product details...</Container>;
+  }
 
   return (
     <Container className="py-8 md:py-12">
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-        {/* Product Images */}
         <div className="space-y-4">
           <div className="aspect-square relative w-full rounded-lg overflow-hidden shadow-lg">
             <Image
               src={product.imageUrl}
               alt={product.name}
-              fill // Changed from layout="fill" objectFit="cover" to fill for Next 13+ App Router best practice
-              style={{ objectFit: "cover" }} // Added for fill
+              fill
+              style={{ objectFit: "cover" }}
               data-ai-hint={product.aiHint || 'product image'}
-              priority // Consider adding priority for LCP images
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
           {product.images && product.images.length > 1 && (
@@ -84,9 +159,9 @@ export default async function ProductPage({ params }: { params: { id: string } }
           )}
         </div>
 
-        {/* Product Details */}
         <div className="space-y-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline">{product.name}</h1>
+          {product.brand && <p className="text-sm text-muted-foreground">Brand: {product.brand}</p>}
 
           <div className="flex items-center space-x-2">
             {[...Array(5)].map((_, i) => (
@@ -102,24 +177,22 @@ export default async function ProductPage({ params }: { params: { id: string } }
             )}
           </p>
 
-          {product.stock && product.stock < 10 && product.stock > 0 && (
-            <Badge variant="destructive">Only {product.stock} left in stock!</Badge>
-          )}
-          {product.stock === 0 && (
-             <Badge variant="destructive">Out of Stock</Badge>
-          )}
-          {product.stock && product.stock >= 10 && (
-             <Badge variant="default">In Stock</Badge>
-          )}
-          {!product.stock && (
+          {typeof product.stock === 'number' ? (
+             product.stock === 0 ? (
+                <Badge variant="destructive">Out of Stock</Badge>
+             ) : product.stock < 10 ? (
+                <Badge variant="destructive">Only {product.stock} left in stock!</Badge>
+             ) : (
+                <Badge variant="default">In Stock</Badge>
+             )
+          ) : (
             <Badge variant="secondary">Stock status unavailable</Badge>
           )}
 
 
-          <p className="text-foreground/80 leading-relaxed">{product.description}</p>
+          <p className="text-foreground/80 leading-relaxed line-clamp-3">{product.description}</p>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            {/* Quantity selector could be added here */}
             <Button size="lg" className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground" disabled={!product.stock || product.stock === 0}>
               <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
             </Button>
@@ -156,16 +229,51 @@ export default async function ProductPage({ params }: { params: { id: string } }
         </div>
       </div>
 
-      {/* Customer Reviews (Placeholder) */}
       <section className="py-12 mt-12 border-t">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-6">Customer Reviews</h2>
-        <div className="p-6 bg-card rounded-lg shadow text-center">
-          <p className="text-muted-foreground">Customer reviews will be shown here.</p>
-          <Button variant="outline" className="mt-4">Write a Review</Button>
+        {/* TODO: Display existing reviews here */}
+        <div className="p-6 bg-card rounded-lg shadow">
+          {!isReviewFormVisible ? (
+            <div className="text-center">
+              <p className="text-muted-foreground mb-4">Have you tried this product? Share your thoughts!</p>
+              <Button variant="outline" onClick={() => setIsReviewFormVisible(true)}>Write a Review</Button>
+            </div>
+          ) : (
+            <form action={reviewFormAction} className="space-y-4">
+              <input type="hidden" name="productId" value={product.id} />
+              <div>
+                <Label htmlFor="rating">Rating</Label>
+                <Select name="rating" required>
+                  <SelectTrigger className="w-full mt-1">
+                    <SelectValue placeholder="Select a rating" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[5, 4, 3, 2, 1].map(r => (
+                      <SelectItem key={r} value={String(r)}>{r} Star{r > 1 ? 's' : ''}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {reviewFormState?.errors?.rating && <p className="text-sm text-destructive mt-1">{reviewFormState.errors.rating}</p>}
+              </div>
+              <div>
+                <Label htmlFor="title">Review Title (Optional)</Label>
+                <Input id="title" name="title" placeholder="e.g., Great product!" className="mt-1" />
+              </div>
+              <div>
+                <Label htmlFor="comment">Your Review</Label>
+                <Textarea id="comment" name="comment" placeholder="Tell us about your experience..." className="mt-1" rows={4} required />
+                {reviewFormState?.errors?.comment && <p className="text-sm text-destructive mt-1">{reviewFormState.errors.comment}</p>}
+              </div>
+              {reviewFormState?.errors?.form && <p className="text-sm text-destructive mt-1">{reviewFormState.errors.form}</p>}
+              <div className="flex justify-end space-x-2">
+                <Button type="button" variant="ghost" onClick={() => setIsReviewFormVisible(false)}>Cancel</Button>
+                <Button type="submit">Submit Review</Button>
+              </div>
+            </form>
+          )}
         </div>
       </section>
 
-      {/* Recommended Products */}
       {relatedProducts.length > 0 && (
         <section className="py-12 mt-12 border-t">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center md:text-left">You Might Also Like</h2>
@@ -180,10 +288,26 @@ export default async function ProductPage({ params }: { params: { id: string } }
   );
 }
 
-export async function generateStaticParams() {
-  const data = await import('@/lib/data');
-  const products = data.mockProducts;
-  return products.map(product => ({
-    id: product.id,
-  }));
+// generateStaticParams can be uncommented if you pre-render all product pages at build time
+// export async function generateStaticParams() {
+//   const data = await import('@/lib/data');
+//   const products = data.mockProducts;
+//   return products.map(product => ({
+//     id: product.id,
+//   }));
+// }
+
+// If you are not pre-rendering, this function is not strictly necessary
+// but good for type safety if you were.
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const product = await getProduct(params.id);
+  if (!product) {
+    return {
+      title: "Product Not Found",
+    };
+  }
+  return {
+    title: product.name,
+    description: product.description.substring(0, 160), // SEO description length
+  };
 }
