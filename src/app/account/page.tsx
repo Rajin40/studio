@@ -1,12 +1,12 @@
-
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useActionState } from 'react';
 import Container from '@/components/Container';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, ShoppingBag, Store, Settings, ListOrdered, BarChart2, CreditCard, Package, DollarSign, Edit3, Heart } from 'lucide-react';
+import { User, ShoppingBag, Store, Settings, ListOrdered, BarChart2, CreditCard, Package, DollarSign, Edit3, Heart, Briefcase, Image as ImageIcon, Tag, Layers, PlusCircle } from 'lucide-react';
+import { mockCategories, type Product, mockProducts as initialMockProducts } from '@/lib/data'; // Import Product type and mockCategories
 
 import {
   Dialog,
@@ -20,7 +20,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useActionState } from 'react';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from '@/hooks/use-toast';
 
 type AccountView = 'buyer' | 'seller';
@@ -43,25 +44,127 @@ async function updateBuyerProfile(prevState: UpdateProfileResponse | null, formD
   if (!email) errors.email = "Email is required.";
   else if (!/\S+@\S+\.\S+/.test(email)) errors.email = "Invalid email format.";
   
-  // Validate phone only if it's not empty
   if (phone && !/^\+?[1-9]\d{1,14}$/.test(phone)) {
     errors.phone = "Invalid phone number format (e.g., +12345678900).";
   }
-
 
   if (Object.keys(errors).length > 0) {
     return { success: false, message: "Please correct the errors below.", errors };
   }
 
-  console.log('Updating buyer profile:', { fullName, email, phone });
-  // In a real app, update Firestore and potentially Firebase Auth email.
-
+  // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   return { 
     success: true, 
     message: 'Profile updated successfully!', 
     updatedUser: { fullName, email, phone } 
+  };
+}
+
+interface UpdateStoreProfileResponse {
+  success: boolean;
+  message: string;
+  errors?: Record<string, string>;
+  updatedStore?: { storeName: string; storeDescription: string; storeLogoUrl?: string };
+}
+
+async function updateSellerStoreProfile(prevState: UpdateStoreProfileResponse | null, formData: FormData): Promise<UpdateStoreProfileResponse> {
+  const storeName = formData.get('storeName') as string;
+  const storeDescription = formData.get('storeDescription') as string;
+  const storeLogoUrl = formData.get('storeLogoUrl') as string;
+
+  const errors: Record<string, string> = {};
+  if (!storeName) errors.storeName = "Store name is required.";
+  if (!storeDescription) errors.storeDescription = "Store description is required.";
+  if (storeLogoUrl) {
+    try {
+      new URL(storeLogoUrl);
+    } catch (_) {
+      errors.storeLogoUrl = "Invalid URL format for store logo.";
+    }
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { success: false, message: "Please correct the errors below.", errors };
+  }
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  return {
+    success: true,
+    message: 'Store profile updated successfully!',
+    updatedStore: { storeName, storeDescription, storeLogoUrl }
+  };
+}
+
+interface AddNewProductResponse {
+  success: boolean;
+  message: string;
+  errors?: Record<string, string>;
+  newProduct?: Product;
+}
+
+async function addNewProductAction(prevState: AddNewProductResponse | null, formData: FormData): Promise<AddNewProductResponse> {
+  const productName = formData.get('productName') as string;
+  const description = formData.get('description') as string;
+  const price = formData.get('price') as string;
+  const categoryId = formData.get('categoryId') as string;
+  const stock = formData.get('stock') as string;
+  const imageUrl = formData.get('imageUrl') as string;
+
+  const errors: Record<string, string> = {};
+
+  if (!productName) errors.productName = "Product name is required.";
+  if (!description) errors.description = "Description is required.";
+  if (!price || isNaN(parseFloat(price)) || parseFloat(price) <= 0) errors.price = "Valid price is required.";
+  if (!categoryId) errors.categoryId = "Category is required.";
+  if (!stock || isNaN(parseInt(stock)) || parseInt(stock) < 0) errors.stock = "Valid stock quantity is required.";
+  if (!imageUrl) errors.imageUrl = "Image URL is required.";
+  else {
+    try {
+      new URL(imageUrl);
+    } catch (_) {
+      errors.imageUrl = "Invalid image URL format.";
+    }
+  }
+  
+  if (Object.keys(errors).length > 0) {
+    return { success: false, message: "Please correct the errors below.", errors };
+  }
+
+  // Simulate API call & product creation
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  const newId = Math.random().toString(36).substring(2, 15);
+  const slug = productName.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+  const categoryName = mockCategories.find(cat => cat.id === categoryId)?.name || 'Unknown';
+
+  const newProduct: Product = {
+    id: newId,
+    name: productName,
+    slug: slug,
+    category: categoryName, // In a real app, this would be categoryId and you'd join
+    price: parseFloat(price),
+    imageUrl: imageUrl,
+    description: description,
+    rating: 0, // Default rating
+    reviewsCount: 0, // Default reviews count
+    stock: parseInt(stock),
+    aiHint: `${productName.substring(0,15)} ${categoryName.substring(0,10)}`, // Simple AI hint
+    isActive: true,
+    isFeatured: false,
+  };
+  
+  // In a real app, you'd save this to a database.
+  // For simulation, we're returning it. The client will add it to its local state.
+  console.log("New product created (simulated):", newProduct);
+
+  return {
+    success: true,
+    message: 'Product added successfully!',
+    newProduct: newProduct,
   };
 }
 
@@ -77,17 +180,17 @@ export default function AccountPage() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                 <div>
                     <div className="mx-auto sm:mx-0 mb-3 w-12 h-12 inline-flex items-center justify-center p-3 bg-primary/10 rounded-full text-primary">
-                    <User className="h-8 w-8" />
+                    {currentView === 'buyer' ? <User className="h-8 w-8" /> : <Store className="h-8 w-8" /> }
                     </div>
                     <CardTitle className="text-2xl sm:text-3xl font-headline">My Account</CardTitle>
-                    <CardDescription>Manage your profile, orders, and settings.</CardDescription>
+                    <CardDescription>Manage your {currentView === 'buyer' ? 'profile, orders, and settings.' : 'store, products, and earnings.'}</CardDescription>
                 </div>
                 <div className="mt-4 sm:mt-0 flex space-x-2">
                     <Button variant={currentView === 'buyer' ? 'default' : 'outline'} onClick={() => setCurrentView('buyer')}>
                         <ShoppingBag className="mr-2 h-4 w-4" /> Buyer View
                     </Button>
                     <Button variant={currentView === 'seller' ? 'default' : 'outline'} onClick={() => setCurrentView('seller')}>
-                        <Store className="mr-2 h-4 w-4" /> Seller View
+                        <Briefcase className="mr-2 h-4 w-4" /> Seller View
                     </Button>
                 </div>
             </div>
@@ -112,7 +215,6 @@ function BuyerDashboard() {
   const [profileFormState, profileFormAction] = useActionState(updateBuyerProfile, profileInitialState);
   const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
 
-  // Mock current user data - in a real app, fetch this
   const [currentUser, setCurrentUser] = useState({
     fullName: "Aisha Sharma",
     email: "aisha.sharma@example.com",
@@ -129,9 +231,8 @@ function BuyerDashboard() {
         if (profileFormState.updatedUser) {
             setCurrentUser(prev => ({ ...prev, ...profileFormState.updatedUser }));
         }
-        setIsProfileDialogOpen(false); // Close dialog on success
+        setIsProfileDialogOpen(false); 
       } else {
-        // Only show general toast if there are no specific field errors displayed inline
         if (!profileFormState.errors || Object.keys(profileFormState.errors).length === 0) {
              toast({
                 title: "Update Failed",
@@ -228,6 +329,67 @@ function BuyerDashboard() {
 }
 
 function SellerDashboard() {
+  const { toast } = useToast();
+  const storeProfileInitialState: UpdateStoreProfileResponse | null = null;
+  const [storeProfileFormState, storeProfileFormAction] = useActionState(updateSellerStoreProfile, storeProfileInitialState);
+  const [isStoreProfileDialogOpen, setIsStoreProfileDialogOpen] = useState(false);
+  
+  const [currentStore, setCurrentStore] = useState({
+    storeName: "My Awesome Shop",
+    storeDescription: "Selling the best widgets in town!",
+    storeLogoUrl: "https://placehold.co/100x100.png?text=Logo"
+  });
+
+  const addProductInitialState: AddNewProductResponse | null = null;
+  const [addProductFormState, addProductFormAction] = useActionState(addNewProductAction, addProductInitialState);
+  const [isAddProductDialogOpen, setIsAddProductDialogOpen] = useState(false);
+  const [sellerProducts, setSellerProducts] = useState<Product[]>(initialMockProducts.slice(0,2)); // Start with a few products for display
+
+  useEffect(() => {
+    if (storeProfileFormState) {
+      if (storeProfileFormState.success) {
+        toast({
+          title: "Success!",
+          description: storeProfileFormState.message,
+        });
+        if (storeProfileFormState.updatedStore) {
+          setCurrentStore(prev => ({ ...prev, ...storeProfileFormState.updatedStore }));
+        }
+        setIsStoreProfileDialogOpen(false); 
+      } else {
+        if (!storeProfileFormState.errors || Object.keys(storeProfileFormState.errors).length === 0) {
+          toast({
+            title: "Update Failed",
+            description: storeProfileFormState.message || "An error occurred.",
+            variant: "destructive",
+          });
+        }
+      }
+    }
+  }, [storeProfileFormState, toast]);
+  
+  useEffect(() => {
+    if (addProductFormState) {
+      if (addProductFormState.success && addProductFormState.newProduct) {
+        toast({
+          title: "Product Added!",
+          description: addProductFormState.message,
+        });
+        setSellerProducts(prevProducts => [addProductFormState.newProduct!, ...prevProducts]);
+        setIsAddProductDialogOpen(false);
+      } else if (!addProductFormState.success) {
+        if (!addProductFormState.errors || Object.keys(addProductFormState.errors).length === 0) {
+          toast({
+            title: "Failed to Add Product",
+            description: addProductFormState.message || "An error occurred.",
+            variant: "destructive",
+          });
+        }
+      }
+    }
+  }, [addProductFormState, toast]);
+
+
   return (
     <Tabs defaultValue="store-profile" className="w-full">
       <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 mb-6">
@@ -240,14 +402,145 @@ function SellerDashboard() {
 
       <TabsContent value="store-profile">
         <DashboardSection title="Store Profile & Settings" icon={<Store className="h-5 w-5 mr-2" />}>
-          <p className="text-muted-foreground">Manage your store's public information, policies, and branding.</p>
-          <Button variant="outline" className="mt-4"><Edit3 className="mr-2 h-4 w-4" /> Edit Store Details</Button>
+          <div className="space-y-3 mb-6">
+            <div className="flex items-center space-x-3">
+              {currentStore.storeLogoUrl ? (
+                <img src={currentStore.storeLogoUrl} alt="Store Logo" data-ai-hint="logo store" className="w-16 h-16 rounded-md object-cover" />
+              ) : (
+                <div className="w-16 h-16 rounded-md bg-muted flex items-center justify-center text-muted-foreground">
+                  <ImageIcon className="h-8 w-8" />
+                </div>
+              )}
+              <div>
+                <h3 className="text-xl font-semibold">{currentStore.storeName}</h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">{currentStore.storeDescription}</p>
+              </div>
+            </div>
+          </div>
+          <Dialog open={isStoreProfileDialogOpen} onOpenChange={setIsStoreProfileDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline"><Edit3 className="mr-2 h-4 w-4" /> Edit Store Details</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[520px]">
+              <DialogHeader>
+                <DialogTitle>Edit Store Profile</DialogTitle>
+                <DialogDescription>
+                  Update your store's public information. Click save when you&apos;re done.
+                </DialogDescription>
+              </DialogHeader>
+              <form action={storeProfileFormAction} className="space-y-4 py-4">
+                <div>
+                  <Label htmlFor="storeName">Store Name</Label>
+                  <Input id="storeName" name="storeName" defaultValue={currentStore.storeName} className="mt-1" />
+                  {storeProfileFormState?.errors?.storeName && <p className="text-sm text-destructive mt-1">{storeProfileFormState.errors.storeName}</p>}
+                </div>
+                <div>
+                  <Label htmlFor="storeDescription">Store Description</Label>
+                  <Textarea id="storeDescription" name="storeDescription" defaultValue={currentStore.storeDescription} className="mt-1" rows={3} />
+                  {storeProfileFormState?.errors?.storeDescription && <p className="text-sm text-destructive mt-1">{storeProfileFormState.errors.storeDescription}</p>}
+                </div>
+                <div>
+                  <Label htmlFor="storeLogoUrl">Store Logo URL (Optional)</Label>
+                  <Input id="storeLogoUrl" name="storeLogoUrl" type="url" defaultValue={currentStore.storeLogoUrl} placeholder="https://example.com/logo.png" className="mt-1" />
+                  {storeProfileFormState?.errors?.storeLogoUrl && <p className="text-sm text-destructive mt-1">{storeProfileFormState.errors.storeLogoUrl}</p>}
+                </div>
+                <DialogFooter className="pt-2">
+                    <DialogClose asChild><Button type="button" variant="outline">Cancel</Button></DialogClose>
+                    <Button type="submit">Save Changes</Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </DashboardSection>
       </TabsContent>
       <TabsContent value="products">
         <DashboardSection title="Product Listings" icon={<Package className="h-5 w-5 mr-2" />}>
-          <p className="text-muted-foreground">Add, edit, and manage your product inventory.</p>
-           <Button variant="default" className="mt-4">Add New Product</Button>
+          <div className="flex justify-between items-center mb-4">
+            <p className="text-muted-foreground">Add, edit, and manage your product inventory.</p>
+            <Dialog open={isAddProductDialogOpen} onOpenChange={setIsAddProductDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="default"><PlusCircle className="mr-2 h-4 w-4" /> Add New Product</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md md:max-w-lg">
+                <DialogHeader>
+                  <DialogTitle>Add New Product</DialogTitle>
+                  <DialogDescription>
+                    Fill in the details for your new product. Click "Add Product" when done.
+                  </DialogDescription>
+                </DialogHeader>
+                <form action={addProductFormAction} className="space-y-4 py-2 max-h-[70vh] overflow-y-auto pr-2">
+                  <div>
+                    <Label htmlFor="productName">Product Name</Label>
+                    <Input id="productName" name="productName" placeholder="e.g., Handcrafted Wooden Bowl" className="mt-1" />
+                    {addProductFormState?.errors?.productName && <p className="text-sm text-destructive mt-1">{addProductFormState.errors.productName}</p>}
+                  </div>
+                  <div>
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea id="description" name="description" placeholder="Detailed description of your product..." className="mt-1" rows={3}/>
+                    {addProductFormState?.errors?.description && <p className="text-sm text-destructive mt-1">{addProductFormState.errors.description}</p>}
+                  </div>
+                  <div>
+                    <Label htmlFor="price">Price ($)</Label>
+                    <Input id="price" name="price" type="number" step="0.01" placeholder="e.g., 29.99" className="mt-1" />
+                    {addProductFormState?.errors?.price && <p className="text-sm text-destructive mt-1">{addProductFormState.errors.price}</p>}
+                  </div>
+                  <div>
+                    <Label htmlFor="categoryId">Category</Label>
+                    <Select name="categoryId" >
+                      <SelectTrigger className="w-full mt-1">
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {mockCategories.map(cat => (
+                          <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {addProductFormState?.errors?.categoryId && <p className="text-sm text-destructive mt-1">{addProductFormState.errors.categoryId}</p>}
+                  </div>
+                   <div>
+                    <Label htmlFor="stock">Stock Quantity</Label>
+                    <Input id="stock" name="stock" type="number" step="1" placeholder="e.g., 100" className="mt-1" />
+                    {addProductFormState?.errors?.stock && <p className="text-sm text-destructive mt-1">{addProductFormState.errors.stock}</p>}
+                  </div>
+                  <div>
+                    <Label htmlFor="imageUrl">Main Image URL</Label>
+                    <Input id="imageUrl" name="imageUrl" type="url" placeholder="https://example.com/image.jpg" className="mt-1" />
+                    {addProductFormState?.errors?.imageUrl && <p className="text-sm text-destructive mt-1">{addProductFormState.errors.imageUrl}</p>}
+                  </div>
+                  <DialogFooter className="pt-2">
+                      <DialogClose asChild><Button type="button" variant="outline">Cancel</Button></DialogClose>
+                      <Button type="submit">Add Product</Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+          
+          {sellerProducts.length > 0 ? (
+            <div className="space-y-3">
+              {sellerProducts.map(product => (
+                <Card key={product.id} className="flex items-center p-3 space-x-3">
+                  <img 
+                    src={product.imageUrl || 'https://placehold.co/60x60.png?text=N/A'} 
+                    alt={product.name} 
+                    data-ai-hint={product.aiHint || 'product image'} 
+                    className="w-16 h-16 object-cover rounded-md"
+                  />
+                  <div className="flex-grow">
+                    <h4 className="font-semibold">{product.name}</h4>
+                    <p className="text-xs text-muted-foreground">${product.price.toFixed(2)} - Stock: {product.stock}</p>
+                  </div>
+                  <Button variant="outline" size="sm"><Edit3 className="mr-1 h-3 w-3"/> Edit</Button>
+                </Card>
+              ))}
+            </div>
+          ) : (
+             <div className="mt-6 p-6 border rounded-md text-center text-muted-foreground">
+                You haven&apos;t added any products yet.
+            </div>
+          )}
+
         </DashboardSection>
       </TabsContent>
       <TabsContent value="orders">
