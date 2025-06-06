@@ -299,6 +299,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
 // If you are not pre-rendering, this function is not strictly necessary
 // but good for type safety if you were.
+/*
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = await getProduct(params.id);
   if (!product) {
@@ -311,3 +312,4 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     description: product.description.substring(0, 160), // SEO description length
   };
 }
+*/
