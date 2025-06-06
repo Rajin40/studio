@@ -1,5 +1,4 @@
 
-import { use } from 'react';
 import Image from 'next/image';
 import { mockArticles, Article } from '@/lib/data';
 import Container from '@/components/Container';
@@ -10,15 +9,17 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 
 async function getArticle(slug: string): Promise<Article | undefined> {
-  return mockArticles.find(a => a.slug === slug);
+  // Ensure mockArticles is correctly imported and accessed
+  const data = await import('@/lib/data');
+  return data.mockArticles.find(a => a.slug === slug);
 }
 
 async function getRelatedArticles(currentArticleSlug: string, category?: string): Promise<Article[]> {
-  return mockArticles.filter(a => a.slug !== currentArticleSlug && (category ? a.category === category : true)).slice(0, 3);
+  const data = await import('@/lib/data');
+  return data.mockArticles.filter(a => a.slug !== currentArticleSlug && (category ? a.category === category : true)).slice(0, 3);
 }
 
-export default async function ArticlePage({ params: paramsPromise }: { params: Promise<{ slug: string }> }) {
-  const params = use(paramsPromise);
+export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const article = await getArticle(params.slug);
 
   if (!article) {
@@ -43,7 +44,14 @@ export default async function ArticlePage({ params: paramsPromise }: { params: P
 
         {article.imageUrl && (
           <div className="relative aspect-video w-full rounded-lg overflow-hidden shadow-lg mb-8">
-            <Image src={article.imageUrl} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.aiHint} priority />
+            <Image 
+              src={article.imageUrl} 
+              alt={article.title} 
+              fill // Changed from layout="fill" objectFit="cover" to fill
+              style={{ objectFit: "cover" }} // Added for fill
+              data-ai-hint={article.aiHint || 'blog image'} 
+              priority // Consider adding priority for LCP images
+            />
           </div>
         )}
 
@@ -97,7 +105,8 @@ export default async function ArticlePage({ params: paramsPromise }: { params: P
 }
 
 export async function generateStaticParams() {
-  return mockArticles.map(article => ({
+  const data = await import('@/lib/data');
+  return data.mockArticles.map(article => ({
     slug: article.slug,
   }));
 }

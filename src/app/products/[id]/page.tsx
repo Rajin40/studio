@@ -1,5 +1,5 @@
 
-import { use } from 'react';
+import { Suspense } from 'react'; // Added Suspense just in case, though may not be strictly needed here.
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data';
@@ -12,12 +12,15 @@ import Container from '@/components/Container';
 
 // Helper function to get product (replace with actual data fetching)
 async function getProduct(id: string): Promise<Product | undefined> {
-  return (await import('@/lib/data')).mockProducts.find(p => p.id === id);
+  // Ensure mockProducts is correctly imported and accessed
+  const data = await import('@/lib/data');
+  return data.mockProducts.find(p => p.id === id);
 }
 
 // Helper function to get related products
 async function getRelatedProducts(currentProductId: string, category?: string, count: number = 4): Promise<Product[]> {
-  const allProducts = (await import('@/lib/data')).mockProducts;
+  const data = await import('@/lib/data');
+  const allProducts = data.mockProducts;
   let recommendedProductsList: Product[] = [];
 
   // 1. Try to find products in the same category (excluding the current product)
@@ -46,8 +49,7 @@ async function getRelatedProducts(currentProductId: string, category?: string, c
   return recommendedProductsList.slice(0, count); // Ensure we don't exceed `count`
 }
 
-export default async function ProductPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
-  const params = use(paramsPromise);
+export default async function ProductPage({ params }: { params: { id: string } }) {
   const product = await getProduct(params.id);
 
   if (!product) {
@@ -65,16 +67,17 @@ export default async function ProductPage({ params: paramsPromise }: { params: P
             <Image
               src={product.imageUrl}
               alt={product.name}
-              layout="fill"
-              objectFit="cover"
-              data-ai-hint={product.aiHint}
+              fill // Changed from layout="fill" objectFit="cover" to fill for Next 13+ App Router best practice
+              style={{ objectFit: "cover" }} // Added for fill
+              data-ai-hint={product.aiHint || 'product image'}
+              priority // Consider adding priority for LCP images
             />
           </div>
           {product.images && product.images.length > 1 && (
             <div className="grid grid-cols-4 gap-2">
               {product.images.slice(0,4).map((img, idx) => (
                 <div key={idx} className="aspect-square relative w-full rounded-md overflow-hidden border hover:border-primary cursor-pointer">
-                  <Image src={img} alt={`${product.name} thumbnail ${idx + 1}`} layout="fill" objectFit="cover" />
+                  <Image src={img} alt={`${product.name} thumbnail ${idx + 1}`} fill style={{ objectFit: "cover" }} />
                 </div>
               ))}
             </div>
@@ -99,18 +102,25 @@ export default async function ProductPage({ params: paramsPromise }: { params: P
             )}
           </p>
 
-          {product.stock && product.stock < 10 && (
+          {product.stock && product.stock < 10 && product.stock > 0 && (
             <Badge variant="destructive">Only {product.stock} left in stock!</Badge>
+          )}
+          {product.stock === 0 && (
+             <Badge variant="destructive">Out of Stock</Badge>
           )}
           {product.stock && product.stock >= 10 && (
              <Badge variant="default">In Stock</Badge>
           )}
+          {!product.stock && (
+            <Badge variant="secondary">Stock status unavailable</Badge>
+          )}
+
 
           <p className="text-foreground/80 leading-relaxed">{product.description}</p>
 
           <div className="flex flex-col sm:flex-row gap-3">
             {/* Quantity selector could be added here */}
-            <Button size="lg" className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button size="lg" className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground" disabled={!product.stock || product.stock === 0}>
               <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
             </Button>
             <Button size="lg" variant="outline" className="flex-1">
@@ -124,14 +134,14 @@ export default async function ProductPage({ params: paramsPromise }: { params: P
               <TabsTrigger value="details">Details</TabsTrigger>
               <TabsTrigger value="shipping">Shipping & Returns</TabsTrigger>
             </TabsList>
-            <TabsContent value="description" className="py-4 text-sm">
+            <TabsContent value="description" className="py-4 text-sm prose dark:prose-invert max-w-none">
               {product.description}
             </TabsContent>
             <TabsContent value="details" className="py-4 text-sm">
-              {product.details ? (
-                <ul className="space-y-1">
+              {product.details && Object.keys(product.details).length > 0 ? (
+                <ul className="space-y-1 list-disc pl-5">
                   {Object.entries(product.details).map(([key, value]) => (
-                    <li key={key}><strong>{key}:</strong> {value}</li>
+                    <li key={key}><strong className="capitalize">{key.replace(/([A-Z])/g, ' $1')}:</strong> {value}</li>
                   ))}
                 </ul>
               ) : (
@@ -171,7 +181,8 @@ export default async function ProductPage({ params: paramsPromise }: { params: P
 }
 
 export async function generateStaticParams() {
-  const products = (await import('@/lib/data')).mockProducts;
+  const data = await import('@/lib/data');
+  const products = data.mockProducts;
   return products.map(product => ({
     id: product.id,
   }));
