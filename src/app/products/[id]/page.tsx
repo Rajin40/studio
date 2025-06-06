@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Suspense, useState, useEffect, useActionState } from 'react';
+import { useState, useEffect, useActionState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data';
@@ -94,19 +94,23 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
   const reviewInitialState: SubmitReviewResponse | null = null;
   const [reviewFormState, reviewFormAction] = useActionState(submitReviewAction, reviewInitialState);
-  const [isReviewFormVisible, setIsReviewFormVisible] = useState(false); // To toggle form
+  const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
 
   useEffect(() => {
     async function loadData() {
-      const fetchedProduct = await getProduct(params.id);
-      if (fetchedProduct) {
-        setProduct(fetchedProduct);
-        const fetchedRelatedProducts = await getRelatedProducts(params.id, fetchedProduct.category, 6);
-        setRelatedProducts(fetchedRelatedProducts);
+      if (params && params.id) {
+        const fetchedProduct = await getProduct(params.id);
+        if (fetchedProduct) {
+          setProduct(fetchedProduct);
+          const fetchedRelatedProducts = await getRelatedProducts(params.id, fetchedProduct.category, 6);
+          setRelatedProducts(fetchedRelatedProducts);
+        }
       }
     }
-    loadData();
-  }, [params.id]);
+    if (params?.id) {
+        loadData();
+    }
+  }, [params?.id]);
 
   useEffect(() => {
     if (reviewFormState) {
@@ -115,8 +119,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           title: "Review Submitted!",
           description: reviewFormState.message,
         });
-        setIsReviewFormVisible(false); // Hide form on success
-        // Potentially reset form fields if needed, though `useActionState` handles this for new submissions
+        setIsReviewFormVisible(false); 
       } else {
         if (!reviewFormState.errors || Object.keys(reviewFormState.errors).length === 0) {
           toast({
@@ -231,7 +234,6 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
       <section className="py-12 mt-12 border-t">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-6">Customer Reviews</h2>
-        {/* TODO: Display existing reviews here */}
         <div className="p-6 bg-card rounded-lg shadow">
           {!isReviewFormVisible ? (
             <div className="text-center">
@@ -313,3 +315,4 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 */
+
