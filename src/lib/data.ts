@@ -2,7 +2,9 @@
 export interface Product {
   id: string;
   name: string;
-  category: string;
+  slug: string; // Added
+  category: string; // Corresponds to Category Name for mock simplicity
+  brand?: string; // Added
   price: number;
   originalPrice?: number;
   imageUrl: string;
@@ -13,11 +15,16 @@ export interface Product {
   stock?: number;
   details?: Record<string, string>;
   aiHint?: string;
+  isActive?: boolean; // Added from schema
+  isFeatured?: boolean; // Added from schema
 }
 
 export interface Category {
-  id: string;
+  id: string; // Corresponds to CategoryID
   name: string;
+  slug: string; // Added
+  description?: string; // Added
+  parentCategoryId?: string; // Added, string for mock simplicity
   imageUrl: string;
   aiHint?: string;
 }
@@ -41,34 +48,105 @@ export interface FaqItem {
   answer: string;
 }
 
+export interface Review {
+  reviewId: string;
+  productId: string;
+  userId: string; // In a real app, this would be a foreign key to Users table
+  userName: string; // For display in mock
+  rating: number;
+  title?: string;
+  comment?: string;
+  createdAt: string; // ISO date string
+  isApproved?: boolean;
+}
+
 export const mockCategories: Category[] = [
-  { id: 'electronics', name: 'Electronics', imageUrl: 'https://placehold.co/400x300.png', aiHint: 'tech gadgets' },
-  { id: 'fashion', name: 'Fashion', imageUrl: 'https://placehold.co/400x300.png', aiHint: 'stylish clothing' },
-  { id: 'home-decor', name: 'Home Decor', imageUrl: 'https://placehold.co/400x300.png', aiHint: 'modern interior' },
-  { id: 'books', name: 'Books', imageUrl: 'https://placehold.co/400x300.png', aiHint: 'library books' },
-  { id: 'tech-courses', name: 'Technical Courses', imageUrl: 'https://placehold.co/400x300.png', aiHint: 'online learning' },
+  {
+    id: 'electronics',
+    name: 'Electronics',
+    slug: 'electronics',
+    description: 'Gadgets, devices, and more.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'tech gadgets'
+  },
+  {
+    id: 'fashion',
+    name: 'Fashion',
+    slug: 'fashion',
+    description: 'Latest trends in apparel and accessories.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'stylish clothing'
+  },
+  {
+    id: 'home-decor',
+    name: 'Home Decor',
+    slug: 'home-decor',
+    description: 'Furnishings and decor for your home.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'modern interior',
+    parentCategoryId: 'home-garden' // Example of parent category
+  },
+  {
+    id: 'books',
+    name: 'Books',
+    slug: 'books',
+    description: 'A wide range of books for all ages.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'library books'
+  },
+  {
+    id: 'tech-courses',
+    name: 'Technical Courses',
+    slug: 'technical-courses',
+    description: 'Learn new tech skills.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'online learning',
+    parentCategoryId: 'education'
+  },
+  { // Example parent category
+    id: 'home-garden',
+    name: 'Home & Garden',
+    slug: 'home-garden',
+    description: 'Everything for your home and garden.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'home garden tools'
+  },
+  { // Example parent category
+    id: 'education',
+    name: 'Education',
+    slug: 'education',
+    description: 'Educational materials and courses.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'learning education'
+  }
 ];
 
 export const mockProducts: Product[] = [
   {
     id: '1',
     name: 'Wireless Noise-Cancelling Headphones',
+    slug: 'wireless-noise-cancelling-headphones',
     category: 'Electronics',
+    brand: 'SoundWave',
     price: 199.99,
     originalPrice: 249.99,
     imageUrl: 'https://placehold.co/600x600.png',
     images: ['https://placehold.co/600x600.png', 'https://placehold.co/600x600.png', 'https://placehold.co/600x600.png'],
     description: 'Experience immersive sound with these comfortable, long-lasting wireless headphones. Features active noise cancellation and a sleek design.',
     rating: 4.5,
-    reviewsCount: 120,
+    reviewsCount: 120, // This could be derived from mockReviews.length for this product
     stock: 15,
     details: { Material: 'Premium plastic and faux leather', Battery: 'Up to 30 hours', Connectivity: 'Bluetooth 5.0' },
-    aiHint: 'headphones audio'
+    aiHint: 'headphones audio',
+    isActive: true,
+    isFeatured: true,
   },
   {
     id: '2',
     name: 'Modern Linen Armchair',
+    slug: 'modern-linen-armchair',
     category: 'Home Decor',
+    brand: 'CozyHome',
     price: 349.00,
     imageUrl: 'https://placehold.co/600x600.png',
     images: ['https://placehold.co/600x600.png', 'https://placehold.co/600x600.png'],
@@ -77,12 +155,16 @@ export const mockProducts: Product[] = [
     reviewsCount: 75,
     stock: 5,
     details: { Material: 'Linen fabric, Oak wood frame', Dimensions: '30" W x 32" D x 34" H' },
-    aiHint: 'armchair furniture'
+    aiHint: 'armchair furniture',
+    isActive: true,
+    isFeatured: false,
   },
   {
     id: '3',
     name: 'Organic Cotton T-Shirt',
+    slug: 'organic-cotton-t-shirt',
     category: 'Fashion',
+    brand: 'EcoThreads',
     price: 29.99,
     imageUrl: 'https://placehold.co/600x600.png',
     images: ['https://placehold.co/600x600.png', 'https://placehold.co/600x600.png'],
@@ -90,12 +172,16 @@ export const mockProducts: Product[] = [
     rating: 4.2,
     reviewsCount: 250,
     details: { Material: '100% Organic Cotton', Care: 'Machine washable' },
-    aiHint: 'tshirt clothing'
+    aiHint: 'tshirt clothing',
+    isActive: true,
+    isFeatured: true,
   },
   {
     id: '4',
     name: 'The Art of Innovation (Book)',
+    slug: 'the-art-of-innovation-book',
     category: 'Books',
+    brand: 'PageTurners Publishing',
     price: 19.95,
     imageUrl: 'https://placehold.co/600x600.png',
     description: 'Explore the principles of innovation and creativity in this insightful book by a leading industry expert.',
@@ -103,12 +189,16 @@ export const mockProducts: Product[] = [
     reviewsCount: 90,
     stock: 50,
     details: { Author: 'Jane Doe', Pages: '280', Format: 'Hardcover' },
-    aiHint: 'book reading'
+    aiHint: 'book reading',
+    isActive: true,
+    isFeatured: false,
   },
    {
     id: '5',
     name: 'Smart Fitness Tracker',
+    slug: 'smart-fitness-tracker',
     category: 'Electronics',
+    brand: 'FitLife',
     price: 79.50,
     originalPrice: 99.99,
     imageUrl: 'https://placehold.co/600x600.png',
@@ -116,23 +206,31 @@ export const mockProducts: Product[] = [
     rating: 4.3,
     reviewsCount: 180,
     stock: 22,
-    aiHint: 'smartwatch fitness'
+    aiHint: 'smartwatch fitness',
+    isActive: true,
+    isFeatured: true,
   },
   {
     id: '6',
     name: 'Vintage Leather Satchel',
+    slug: 'vintage-leather-satchel',
     category: 'Fashion',
+    brand: 'Heritage Bags',
     price: 120.00,
     imageUrl: 'https://placehold.co/600x600.png',
     description: 'A timeless leather satchel, perfect for work or casual outings. Handcrafted with high-quality materials.',
     rating: 4.7,
     reviewsCount: 65,
-    aiHint: 'leather bag'
+    aiHint: 'leather bag',
+    isActive: true,
+    isFeatured: false,
   },
   {
     id: '7',
     name: 'Smart Home Hub Controller',
+    slug: 'smart-home-hub-controller',
     category: 'Electronics',
+    brand: 'ConnectHome',
     price: 129.99,
     imageUrl: 'https://placehold.co/600x600.png',
     images: ['https://placehold.co/600x600.png', 'https://placehold.co/600x600.png'],
@@ -141,12 +239,16 @@ export const mockProducts: Product[] = [
     reviewsCount: 95,
     stock: 30,
     details: { Compatibility: 'Alexa, Google Assistant, Zigbee, Z-Wave', Power: 'AC Adapter' },
-    aiHint: 'smart home'
+    aiHint: 'smart home',
+    isActive: true,
+    isFeatured: false,
   },
   {
     id: '8',
     name: 'Stylish Winter Coat',
+    slug: 'stylish-winter-coat',
     category: 'Fashion',
+    brand: 'ArcticWarmth',
     price: 189.75,
     originalPrice: 250.00,
     imageUrl: 'https://placehold.co/600x600.png',
@@ -155,9 +257,70 @@ export const mockProducts: Product[] = [
     reviewsCount: 55,
     stock: 12,
     details: { Material: 'Wool blend, Faux fur', Sizes: 'S, M, L, XL' },
-    aiHint: 'winter coat'
+    aiHint: 'winter coat',
+    isActive: false, // Example of inactive product
+    isFeatured: false,
   }
 ];
+
+export const mockReviews: Review[] = [
+  {
+    reviewId: 'rev1',
+    productId: '1', // Wireless Noise-Cancelling Headphones
+    userId: 'user123',
+    userName: 'Sophie R.',
+    rating: 5,
+    title: 'Amazing Sound Quality!',
+    comment: 'These headphones are incredible. The noise cancellation is top-notch and they are so comfortable to wear for hours.',
+    createdAt: '2024-07-20T10:30:00Z',
+    isApproved: true,
+  },
+  {
+    reviewId: 'rev2',
+    productId: '1', // Wireless Noise-Cancelling Headphones
+    userId: 'user456',
+    userName: 'John B.',
+    rating: 4,
+    title: 'Very good, but a bit pricey',
+    comment: 'Solid headphones, great features. Just wish they were a little cheaper. But overall, satisfied with the purchase.',
+    createdAt: '2024-07-22T14:00:00Z',
+    isApproved: true,
+  },
+  {
+    reviewId: 'rev3',
+    productId: '3', // Organic Cotton T-Shirt
+    userId: 'user789',
+    userName: 'Maria L.',
+    rating: 5,
+    title: 'So soft and comfy!',
+    comment: 'Love this t-shirt! The organic cotton feels great on the skin. Will buy more in different colors.',
+    createdAt: '2024-07-18T09:15:00Z',
+    isApproved: true,
+  },
+  {
+    reviewId: 'rev4',
+    productId: '2', // Modern Linen Armchair
+    userId: 'user101',
+    userName: 'David K.',
+    rating: 4,
+    title: 'Stylish and well-made',
+    comment: 'The armchair looks fantastic in my living room. Assembly was straightforward. It is a bit firm, but hopefully, it softens up.',
+    createdAt: '2024-07-25T11:00:00Z',
+    isApproved: true,
+  },
+    {
+    reviewId: 'rev5',
+    productId: '1', // Wireless Noise-Cancelling Headphones
+    userId: 'user112',
+    userName: 'Emily P.',
+    rating: 3,
+    title: 'Decent for the price.',
+    comment: 'Noise cancellation works okay, but I expected more for this price range. Battery life is good though.',
+    createdAt: '2024-08-01T16:45:00Z',
+    isApproved: true,
+  }
+];
+
 
 export const mockArticles: Article[] = [
   {
@@ -261,3 +424,7 @@ export const returnPolicy = `
 <p>Once we receive and inspect your return, we will notify you of the approval or rejection of your refund. If approved, your refund will be processed, and a credit will automatically be applied to your original method of payment within a certain number of days.</p>
 `;
 
+// To calculate reviewsCount for a product:
+// const getReviewsCountForProduct = (productId: string) => mockReviews.filter(review => review.productId === productId).length;
+// Example: mockProducts[0].reviewsCount = getReviewsCountForProduct(mockProducts[0].id);
+// This is just illustrative; for the mock data, review counts are hardcoded for now.
