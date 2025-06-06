@@ -190,14 +190,14 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
                 <Badge variant="destructive">Only {product.stock} left in stock!</Badge>
              ) : (
                 (() => {
-                  let discountPercentText = '';
+                  let badgeText = "In Stock";
                   if (product.originalPrice && product.price && product.originalPrice > product.price) {
                     const discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
                     if (discountPercent > 0) {
-                      discountPercentText = ` - ${discountPercent}% OFF`;
+                      badgeText += ` - ${discountPercent}% OFF`;
                     }
                   }
-                  return <Badge variant="default">In Stock{discountPercentText}</Badge>;
+                  return <Badge variant="default">{badgeText}</Badge>;
                 })()
              )
           ) : (
@@ -244,6 +244,17 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         </div>
       </div>
 
+      {relatedProducts.length > 0 && (
+        <section className="py-12 mt-12 border-t">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center md:text-left">You Might Also Like</h2>
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+            {relatedProducts.map(p => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="py-12 mt-12 border-t">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-6">Customer Reviews</h2>
         <div className="p-6 bg-card rounded-lg shadow">
@@ -287,17 +298,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
           )}
         </div>
       </section>
-
-      {relatedProducts.length > 0 && (
-        <section className="py-12 mt-12 border-t">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center md:text-left">You Might Also Like</h2>
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-            {relatedProducts.map(p => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
-      )}
     </Container>
   );
 }
