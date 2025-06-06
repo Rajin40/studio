@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useActionState, use } from 'react'; // Added 'use'
+import { useState, useEffect, useActionState, use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data';
@@ -88,9 +88,6 @@ async function submitReviewAction(prevState: SubmitReviewResponse | null, formDa
 
 
 export default function ProductPage({ params: paramsFromProps }: { params: { id: string } }) {
-  // Unwrap the params prop using React.use() as recommended by the Next.js warning.
-  // The `as any` is used because TypeScript's static type for paramsFromProps ({id: string})
-  // doesn't reflect Next.js's runtime behavior where it might be a Promise here.
   const params = use(paramsFromProps as any);
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -103,7 +100,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
 
   useEffect(() => {
     async function loadData() {
-      // Now 'params' is the resolved object.
       if (params && params.id) {
         const fetchedProduct = await getProduct(params.id);
         if (fetchedProduct) {
@@ -113,11 +109,10 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         }
       }
     }
-    // Ensure params (resolved) and params.id exist before loading data.
     if (params?.id) {
         loadData();
     }
-  }, [params?.id]); // Depend on the id from the resolved params.
+  }, [params?.id]);
 
   useEffect(() => {
     if (reviewFormState) {
@@ -127,6 +122,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
           description: reviewFormState.message,
         });
         setIsReviewFormVisible(false);
+        // Reset form fields or form state if needed here
       } else {
         if (!reviewFormState.errors || Object.keys(reviewFormState.errors).length === 0) {
           toast({
@@ -140,8 +136,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
   }, [reviewFormState, toast]);
 
   if (!product) {
-    // If params is resolved but product is still loading (or not found), show loading.
-    // If paramsFromProps was a promise, use(paramsFromProps) would suspend until it resolves.
     return <Container className="py-12 text-center">Loading product details...</Container>;
   }
 
@@ -164,7 +158,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
             <div className="grid grid-cols-4 gap-2">
               {product.images.slice(0,4).map((img, idx) => (
                 <div key={idx} className="aspect-square relative w-full rounded-md overflow-hidden border hover:border-primary cursor-pointer">
-                  <Image src={img} alt={`${product.name} thumbnail ${idx + 1}`} fill style={{ objectFit: "cover" }} />
+                  <Image src={img} alt={`${product.name} thumbnail ${idx + 1}`} fill style={{ objectFit: "cover" }} data-ai-hint={product.aiHint || `thumbnail ${idx + 1}`} />
                 </div>
               ))}
             </div>
@@ -184,18 +178,27 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
 
           <p className="text-3xl font-semibold text-foreground">
             ${product.price.toFixed(2)}
-            {product.originalPrice && (
+            {product.originalPrice && product.originalPrice > product.price && (
               <span className="ml-3 text-lg text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
             )}
           </p>
-
+          
           {typeof product.stock === 'number' ? (
              product.stock === 0 ? (
                 <Badge variant="destructive">Out of Stock</Badge>
              ) : product.stock < 10 ? (
                 <Badge variant="destructive">Only {product.stock} left in stock!</Badge>
              ) : (
-                <Badge variant="default">In Stock</Badge>
+                (() => {
+                  let discountPercentText = '';
+                  if (product.originalPrice && product.price && product.originalPrice > product.price) {
+                    const discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+                    if (discountPercent > 0) {
+                      discountPercentText = ` - ${discountPercent}% OFF`;
+                    }
+                  }
+                  return <Badge variant="default">In Stock{discountPercentText}</Badge>;
+                })()
              )
           ) : (
             <Badge variant="secondary">Stock status unavailable</Badge>
@@ -299,7 +302,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
   );
 }
 
-// generateStaticParams can be uncommented if you pre-render all product pages at build time
 // export async function generateStaticParams() {
 //   const data = await import('@/lib/data');
 //   const products = data.mockProducts;
@@ -308,8 +310,10 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
 //   }));
 // }
 
-// If you are not pre-rendering, this function is not strictly necessary
-// but good for type safety if you were.
+// The `generateMetadata` function is commented out because this is a Client Component
+// and `generateMetadata` can only be exported from Server Components.
+// For dynamic metadata in client components, you would typically use a different approach
+// or restructure to have a Server Component wrapper.
 /*
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = await getProduct(params.id);
