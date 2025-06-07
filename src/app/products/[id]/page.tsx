@@ -86,7 +86,7 @@ async function submitReviewAction(prevState: SubmitReviewResponse | null, formDa
 
 
 export default function ProductPage({ params: paramsFromProps }: { params: { id: string } }) {
-  const params = use(paramsFromProps as any); 
+  const resolvedParams = use(paramsFromProps as any); 
 
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -110,10 +110,10 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
           setSelectedImageUrl(null);
         }
     }
-    if (params?.id) {
-        loadData(params.id);
+    if (resolvedParams?.id) {
+        loadData(resolvedParams.id);
     }
-  }, [params?.id]);
+  }, [resolvedParams?.id]);
 
   useEffect(() => {
     if (reviewFormState) {
@@ -154,7 +154,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
   return (
     <Container className="py-8 md:py-12">
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-        {/* Left Column: Image Gallery + Popular Products */}
+        {/* Left Column: Image Gallery */}
         <div>
           <div className="space-y-4">
             <div className="aspect-square relative w-full rounded-lg overflow-hidden shadow-lg bg-muted/30">
@@ -203,17 +203,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
               </div>
             )}
           </div>
-          {/* Our Popular Products Section - Moved to Left Column */}
-          {relatedProducts.length > 0 && (
-            <section className="pt-8 mt-8">
-              <h2 className="text-xl font-bold font-headline mb-4 text-left">Our popular products</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {relatedProducts.slice(0, 2).map(p => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
-              </div>
-            </section>
-          )}
         </div>
 
         {/* Right Column: Product Information */}
@@ -302,7 +291,19 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         </div>
       </div>
 
-      {/* Customer Reviews Section - Remains full-width at the bottom */}
+      {/* You Might Also Like Section - Full width */}
+      {relatedProducts.length > 0 && (
+        <section className="py-12 mt-12 border-t">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center">You Might Also Like</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {relatedProducts.map(p => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Customer Reviews Section - Full width */}
       <section className="py-12 mt-12 border-t">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-6">Customer Reviews</h2>
         <div className="p-6 bg-card rounded-lg shadow">
@@ -374,4 +375,3 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
 //     description: product.description.substring(0, 160),
 //   };
 // }
-
