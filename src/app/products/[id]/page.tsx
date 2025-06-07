@@ -104,7 +104,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         if (fetchedProduct) {
           setProduct(fetchedProduct);
           setSelectedImageUrl(fetchedProduct.imageUrl); 
-          const fetchedRelatedProducts = await getRelatedProducts(params.id, fetchedProduct.category, 4);
+          const fetchedRelatedProducts = await getRelatedProducts(params.id, fetchedProduct.category, 4); // Fetch 4 for full-width display
           setRelatedProducts(fetchedRelatedProducts);
         } else {
           setProduct(null);
@@ -170,7 +170,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             )}
-            {product.isFeatured && (
+            {product.isFeatured && ( // Using isFeatured as a proxy for "New Arrival"
                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
                     <Badge variant="default" className="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm px-2.5 py-1 sm:px-3 shadow-md">
                         New Arrival
@@ -285,7 +285,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         </div>
       </div>
 
-      {/* Related Products Section */}
+      {/* Related Products Section - Moved back to full-width */}
       {relatedProducts.length > 0 && (
         <section className="py-12 mt-12 border-t">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center">You Might Also Like</h2>
@@ -297,7 +297,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         </section>
       )}
 
-      {/* Customer Reviews Section */}
+      {/* Customer Reviews Section - Now after "You Might Also Like" */}
       <section className="py-12 mt-12 border-t">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-6">Customer Reviews</h2>
         <div className="p-6 bg-card rounded-lg shadow">
@@ -370,3 +370,4 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 //     id: product.id,
 //   }));
 // }
+
