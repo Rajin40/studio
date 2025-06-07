@@ -15,13 +15,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Menu as MenuIcon, Search, ShoppingCart, User, BookOpen, ChevronDown } from 'lucide-react';
+import { Menu as MenuIcon, Search, ShoppingCart, User, BookOpen, ChevronDown, Package /* Replaced Shoe with Package as a placeholder */ } from 'lucide-react';
 import Container from '@/components/Container';
 import { mockCategories, mockArticles } from '@/lib/data'; // Assuming these are available and have some data
 
 export default function SiteHeader() {
   const mainNavLinks = [
     { href: '/', label: 'Home' },
+    { href: '/shoe-store', label: 'Shoe Store' },
     { href: '/help', label: 'Help Center' },
   ];
 
@@ -63,6 +64,7 @@ export default function SiteHeader() {
                     href={link.href}
                     className="block py-3 transition-colors hover:text-primary text-base font-medium rounded-md hover:bg-muted px-2"
                   >
+                    {link.label === 'Shoe Store' && <Package className="inline-block mr-2 h-4 w-4 align-text-bottom" /> /* Placeholder icon */}
                     {link.label}
                   </Link>
                 ))}
@@ -128,8 +130,9 @@ export default function SiteHeader() {
             <Link
               key={link.label}
               href={link.href}
-              className="px-3 py-2 transition-colors hover:text-primary rounded-md"
+              className="px-3 py-2 transition-colors hover:text-primary rounded-md flex items-center"
             >
+              {link.label === 'Shoe Store' && <Package className="mr-1.5 h-4 w-4" /> /* Placeholder icon */}
               {link.label}
             </Link>
           ))}
