@@ -60,7 +60,7 @@ export default function SneakersPage() {
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="border-2 border-white text-white hover:bg-white hover:text-orange-600 transition-colors duration-300 px-8 py-3 text-base font-semibold group"
+                  className="border-2 border-white text-black hover:bg-white hover:text-orange-600 transition-colors duration-300 px-8 py-3 text-base font-semibold group"
                 >
                   {heroContent.buttonText}
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
