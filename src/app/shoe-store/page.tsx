@@ -8,25 +8,24 @@ import Container from '@/components/Container';
 import ProductCard from '@/components/ProductCard';
 import { TrustBadgesSection } from '@/components/TrustBadge';
 import NewsletterSignup from '@/components/NewsletterSignup';
-import { mockProducts, mockCategories, Category } from '@/lib/data';
-import { ArrowUpRight } from 'lucide-react'; // ChevronLeft, ChevronRight removed
+import { mockProducts, mockCategories, type Category } from '@/lib/data';
+// ArrowUpRight removed as it's no longer used in the static hero
 
 const heroData = {
   preTitle: "NEW PRODUCT",
   title: "Cool Air Shoes",
   buttonText: "Checkout",
-  buttonLink: "/cart", // Example link, can be changed to a specific product
+  buttonLink: "/cart", 
   imageUrl: "https://placehold.co/800x600.png",
   imageAlt: "Cool Air Shoes",
   imageAiHint: "yellow sneaker black",
 };
 
 export default function ShoeStorePage() {
-  // Carousel state and handlers are removed as the hero is now static
-
   const shoeCategories = mockCategories.filter(
-    cat => cat.parentCategoryId === 'footwear' || cat.id === 'footwear'
-  ).slice(0, 4);
+    cat => cat.id === 'footwear' || // Include the parent "Footwear" category
+           (cat.parentCategoryId === 'footwear' && ['sneakers', 'formal-shoes', 'running-shoes'].includes(cat.slug)) // Include specific children
+  ).slice(0, 4); // Ensure we still only take up to 4 for this display
 
   const shoeProducts = mockProducts.filter(
     product => mockCategories.find(cat => cat.name === product.category && (cat.id === 'footwear' || cat.parentCategoryId === 'footwear'))
@@ -80,7 +79,8 @@ export default function ShoeStorePage() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">Shop Shoe Styles</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {shoeCategories.map((category) => (
-              <Link key={category.id} href={`/search?category=${category.slug}`} className="group block">
+              // Update links to point to new dedicated style pages
+              <Link key={category.id} href={`/${category.slug}`} className="group block">
                 <div className="aspect-square relative rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-shadow">
                   <Image
                     src={category.imageUrl}
@@ -121,7 +121,8 @@ export default function ShoeStorePage() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline mb-4">Sole Mate Savings!</h2>
           <p className="text-lg mb-6">Get 15% off on all new season sneakers. Use code <span className="font-semibold">SOLE15</span>.</p>
           <Button size="lg" variant="outline" asChild className="border-accent-foreground text-foreground hover:bg-accent-foreground hover:text-accent">
-            <Link href="/search?category=sneakers&promo=sole15">Shop Sneaker Deals</Link>
+            {/* Updated link to point to the new sneakers page */}
+            <Link href="/sneakers?promo=sole15">Shop Sneaker Deals</Link>
           </Button>
         </Container>
       </section>
