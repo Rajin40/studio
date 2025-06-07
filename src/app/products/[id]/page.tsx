@@ -98,7 +98,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
   const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
 
   useEffect(() => {
-    async function loadData(id: string) { // Pass id directly
+    async function loadData(id: string) { 
         const fetchedProduct = await getProduct(id);
         if (fetchedProduct) {
           setProduct(fetchedProduct);
@@ -141,11 +141,9 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
   }
   
   if (product && !selectedImageUrl) {
-    // This state could happen briefly if product is set but selectedImageUrl hasn't caught up.
-    // Setting it here ensures it's initialized if params.id was valid but images were delayed.
     setSelectedImageUrl(product.imageUrl); 
   }
-  if (!selectedImageUrl && product) { // This check is to ensure selectedImageUrl is available before rendering Image
+  if (!selectedImageUrl && product) { 
       return <Container className="py-12 text-center">Loading images...</Container>;
   }
 
@@ -205,8 +203,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
               </div>
             )}
           </div>
-
-          {/* Our Popular Products Section */}
+          {/* Our Popular Products Section - Moved to Left Column */}
           {relatedProducts.length > 0 && (
             <section className="pt-8 mt-8">
               <h2 className="text-xl font-bold font-headline mb-4 text-left">Our popular products</h2>
@@ -245,15 +242,21 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
                 <Badge variant="destructive">Only {product.stock} left in stock!</Badge>
              ) : (
                 (() => {
-                  let badgeText = "In Stock";
-                  let discountPercent = 0;
-                  if (product.originalPrice && product.price && product.originalPrice > product.price) {
-                    discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
-                    if (discountPercent > 0) {
-                      badgeText += ` - ${discountPercent}% OFF`;
-                    }
-                  }
-                  return <Badge variant={discountPercent > 0 ? "secondary" : "default"}>{badgeText}</Badge>;
+                  const discountPercent = (product.originalPrice && product.price && product.originalPrice > product.price)
+                    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+                    : 0;
+            
+                  return (
+                    <Badge variant={discountPercent > 0 ? "secondary" : "default"}>
+                      <span>In Stock</span>
+                      {discountPercent > 0 && (
+                        <>
+                          <span className="mx-1">-</span>
+                          <span className="text-destructive font-semibold">{discountPercent}% OFF</span>
+                        </>
+                      )}
+                    </Badge>
+                  );
                 })()
              )
           ) : (
@@ -371,3 +374,4 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
 //     description: product.description.substring(0, 160),
 //   };
 // }
+
