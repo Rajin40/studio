@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data';
 import { Button } from '@/components/ui/button';
-import { Star, ShoppingCart, Heart } from 'lucide-react';
+import { Star, ShoppingCart, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from '@/components/ui/badge';
@@ -71,7 +71,6 @@ async function submitReviewAction(prevState: SubmitReviewResponse | null, formDa
     errors.comment = "Review comment cannot be empty.";
   }
   if (!productId) {
-    // This should ideally not happen if form is set up correctly
     errors.form = "Product ID is missing. Cannot submit review.";
   }
 
@@ -79,7 +78,6 @@ async function submitReviewAction(prevState: SubmitReviewResponse | null, formDa
     return { success: false, message: "Please correct the errors below.", errors };
   }
 
-  // Simulate API call to submit review
   console.log("Submitting review:", { productId, rating, title, comment });
   await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -92,6 +90,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
 
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
   const reviewInitialState: SubmitReviewResponse | null = null;
@@ -104,8 +103,13 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         const fetchedProduct = await getProduct(params.id);
         if (fetchedProduct) {
           setProduct(fetchedProduct);
+          setSelectedImageUrl(fetchedProduct.imageUrl); // Set initial selected image
           const fetchedRelatedProducts = await getRelatedProducts(params.id, fetchedProduct.category, 6);
           setRelatedProducts(fetchedRelatedProducts);
+        } else {
+          // Handle product not found case, e.g., redirect or show error
+          setProduct(null);
+          setSelectedImageUrl(null);
         }
       }
     }
@@ -122,7 +126,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
           description: reviewFormState.message,
         });
         setIsReviewFormVisible(false);
-        // Reset form fields or form state if needed here
+        // Consider resetting form or refetching reviews if they were displayed
       } else {
         if (!reviewFormState.errors || Object.keys(reviewFormState.errors).length === 0) {
           toast({
@@ -135,36 +139,64 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
     }
   }, [reviewFormState, toast]);
 
-  if (!product) {
-    return <Container className="py-12 text-center">Loading product details...</Container>;
+  if (!product || !selectedImageUrl) {
+    return <Container className="py-12 text-center">Loading product details or product not found...</Container>;
   }
+
+  const allImages = [product.imageUrl, ...(product.images || [])].filter(Boolean);
+  const displayThumbnails = Array.from(new Set(allImages)).slice(0, 5); // Max 5 unique thumbnails
 
   return (
     <Container className="py-8 md:py-12">
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+        {/* Left Column: Image Gallery */}
         <div className="space-y-4">
-          <div className="aspect-square relative w-full rounded-lg overflow-hidden shadow-lg">
+          <div className="aspect-square relative w-full rounded-lg overflow-hidden shadow-lg bg-muted/30">
             <Image
-              src={product.imageUrl}
+              src={selectedImageUrl}
               alt={product.name}
               fill
-              style={{ objectFit: "cover" }}
+              style={{ objectFit: "contain" }} // Changed to contain for better visibility
               data-ai-hint={product.aiHint || 'product image'}
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
+            {product.isFeatured && ( // Using isFeatured as a proxy for "New Arrival"
+                 <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
+                    <Badge variant="default" className="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm px-2.5 py-1 sm:px-3 shadow-md">
+                        New Arrival
+                    </Badge>
+                 </div>
+            )}
           </div>
-          {product.images && product.images.length > 1 && (
-            <div className="grid grid-cols-4 gap-2">
-              {product.images.slice(0,4).map((img, idx) => (
-                <div key={idx} className="aspect-square relative w-full rounded-md overflow-hidden border hover:border-primary cursor-pointer">
-                  <Image src={img} alt={`${product.name} thumbnail ${idx + 1}`} fill style={{ objectFit: "cover" }} data-ai-hint={product.aiHint || `thumbnail ${idx + 1}`} />
+          {displayThumbnails.length > 1 && (
+            <div className={`grid grid-cols-${Math.min(displayThumbnails.length, 5)} gap-2 sm:gap-3`}>
+              {displayThumbnails.map((img, idx) => (
+                <div 
+                  key={idx} 
+                  className={`aspect-square relative w-full rounded-md overflow-hidden border-2 cursor-pointer transition-all duration-150 ease-in-out
+                              ${selectedImageUrl === img ? 'border-primary shadow-md scale-105' : 'border-border hover:border-muted-foreground/50'}`}
+                  onClick={() => setSelectedImageUrl(img)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View image ${idx + 1}`}
+                  onKeyDown={(e) => e.key === 'Enter' && setSelectedImageUrl(img)}
+                >
+                  <Image 
+                    src={img} 
+                    alt={`${product.name} thumbnail ${idx + 1}`} 
+                    fill 
+                    style={{ objectFit: "cover" }} 
+                    data-ai-hint={product.aiHint || `thumbnail ${idx + 1}`} 
+                    sizes="10vw"
+                  />
                 </div>
               ))}
             </div>
           )}
         </div>
 
+        {/* Right Column: Product Information */}
         <div className="space-y-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline">{product.name}</h1>
           {product.brand && <p className="text-sm text-muted-foreground">Brand: {product.brand}</p>}
@@ -191,21 +223,33 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
              ) : (
                 (() => {
                   let badgeText = "In Stock";
+                  let discountPercent = 0;
                   if (product.originalPrice && product.price && product.originalPrice > product.price) {
-                    const discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+                    discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
                     if (discountPercent > 0) {
                       badgeText += ` - ${discountPercent}% OFF`;
                     }
                   }
-                  return <Badge variant="default">{badgeText}</Badge>;
+                  return <Badge variant={discountPercent > 0 ? "secondary" : "default"}>{badgeText}</Badge>;
                 })()
              )
           ) : (
             <Badge variant="secondary">Stock status unavailable</Badge>
           )}
 
+          {/* Popular Products / You Might Also Like - Moved Here */}
+          {relatedProducts.length > 0 && (
+            <div className="pt-4">
+              <h3 className="text-lg font-semibold font-headline mb-3">Popular Choices</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {relatedProducts.slice(0, 2).map(p => ( // Show only 2 for compactness
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            </div>
+          )}
 
-          <p className="text-foreground/80 leading-relaxed line-clamp-3">{product.description}</p>
+          <p className="text-foreground/80 leading-relaxed line-clamp-3 pt-2">{product.description}</p>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <Button size="lg" className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground" disabled={!product.stock || product.stock === 0}>
@@ -216,7 +260,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
             </Button>
           </div>
 
-          <Tabs defaultValue="description" className="w-full">
+          <Tabs defaultValue="description" className="w-full pt-2">
             <TabsList className="grid w-full grid-cols-2 md:grid-cols-3">
               <TabsTrigger value="description">Description</TabsTrigger>
               <TabsTrigger value="details">Details</TabsTrigger>
@@ -244,17 +288,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         </div>
       </div>
 
-      {relatedProducts.length > 0 && (
-        <section className="py-12 mt-12 border-t">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center md:text-left">You Might Also Like</h2>
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-            {relatedProducts.map(p => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
-      )}
-
+      {/* Customer Reviews Section - Now after related products if not in right column */}
       <section className="py-12 mt-12 border-t">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-6">Customer Reviews</h2>
         <div className="p-6 bg-card rounded-lg shadow">
@@ -301,14 +335,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
     </Container>
   );
 }
-
-// export async function generateStaticParams() {
-//   const data = await import('@/lib/data');
-//   const products = data.mockProducts;
-//   return products.map(product => ({
-//     id: product.id,
-//   }));
-// }
 
 // The `generateMetadata` function is commented out because this is a Client Component
 // and `generateMetadata` can only be exported from Server Components.
