@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data';
 import { Button } from '@/components/ui/button';
-import { Star, ShoppingCart, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, ShoppingCart, Heart } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from '@/components/ui/badge';
@@ -34,16 +34,16 @@ async function getRelatedProducts(currentProductId: string, category?: string, c
       p => p.id !== currentProductId && p.category === category
     );
   }
-  recommendedProductsList = recommendedProductsList.slice(0, count);
-
+  
+  // If not enough from the same category, fill with other products
   if (recommendedProductsList.length < count) {
     const existingIds = new Set(recommendedProductsList.map(p => p.id));
-    existingIds.add(currentProductId);
+    existingIds.add(currentProductId); // Ensure current product isn't included
 
     const otherProducts = allProducts.filter(
       p => !existingIds.has(p.id)
     );
-
+    
     const needed = count - recommendedProductsList.length;
     recommendedProductsList.push(...otherProducts.slice(0, needed));
   }
@@ -86,7 +86,7 @@ async function submitReviewAction(prevState: SubmitReviewResponse | null, formDa
 
 
 export default function ProductPage({ params: paramsFromProps }: { params: { id: string } }) {
-  const params = use(paramsFromProps as any);
+  const params = use(paramsFromProps as any); 
 
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -103,11 +103,10 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         const fetchedProduct = await getProduct(params.id);
         if (fetchedProduct) {
           setProduct(fetchedProduct);
-          setSelectedImageUrl(fetchedProduct.imageUrl); // Set initial selected image
-          const fetchedRelatedProducts = await getRelatedProducts(params.id, fetchedProduct.category, 6);
+          setSelectedImageUrl(fetchedProduct.imageUrl); 
+          const fetchedRelatedProducts = await getRelatedProducts(params.id, fetchedProduct.category, 4);
           setRelatedProducts(fetchedRelatedProducts);
         } else {
-          // Handle product not found case, e.g., redirect or show error
           setProduct(null);
           setSelectedImageUrl(null);
         }
@@ -139,12 +138,20 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
     }
   }, [reviewFormState, toast]);
 
-  if (!product || !selectedImageUrl) {
+  if (!product) { 
     return <Container className="py-12 text-center">Loading product details or product not found...</Container>;
   }
+  
+  if (product && !selectedImageUrl) {
+    setSelectedImageUrl(product.imageUrl);
+  }
+  if (!selectedImageUrl && product) { 
+      return <Container className="py-12 text-center">Loading images...</Container>;
+  }
 
-  const allImages = [product.imageUrl, ...(product.images || [])].filter(Boolean);
-  const displayThumbnails = Array.from(new Set(allImages)).slice(0, 5); // Max 5 unique thumbnails
+
+  const allImages = [product.imageUrl, ...(product.images || [])].filter(Boolean) as string[];
+  const displayThumbnails = Array.from(new Set(allImages)).slice(0, 5);
 
   return (
     <Container className="py-8 md:py-12">
@@ -152,16 +159,18 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         {/* Left Column: Image Gallery */}
         <div className="space-y-4">
           <div className="aspect-square relative w-full rounded-lg overflow-hidden shadow-lg bg-muted/30">
-            <Image
-              src={selectedImageUrl}
-              alt={product.name}
-              fill
-              style={{ objectFit: "contain" }} // Changed to contain for better visibility
-              data-ai-hint={product.aiHint || 'product image'}
-              priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-            {product.isFeatured && ( // Using isFeatured as a proxy for "New Arrival"
+            {selectedImageUrl && (
+              <Image
+                src={selectedImageUrl}
+                alt={product.name}
+                fill
+                style={{ objectFit: "contain" }}
+                data-ai-hint={product.aiHint || 'product image'}
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            )}
+            {product.isFeatured && (
                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
                     <Badge variant="default" className="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm px-2.5 py-1 sm:px-3 shadow-md">
                         New Arrival
@@ -237,18 +246,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
             <Badge variant="secondary">Stock status unavailable</Badge>
           )}
 
-          {/* Popular Products / You Might Also Like - Moved Here */}
-          {relatedProducts.length > 0 && (
-            <div className="pt-4">
-              <h3 className="text-lg font-semibold font-headline mb-3">Popular Choices</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {relatedProducts.slice(0, 2).map(p => ( // Show only 2 for compactness
-                  <ProductCard key={p.id} product={p} />
-                ))}
-              </div>
-            </div>
-          )}
-
           <p className="text-foreground/80 leading-relaxed line-clamp-3 pt-2">{product.description}</p>
 
           <div className="flex flex-col sm:flex-row gap-3">
@@ -288,7 +285,19 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         </div>
       </div>
 
-      {/* Customer Reviews Section - Now after related products if not in right column */}
+      {/* Related Products Section */}
+      {relatedProducts.length > 0 && (
+        <section className="py-12 mt-12 border-t">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center">You Might Also Like</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            {relatedProducts.map(p => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Customer Reviews Section */}
       <section className="py-12 mt-12 border-t">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-6">Customer Reviews</h2>
         <div className="p-6 bg-card rounded-lg shadow">
@@ -354,3 +363,10 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 */
+
+// export async function generateStaticParams() {
+//   const data = await import('@/lib/data');
+//   return data.mockProducts.map(product => ({
+//     id: product.id,
+//   }));
+// }
