@@ -2,9 +2,9 @@
 export interface Product {
   id: string;
   name: string;
-  slug: string; // Added
+  slug: string;
   category: string; // Corresponds to Category Name for mock simplicity
-  brand?: string; // Added
+  brand?: string;
   price: number;
   originalPrice?: number;
   imageUrl: string;
@@ -15,16 +15,16 @@ export interface Product {
   stock?: number;
   details?: Record<string, string>;
   aiHint?: string;
-  isActive?: boolean; // Added from schema
-  isFeatured?: boolean; // Added from schema
+  isActive?: boolean;
+  isFeatured?: boolean;
 }
 
 export interface Category {
-  id: string; // Corresponds to CategoryID
+  id: string;
   name: string;
-  slug: string; // Added
-  description?: string; // Added
-  parentCategoryId?: string; // Added, string for mock simplicity
+  slug: string;
+  description?: string;
+  parentCategoryId?: string;
   imageUrl: string;
   aiHint?: string;
 }
@@ -51,12 +51,12 @@ export interface FaqItem {
 export interface Review {
   reviewId: string;
   productId: string;
-  userId: string; // In a real app, this would be a foreign key to Users table
-  userName: string; // For display in mock
+  userId: string;
+  userName: string;
   rating: number;
   title?: string;
   comment?: string;
-  createdAt: string; // ISO date string
+  createdAt: string;
   isApproved?: boolean;
 }
 
@@ -84,7 +84,7 @@ export const mockCategories: Category[] = [
     description: 'Furnishings and decor for your home.',
     imageUrl: 'https://placehold.co/400x300.png',
     aiHint: 'modern interior',
-    parentCategoryId: 'home-garden' // Example of parent category
+    parentCategoryId: 'home-garden'
   },
   {
     id: 'books',
@@ -103,7 +103,7 @@ export const mockCategories: Category[] = [
     aiHint: 'online learning',
     parentCategoryId: 'education'
   },
-  { // Example parent category
+  { 
     id: 'home-garden',
     name: 'Home & Garden',
     slug: 'home-garden',
@@ -111,14 +111,49 @@ export const mockCategories: Category[] = [
     imageUrl: 'https://placehold.co/400x300.png',
     aiHint: 'home garden tools'
   },
-  { // Example parent category
+  { 
     id: 'education',
     name: 'Education',
     slug: 'education',
     description: 'Educational materials and courses.',
     imageUrl: 'https://placehold.co/400x300.png',
     aiHint: 'learning education'
-  }
+  },
+  {
+    id: 'footwear',
+    name: 'Footwear',
+    slug: 'footwear',
+    description: 'All kinds of shoes for every occasion.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'shoes footwear variety'
+  },
+  {
+    id: 'sneakers',
+    name: 'Sneakers',
+    slug: 'sneakers',
+    description: 'Comfortable and stylish sneakers for everyday wear.',
+    parentCategoryId: 'footwear',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'sneakers athletic casual'
+  },
+  {
+    id: 'formal-shoes',
+    name: 'Formal Shoes',
+    slug: 'formal-shoes',
+    description: 'Elegant formal shoes for special events.',
+    parentCategoryId: 'footwear',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'formal dress shoes'
+  },
+  {
+    id: 'running-shoes',
+    name: 'Running Shoes',
+    slug: 'running-shoes',
+    description: 'High-performance running shoes for athletes.',
+    parentCategoryId: 'footwear',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'running sport shoes'
+  },
 ];
 
 export const mockProducts: Product[] = [
@@ -134,7 +169,7 @@ export const mockProducts: Product[] = [
     images: ['https://placehold.co/600x600.png', 'https://placehold.co/600x600.png', 'https://placehold.co/600x600.png'],
     description: 'Experience immersive sound with these comfortable, long-lasting wireless headphones. Features active noise cancellation and a sleek design.',
     rating: 4.5,
-    reviewsCount: 120, // This could be derived from mockReviews.length for this product
+    reviewsCount: 120,
     stock: 15,
     details: { Material: 'Premium plastic and faux leather', Battery: 'Up to 30 hours', Connectivity: 'Bluetooth 5.0' },
     aiHint: 'headphones audio',
@@ -171,6 +206,7 @@ export const mockProducts: Product[] = [
     description: 'A classic, comfortable t-shirt made from 100% organic cotton. Available in various colors.',
     rating: 4.2,
     reviewsCount: 250,
+    stock: 100,
     details: { Material: '100% Organic Cotton', Care: 'Machine washable' },
     aiHint: 'tshirt clothing',
     isActive: true,
@@ -221,6 +257,7 @@ export const mockProducts: Product[] = [
     description: 'A timeless leather satchel, perfect for work or casual outings. Handcrafted with high-quality materials.',
     rating: 4.7,
     reviewsCount: 65,
+    stock: 8,
     aiHint: 'leather bag',
     isActive: true,
     isFeatured: false,
@@ -258,7 +295,77 @@ export const mockProducts: Product[] = [
     stock: 12,
     details: { Material: 'Wool blend, Faux fur', Sizes: 'S, M, L, XL' },
     aiHint: 'winter coat',
-    isActive: false, // Example of inactive product
+    isActive: false,
+    isFeatured: false,
+  },
+  {
+    id: 'shoe-1',
+    name: 'Men\'s Classic Leather Sneakers',
+    slug: 'mens-classic-leather-sneakers',
+    category: 'Sneakers', // Belongs to 'Sneakers' which is child of 'Footwear'
+    brand: 'UrbanStride',
+    price: 89.99,
+    originalPrice: 110.00,
+    imageUrl: 'https://placehold.co/600x600.png',
+    description: 'Timeless leather sneakers for a sharp, casual look. Cushioned insole for all-day comfort.',
+    rating: 4.6,
+    reviewsCount: 150,
+    stock: 40,
+    details: { Material: 'Genuine Leather Upper, Rubber Sole', Color: 'White, Black, Navy' },
+    aiHint: 'mens leather sneakers',
+    isActive: true,
+    isFeatured: true,
+  },
+  {
+    id: 'shoe-2',
+    name: 'Women\'s High-Performance Running Shoes',
+    slug: 'womens-high-performance-running-shoes',
+    category: 'Running Shoes',
+    brand: 'SwiftRun',
+    price: 129.50,
+    imageUrl: 'https://placehold.co/600x600.png',
+    description: 'Engineered for speed and comfort, these running shoes feature responsive cushioning and a breathable mesh upper.',
+    rating: 4.8,
+    reviewsCount: 210,
+    stock: 25,
+    details: { Type: 'Neutral Cushioned', Drop: '8mm', Weight: '220g' },
+    aiHint: 'womens running shoes',
+    isActive: true,
+    isFeatured: true,
+  },
+  {
+    id: 'shoe-3',
+    name: 'Men\'s Oxford Formal Shoes',
+    slug: 'mens-oxford-formal-shoes',
+    category: 'Formal Shoes',
+    brand: 'GentlemenStyle',
+    price: 149.00,
+    imageUrl: 'https://placehold.co/600x600.png',
+    description: 'Elegant and sophisticated Oxford shoes, perfect for business meetings or formal events. Crafted from polished leather.',
+    rating: 4.7,
+    reviewsCount: 85,
+    stock: 18,
+    details: { Material: 'Polished Calfskin Leather', Sole: 'Leather with rubber heel', Construction: 'Goodyear Welt' },
+    aiHint: 'mens formal oxfords',
+    isActive: true,
+    isFeatured: false,
+  },
+  {
+    id: 'shoe-4',
+    name: 'Women\'s Ankle Boots - Suede',
+    slug: 'womens-ankle-boots-suede',
+    category: 'Footwear', // Could also be a "Boots" category if added
+    brand: 'AutumnVogue',
+    price: 99.99,
+    originalPrice: 130.00,
+    imageUrl: 'https://placehold.co/600x600.png',
+    description: 'Chic suede ankle boots with a comfortable block heel. Versatile for day to night wear.',
+    rating: 4.5,
+    reviewsCount: 110,
+    stock: 30,
+    details: { Material: 'Suede Upper, Synthetic Lining', HeelHeight: '2.5 inches' },
+    aiHint: 'womens suede boots',
+    isActive: true,
     isFeatured: false,
   }
 ];
@@ -266,7 +373,7 @@ export const mockProducts: Product[] = [
 export const mockReviews: Review[] = [
   {
     reviewId: 'rev1',
-    productId: '1', // Wireless Noise-Cancelling Headphones
+    productId: '1',
     userId: 'user123',
     userName: 'Sophie R.',
     rating: 5,
@@ -277,7 +384,7 @@ export const mockReviews: Review[] = [
   },
   {
     reviewId: 'rev2',
-    productId: '1', // Wireless Noise-Cancelling Headphones
+    productId: '1',
     userId: 'user456',
     userName: 'John B.',
     rating: 4,
@@ -288,7 +395,7 @@ export const mockReviews: Review[] = [
   },
   {
     reviewId: 'rev3',
-    productId: '3', // Organic Cotton T-Shirt
+    productId: '3',
     userId: 'user789',
     userName: 'Maria L.',
     rating: 5,
@@ -299,7 +406,7 @@ export const mockReviews: Review[] = [
   },
   {
     reviewId: 'rev4',
-    productId: '2', // Modern Linen Armchair
+    productId: '2',
     userId: 'user101',
     userName: 'David K.',
     rating: 4,
@@ -308,15 +415,37 @@ export const mockReviews: Review[] = [
     createdAt: '2024-07-25T11:00:00Z',
     isApproved: true,
   },
-    {
+  {
     reviewId: 'rev5',
-    productId: '1', // Wireless Noise-Cancelling Headphones
+    productId: '1',
     userId: 'user112',
     userName: 'Emily P.',
     rating: 3,
     title: 'Decent for the price.',
     comment: 'Noise cancellation works okay, but I expected more for this price range. Battery life is good though.',
     createdAt: '2024-08-01T16:45:00Z',
+    isApproved: true,
+  },
+  {
+    reviewId: 'rev-shoe-1',
+    productId: 'shoe-1',
+    userId: 'userShoeLover',
+    userName: 'Alex M.',
+    rating: 5,
+    title: 'Best classic sneakers!',
+    comment: 'These leather sneakers are super comfortable and look great with everything. Highly recommend!',
+    createdAt: '2024-08-02T10:00:00Z',
+    isApproved: true,
+  },
+  {
+    reviewId: 'rev-shoe-2',
+    productId: 'shoe-2',
+    userId: 'userRunner',
+    userName: 'Jessica B.',
+    rating: 4,
+    title: 'Great for my daily runs',
+    comment: 'Very supportive and lightweight. My feet feel great even after a long run. The color is vibrant too!',
+    createdAt: '2024-08-03T11:30:00Z',
     isApproved: true,
   }
 ];
@@ -424,7 +553,3 @@ export const returnPolicy = `
 <p>Once we receive and inspect your return, we will notify you of the approval or rejection of your refund. If approved, your refund will be processed, and a credit will automatically be applied to your original method of payment within a certain number of days.</p>
 `;
 
-// To calculate reviewsCount for a product:
-// const getReviewsCountForProduct = (productId: string) => mockReviews.filter(review => review.productId === productId).length;
-// Example: mockProducts[0].reviewsCount = getReviewsCountForProduct(mockProducts[0].id);
-// This is just illustrative; for the mock data, review counts are hardcoded for now.
