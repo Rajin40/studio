@@ -207,7 +207,7 @@ export default function ShoeProductPage({ params: paramsFromProps }: { params: {
                     alt={`${product.name} thumbnail ${idx + 1}`} 
                     fill 
                     style={{ objectFit: "cover" }} 
-                    data-ai-hint={product.aiHint || `thumbnail shoe ${idx + 1}`} 
+                    data-ai-hint={product.aiHint || 'shoe variant'} 
                     sizes="10vw"
                   />
                 </div>
