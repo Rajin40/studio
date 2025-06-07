@@ -27,9 +27,9 @@ const getProductsForStyle = (styleName: string): Product[] => {
 
 const heroSlidesData = [
   {
-    imageUrl: "https://placehold.co/700x500.png?text=Runners+Profile&style=dynamic",
-    aiHint: "running shoe dynamic",
-    alt: "Dynamic Running Shoe Model - Profile View"
+    imageUrl: "https://storage.googleapis.com/idx-dev-01-ai-project-image-model-output/user_1UqXoDRiFhM8FqL6a6TcgOl7g5I2/1720772449799-3.png",
+    aiHint: "white sneaker laces",
+    alt: "White sneaker with untied laces"
   },
   {
     imageUrl: "https://placehold.co/700x500.png?text=Runners+Action&style=action",
