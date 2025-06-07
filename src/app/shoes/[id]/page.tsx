@@ -102,11 +102,14 @@ export default function ShoeProductPage({ params: paramsFromProps }: { params: {
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const { toast } = useToast();
 
   const reviewInitialState: SubmitReviewResponse | null = null;
   const [reviewFormState, reviewFormAction] = useActionState(submitReviewAction, reviewInitialState);
   const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
+
+  const availableSizes = ['38', '40', '42', '44'];
 
   useEffect(() => {
     async function loadData(id: string) { 
@@ -263,6 +266,22 @@ export default function ShoeProductPage({ params: paramsFromProps }: { params: {
             <Badge variant="secondary">Stock status unavailable</Badge>
           )}
 
+          <div className="mt-4 pt-2 space-y-2">
+            <Label className="text-base font-medium">Select Size:</Label>
+            <div className="flex flex-wrap gap-2">
+              {availableSizes.map((size) => (
+                <Button
+                  key={size}
+                  variant={selectedSize === size ? 'default' : 'outline'}
+                  onClick={() => setSelectedSize(size)}
+                  className="px-4 py-2 rounded-md"
+                >
+                  {size}
+                </Button>
+              ))}
+            </div>
+          </div>
+
           <p className="text-foreground/80 leading-relaxed line-clamp-3 pt-2">{product.description}</p>
 
           <div className="flex flex-col sm:flex-row gap-3">
@@ -359,5 +378,3 @@ export default function ShoeProductPage({ params: paramsFromProps }: { params: {
     </Container>
   );
 }
-
-    
