@@ -98,22 +98,20 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
   const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
 
   useEffect(() => {
-    async function loadData() {
-      if (params && params.id) {
-        const fetchedProduct = await getProduct(params.id);
+    async function loadData(id: string) { // Pass id directly
+        const fetchedProduct = await getProduct(id);
         if (fetchedProduct) {
           setProduct(fetchedProduct);
           setSelectedImageUrl(fetchedProduct.imageUrl); 
-          const fetchedRelatedProducts = await getRelatedProducts(params.id, fetchedProduct.category, 4); // Fetch 4 for full-width display
+          const fetchedRelatedProducts = await getRelatedProducts(id, fetchedProduct.category, 4);
           setRelatedProducts(fetchedRelatedProducts);
         } else {
           setProduct(null);
           setSelectedImageUrl(null);
         }
-      }
     }
     if (params?.id) {
-        loadData();
+        loadData(params.id);
     }
   }, [params?.id]);
 
@@ -143,9 +141,11 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
   }
   
   if (product && !selectedImageUrl) {
-    setSelectedImageUrl(product.imageUrl);
+    // This state could happen briefly if product is set but selectedImageUrl hasn't caught up.
+    // Setting it here ensures it's initialized if params.id was valid but images were delayed.
+    setSelectedImageUrl(product.imageUrl); 
   }
-  if (!selectedImageUrl && product) { 
+  if (!selectedImageUrl && product) { // This check is to ensure selectedImageUrl is available before rendering Image
       return <Container className="py-12 text-center">Loading images...</Container>;
   }
 
@@ -156,52 +156,66 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
   return (
     <Container className="py-8 md:py-12">
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-        {/* Left Column: Image Gallery */}
-        <div className="space-y-4">
-          <div className="aspect-square relative w-full rounded-lg overflow-hidden shadow-lg bg-muted/30">
-            {selectedImageUrl && (
-              <Image
-                src={selectedImageUrl}
-                alt={product.name}
-                fill
-                style={{ objectFit: "contain" }}
-                data-ai-hint={product.aiHint || 'product image'}
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            )}
-            {product.isFeatured && ( // Using isFeatured as a proxy for "New Arrival"
-                 <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-                    <Badge variant="default" className="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm px-2.5 py-1 sm:px-3 shadow-md">
-                        New Arrival
-                    </Badge>
-                 </div>
+        {/* Left Column: Image Gallery + Popular Products */}
+        <div>
+          <div className="space-y-4">
+            <div className="aspect-square relative w-full rounded-lg overflow-hidden shadow-lg bg-muted/30">
+              {selectedImageUrl && (
+                <Image
+                  src={selectedImageUrl}
+                  alt={product.name}
+                  fill
+                  style={{ objectFit: "contain" }}
+                  data-ai-hint={product.aiHint || 'product image'}
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              )}
+              {product.isFeatured && ( 
+                   <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
+                      <Badge variant="default" className="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm px-2.5 py-1 sm:px-3 shadow-md">
+                          New Arrival
+                      </Badge>
+                   </div>
+              )}
+            </div>
+            {displayThumbnails.length > 1 && (
+              <div className={`grid grid-cols-${Math.min(displayThumbnails.length, 5)} gap-2 sm:gap-3`}>
+                {displayThumbnails.map((img, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`aspect-square relative w-full rounded-md overflow-hidden border-2 cursor-pointer transition-all duration-150 ease-in-out
+                                ${selectedImageUrl === img ? 'border-primary shadow-md scale-105' : 'border-border hover:border-muted-foreground/50'}`}
+                    onClick={() => setSelectedImageUrl(img)}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`View image ${idx + 1}`}
+                    onKeyDown={(e) => e.key === 'Enter' && setSelectedImageUrl(img)}
+                  >
+                    <Image 
+                      src={img} 
+                      alt={`${product.name} thumbnail ${idx + 1}`} 
+                      fill 
+                      style={{ objectFit: "cover" }} 
+                      data-ai-hint={product.aiHint || `thumbnail ${idx + 1}`} 
+                      sizes="10vw"
+                    />
+                  </div>
+                ))}
+              </div>
             )}
           </div>
-          {displayThumbnails.length > 1 && (
-            <div className={`grid grid-cols-${Math.min(displayThumbnails.length, 5)} gap-2 sm:gap-3`}>
-              {displayThumbnails.map((img, idx) => (
-                <div 
-                  key={idx} 
-                  className={`aspect-square relative w-full rounded-md overflow-hidden border-2 cursor-pointer transition-all duration-150 ease-in-out
-                              ${selectedImageUrl === img ? 'border-primary shadow-md scale-105' : 'border-border hover:border-muted-foreground/50'}`}
-                  onClick={() => setSelectedImageUrl(img)}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`View image ${idx + 1}`}
-                  onKeyDown={(e) => e.key === 'Enter' && setSelectedImageUrl(img)}
-                >
-                  <Image 
-                    src={img} 
-                    alt={`${product.name} thumbnail ${idx + 1}`} 
-                    fill 
-                    style={{ objectFit: "cover" }} 
-                    data-ai-hint={product.aiHint || `thumbnail ${idx + 1}`} 
-                    sizes="10vw"
-                  />
-                </div>
-              ))}
-            </div>
+
+          {/* Our Popular Products Section */}
+          {relatedProducts.length > 0 && (
+            <section className="pt-8 mt-8">
+              <h2 className="text-xl font-bold font-headline mb-4 text-left">Our popular products</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {relatedProducts.slice(0, 2).map(p => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            </section>
           )}
         </div>
 
@@ -285,19 +299,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         </div>
       </div>
 
-      {/* Related Products Section - Moved back to full-width */}
-      {relatedProducts.length > 0 && (
-        <section className="py-12 mt-12 border-t">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center">You Might Also Like</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-            {relatedProducts.map(p => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Customer Reviews Section - Now after "You Might Also Like" */}
+      {/* Customer Reviews Section - Remains full-width at the bottom */}
       <section className="py-12 mt-12 border-t">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-6">Customer Reviews</h2>
         <div className="p-6 bg-card rounded-lg shadow">
@@ -345,25 +347,8 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
   );
 }
 
-// The `generateMetadata` function is commented out because this is a Client Component
-// and `generateMetadata` can only be exported from Server Components.
-// For dynamic metadata in client components, you would typically use a different approach
-// or restructure to have a Server Component wrapper.
-/*
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const product = await getProduct(params.id);
-  if (!product) {
-    return {
-      title: "Product Not Found",
-    };
-  }
-  return {
-    title: product.name,
-    description: product.description.substring(0, 160), // SEO description length
-  };
-}
-*/
-
+// The `generateStaticParams` function is used by Next.js to pre-render
+// pages at build time if you are using static generation for dynamic routes.
 // export async function generateStaticParams() {
 //   const data = await import('@/lib/data');
 //   return data.mockProducts.map(product => ({
@@ -371,3 +356,18 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 //   }));
 // }
 
+// Metadata generation is typically done in Server Components.
+// Since this is a Client Component, metadata would be handled differently
+// or by a parent Server Component.
+// export async function generateMetadata({ params }: { params: { id: string } }) {
+//   const product = await getProduct(params.id);
+//   if (!product) {
+//     return {
+//       title: "Product Not Found",
+//     };
+//   }
+//   return {
+//     title: product.name,
+//     description: product.description.substring(0, 160),
+//   };
+// }
