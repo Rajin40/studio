@@ -31,8 +31,8 @@ export default function FootwearPage() {
 
   // Hero data inspired by the image
   const heroData = {
-    titlePrimary: "MAYFLY",
-    titleSecondary: "WOVEN",
+    titlePrimary: "Footwear",
+    titleSecondary: "Shoes",
     description: "All kinds of shoes for every occasion.",
     mainImageUrl: "https://placehold.co/700x450.png", // Placeholder for the main red shoe
     mainImageAiHint: "red woven sneaker modern",
