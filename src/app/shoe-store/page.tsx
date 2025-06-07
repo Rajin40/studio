@@ -6,146 +6,68 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Container from '@/components/Container';
 import ProductCard from '@/components/ProductCard';
-// ArticleCard is not used in this version, can be removed if not re-added
-// import ArticleCard from '@/components/ArticleCard'; 
 import { TrustBadgesSection } from '@/components/TrustBadge';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import { mockProducts, mockCategories, Category } from '@/lib/data';
-import { ChevronRight, ArrowUpRight, ChevronLeft } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowUpRight } from 'lucide-react'; // ChevronLeft, ChevronRight removed
 
-const shoeSlides = [
-  {
-    mainImage: "https://placehold.co/600x400.png?text=Stylish+Sneaker",
-    mainImageHint: "stylish sneaker",
-    stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?text=Shoe+Texture', hint: 'shoe detail texture', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?text=Urban+Style', hint: 'urban fashion style', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?text=Shoe+Fabric', hint: 'shoe fabric material', z: '10', w: '30%' },
-    ]
-  },
-  {
-    mainImage: "https://placehold.co/600x400.png?text=Running+Shoe",
-    mainImageHint: "dynamic running shoe",
-     stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?text=Sport+Weave', hint: 'sport fabric weave', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?text=Active+Gear', hint: 'active lifestyle gear', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?text=Modern+Footwear', hint: 'modern footwear design', z: '10', w: '30%' },
-    ]
-  },
-  {
-    mainImage: "https://placehold.co/600x400.png?text=Elegant+Heel",
-    mainImageHint: "elegant heel shoe",
-    stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?text=Leather+Detail', hint: 'leather shoe texture', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?text=Evening+Wear', hint: 'evening fashion style', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?text=Luxury+Accessory', hint: 'luxury shoe accessory', z: '10', w: '30%' },
-    ]
-  },
-];
-const totalShoeSlides = shoeSlides.length;
-
+const heroData = {
+  preTitle: "NEW PRODUCT",
+  title: "Cool Air Shoes",
+  buttonText: "Checkout",
+  buttonLink: "/cart", // Example link, can be changed to a specific product
+  imageUrl: "https://placehold.co/800x600.png",
+  imageAlt: "Cool Air Shoes",
+  imageAiHint: "yellow sneaker black",
+};
 
 export default function ShoeStorePage() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const handleNext = () => {
-    setCurrentSlide((prev) => (prev === totalShoeSlides - 1 ? 0 : prev + 1));
-  };
-
-  const handlePrev = () => {
-    setCurrentSlide((prev) => (prev === 0 ? totalShoeSlides - 1 : prev - 1));
-  };
-
-  const activeSlide = shoeSlides[currentSlide];
+  // Carousel state and handlers are removed as the hero is now static
 
   const shoeCategories = mockCategories.filter(
     cat => cat.parentCategoryId === 'footwear' || cat.id === 'footwear'
-  ).slice(0, 4); // Show 'Footwear' and up to 3 sub-categories
+  ).slice(0, 4);
 
   const shoeProducts = mockProducts.filter(
     product => mockCategories.find(cat => cat.name === product.category && (cat.id === 'footwear' || cat.parentCategoryId === 'footwear'))
   );
   
   const featuredShoeProducts = shoeProducts.filter(p => p.isFeatured).slice(0, 8);
-  const newArrivalShoes = [...shoeProducts].sort((a,b) => (b.id > a.id ? 1 : -1) ).slice(0, 8); // simple sort by ID for "newness"
+  const newArrivalShoes = [...shoeProducts].sort((a,b) => (b.id > a.id ? 1 : -1) ).slice(0, 8);
 
 
   return (
     <div className="bg-background">
       {/* Hero Banner */}
-      <section className="bg-sky-700 text-white relative overflow-hidden min-h-[calc(100vh-4rem)] md:min-h-screen flex items-center justify-center">
-        <Container className="relative z-10 h-full py-12 md:py-16 w-full">
-          <div className="flex flex-col h-full justify-between min-h-[75vh] md:min-h-[80vh]">
-            
-            <div className="grid grid-cols-12 gap-x-4 items-center flex-grow">
-              {/* Left Vertical Elements */}
-              <div className="col-span-1 hidden md:flex flex-col items-center justify-between self-stretch py-8">
-                <div className="flex-grow"></div>
-                <div className="flex flex-col items-center space-y-3 text-xs opacity-75">
-                  <span>{currentSlide + 1} / {totalShoeSlides}</span>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white" onClick={handlePrev}><ChevronLeft className="h-4 w-4"/></Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white" onClick={handleNext}><ChevronRight className="h-4 w-4"/></Button>
-                  <div className="flex flex-col space-y-1 pt-2">
-                    {shoeSlides.map((_, index) => (
-                       <span key={index} className={`h-1.5 w-1.5 rounded-full ${currentSlide === index ? 'bg-white' : 'bg-white/50'}`}></span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Main Content Area - Title and Images */}
-              <div className="col-span-12 md:col-span-11 relative flex flex-col justify-center items-center text-center md:items-start md:text-left h-full">
-                {/* Image Composition */}
-                <div className="absolute inset-0 flex justify-center items-center opacity-30 md:opacity-100">
-                  <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-2xl h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
-                    {activeSlide.stripImages.map((strip, index) => (
-                      <div
-                        key={index}
-                        className="absolute top-0 h-full transform -skew-x-[15deg] overflow-hidden"
-                        style={{ left: strip.offset, zIndex: parseInt(strip.z), width: strip.w }}
-                      >
-                        <div
-                          className="absolute inset-[-15px] transform skew-x-[15deg] bg-cover bg-center"
-                          style={{ backgroundImage: `url(${strip.image})` }}
-                          data-ai-hint={strip.hint}
-                        ></div>
-                      </div>
-                    ))}
-                    <div className="absolute right-[-10%] sm:right-[-5%] md:right-[-20%] lg:right-[-25%] top-1/2 transform -translate-y-1/2 z-30 w-[50%] sm:w-[45%] md:w-[250px] lg:w-[300px] xl:w-[380px]">
-                      <Image
-                        key={activeSlide.mainImage} 
-                        src={activeSlide.mainImage}
-                        alt="Featured Shoe"
-                        width={600}
-                        height={400}
-                        className="object-contain"
-                        data-ai-hint={activeSlide.mainImageHint}
-                        priority={currentSlide === 0} 
-                      />
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="relative z-20 mt-8 md:mt-0">
-                  <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold tracking-tighter leading-none drop-shadow-md">
-                    STEP UP
-                  </h1>
-                  <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-none mt-[-0.1em] sm:mt-[-0.15em] drop-shadow-md">
-                    YOUR STYLE
-                  </p>
-                </div>
+      <section className="bg-stone-50 text-neutral-800 relative overflow-hidden">
+        <Container className="py-16 md:py-24 lg:py-32 min-h-[calc(80vh)] md:min-h-[calc(90vh)] flex items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center w-full">
+            {/* Text Content */}
+            <div className="flex flex-col justify-center text-center md:text-left order-2 md:order-1">
+              <p className="text-sm sm:text-base uppercase tracking-wider text-neutral-600 mb-2 md:mb-3">
+                {heroData.preTitle}
+              </p>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-headline text-neutral-900 mb-6 md:mb-8">
+                {heroData.title}
+              </h1>
+              <div className="flex justify-center md:justify-start">
+                <Button size="lg" className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 text-base sm:text-lg" asChild>
+                  <Link href={heroData.buttonLink}>{heroData.buttonText}</Link>
+                </Button>
               </div>
             </div>
 
-            {/* Bottom Bar */}
-            <div className="grid grid-cols-12 gap-x-4 items-center pt-8 md:pt-4 pb-4">
-              <div className="col-span-1 hidden md:block"></div>
-              <div className="col-span-12 md:col-span-11 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-                <div className="flex-grow"></div>
-                <Link href="/search?category=footwear" className="flex items-center text-xs sm:text-sm hover:underline hover:opacity-100 opacity-75">
-                  Explore Shoe Collection <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                </Link>
+            {/* Image Content */}
+            <div className="flex justify-center items-center order-1 md:order-2 p-4 md:p-0">
+              <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl aspect-[4/3]">
+                <Image
+                  src={heroData.imageUrl}
+                  alt={heroData.imageAlt}
+                  fill
+                  style={{ objectFit: "contain" }}
+                  data-ai-hint={heroData.imageAiHint}
+                  priority
+                />
               </div>
             </div>
           </div>
@@ -239,4 +161,3 @@ export default function ShoeStorePage() {
     </div>
   );
 }
-
