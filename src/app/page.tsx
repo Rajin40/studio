@@ -15,43 +15,24 @@ import { ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 
 const slides = [
   {
-    mainImageUrl: "https://placehold.co/800x600.png",
-    mainImageAiHint: "modern shoe design",
-    bgStrip1Url: "https://placehold.co/300x700.png?text=bg1",
-    bgStrip1AiHint: "abstract pattern",
-    bgStrip2Url: "https://placehold.co/300x700.png?text=bg2",
-    bgStrip2AiHint: "geometric design",
-    titlePrimary: "DESIGN",
-    titleSecondary: "& HIGH QUALITY",
-    buttonText: "View All Products",
-    buttonLink: "/search",
-    bulletPoints: ["Innovative Style", "Premium Materials", "Unmatched Comfort"],
+    mainImageUrl: "https://placehold.co/800x600.png?text=Product+Showcase+1",
+    mainImageAiHint: "modern product design",
   },
   {
-    mainImageUrl: "https://placehold.co/800x600.png?text=Shoe+2",
-    mainImageAiHint: "stylish sneaker",
-    bgStrip1Url: "https://placehold.co/300x700.png?text=bg3",
-    bgStrip1AiHint: "urban texture",
-    bgStrip2Url: "https://placehold.co/300x700.png?text=bg4",
-    bgStrip2AiHint: "vibrant colors",
-    titlePrimary: "FRESH",
-    titleSecondary: "& ICONIC STYLES",
-    buttonText: "Shop New Arrivals",
-    buttonLink: "/search?sort=newest",
-    bulletPoints: ["Latest Trends", "Exclusive Collections", "Bold Statements"],
+    mainImageUrl: "https://placehold.co/800x600.png?text=Product+Showcase+2",
+    mainImageAiHint: "elegant lifestyle item",
   },
   {
-    mainImageUrl: "https://placehold.co/800x600.png?text=Shoe+3",
-    mainImageAiHint: "elegant footwear",
-    bgStrip1Url: "https://placehold.co/300x700.png?text=bg5",
-    bgStrip1AiHint: "minimalist background",
-    bgStrip2Url: "https://placehold.co/300x700.png?text=bg6",
-    bgStrip2AiHint: "soft tones",
-    titlePrimary: "CRAFTED",
-    titleSecondary: "FOR PERFECTION",
-    buttonText: "Explore Bestsellers",
-    buttonLink: "/search?sort=popular",
-    bulletPoints: ["Expert Craftsmanship", "Durable & Lasting", "Timeless Elegance"],
+    mainImageUrl: "https://placehold.co/800x600.png?text=Product+Showcase+3",
+    mainImageAiHint: "innovative tech gadget",
+  },
+  {
+    mainImageUrl: "https://placehold.co/800x600.png?text=Product+Showcase+4",
+    mainImageAiHint: "stylish fashion accessory",
+  },
+  {
+    mainImageUrl: "https://placehold.co/800x600.png?text=Product+Showcase+5",
+    mainImageAiHint: "unique home decor",
   },
 ];
 
@@ -83,119 +64,85 @@ export default function HomePage() {
 
   return (
     <div className="bg-background">
-      {/* Hero Banner - Restored Dynamic Carousel */}
-      <section className="bg-emerald-800 text-white relative overflow-hidden min-h-[calc(100vh-4rem)] md:min-h-screen flex items-center justify-center">
-        {/* Animated Background Strips */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          {slides.map((slide, index) => (
-            <div key={`bg-strips-${index}`} className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${currentSlide === index ? 'opacity-100' : 'opacity-0'}`}>
-              <Image
-                src={slide.bgStrip1Url}
-                alt=""
-                fill
-                style={{ objectFit: "cover" }}
-                className="absolute top-0 left-0 w-1/3 h-full transform -skew-x-12 -translate-x-1/4 opacity-20"
-                data-ai-hint={slide.bgStrip1AiHint}
-                priority={index === 0}
-              />
-              <Image
-                src={slide.bgStrip2Url}
-                alt=""
-                fill
-                style={{ objectFit: "cover" }}
-                className="absolute top-0 right-0 w-1/3 h-full transform -skew-x-12 translate-x-1/4 opacity-20"
-                data-ai-hint={slide.bgStrip2AiHint}
-                priority={index === 0}
-              />
-            </div>
-          ))}
-        </div>
-
-        <Container className="relative z-10 h-full py-12 md:py-16 w-full">
-          <div className="flex h-full justify-between min-h-[75vh] md:min-h-[80vh]">
-            {/* Side Navigation Dots */}
-            <div className="hidden md:flex flex-col justify-center items-center space-y-3 pr-4 lg:pr-8 self-stretch">
-              {slides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 focus:outline-none
-                              ${currentSlide === index ? 'bg-white scale-125 ring-2 ring-white/50 ring-offset-2 ring-offset-emerald-800' : 'bg-white/40 hover:bg-white/70'}`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
-
-            {/* Main Content Area - Image & Text */}
-            <div className="relative flex-grow flex flex-col md:flex-row justify-center items-center text-center md:text-left overflow-hidden">
-              {/* Text Content (Left) */}
-              <div className="md:w-1/2 lg:w-2/5 p-4 md:p-0 relative z-20 order-2 md:order-1 animate-fadeIn">
-                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold tracking-tighter leading-none drop-shadow-md">
-                  {activeSlide.titlePrimary}
+      {/* Hero Banner - Styled like the provided image */}
+      <section className="bg-emerald-800 text-white relative overflow-hidden min-h-screen flex items-center">
+        <Container className="relative z-10 w-full h-full flex flex-col justify-between py-8 md:py-12">
+          <div className="grid md:grid-cols-2 gap-8 items-center flex-grow">
+            {/* Left Column: Text and Navigation */}
+            <div className="flex flex-col justify-center text-center md:text-left h-full">
+              <div className="mb-auto md:mb-0"> {/* Pushes text to top, allows nav to be at bottom of this column part */}
+                <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold font-headline tracking-tight leading-none drop-shadow-md">
+                  DESIGN
                 </h1>
-                <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-none mt-[-0.1em] sm:mt-[-0.15em] drop-shadow-md">
-                  {activeSlide.titleSecondary}
+                <p className="text-4xl sm:text-5xl md:text-6xl font-semibold font-headline mt-[-0.2em] sm:mt-[-0.15em] drop-shadow-md">
+                  & HIGH QUALITY
                 </p>
-                <ul className="mt-6 sm:mt-8 space-y-1.5 text-base sm:text-lg opacity-90 hidden md:block">
-                  {activeSlide.bulletPoints.map((point, idx) => (
-                    <li key={idx} className="flex items-center">
-                      <span className="inline-block w-1.5 h-1.5 bg-white rounded-full mr-2.5"></span>
-                      {point}
-                    </li>
-                  ))}
-                </ul>
               </div>
+              
+              {/* Carousel Navigation Controls */}
+              <div className="mt-10 md:mt-16 space-y-3 self-center md:self-start">
+                <div className="text-sm opacity-80">
+                  <span>{String(currentSlide + 1).padStart(2, '0')}</span> / {String(totalSlides).padStart(2, '0')}
+                </div>
+                <div className="flex space-x-3">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={handlePrev} 
+                    aria-label="Previous slide" 
+                    className="text-white/70 hover:text-white hover:bg-white/10 rounded-full w-8 h-8"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={handleNext} 
+                    aria-label="Next slide" 
+                    className="text-white/70 hover:text-white hover:bg-white/10 rounded-full w-8 h-8"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </Button>
+                </div>
+                <div className="flex space-x-1.5">
+                  {slides.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentSlide(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 focus:outline-none
+                                  ${currentSlide === index ? 'bg-white scale-110' : 'bg-white/40 hover:bg-white/70'}`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
 
-              {/* Image (Right) & Prev/Next Buttons */}
-              <div className="md:w-1/2 lg:w-3/5 flex-shrink-0 relative h-64 sm:h-80 md:h-auto md:self-stretch order-1 md:order-2 mb-6 md:mb-0 animate-slideInRight">
+            {/* Right Column: Image */}
+            <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center">
+              {activeSlide && (
                 <Image
                   key={activeSlide.mainImageUrl} // Key change for transition
                   src={activeSlide.mainImageUrl}
-                  alt={activeSlide.titlePrimary + " " + activeSlide.titleSecondary}
+                  alt="DESIGN & HIGH QUALITY Product Showcase"
                   fill
                   style={{ objectFit: "contain" }}
                   className="drop-shadow-2xl transition-opacity duration-700 ease-in-out"
                   data-ai-hint={activeSlide.mainImageAiHint}
-                  priority
-                  sizes="(max-width: 768px) 80vw, 40vw"
+                  priority={currentSlide === 0}
+                  sizes="(max-width: 768px) 90vw, 45vw"
                 />
-                {/* Prev/Next for image area - subtle */}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handlePrev}
-                  className="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white hover:bg-white/10 rounded-full p-2"
-                  aria-label="Previous slide"
-                >
-                  <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleNext}
-                  className="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white hover:bg-white/10 rounded-full p-2"
-                  aria-label="Next slide"
-                >
-                  <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
-                </Button>
-              </div>
-            </div>
-
-             {/* Right side buffer for symmetry, can be empty or hold other controls if needed */}
-            <div className="hidden md:flex flex-col justify-center items-center space-y-3 pl-4 lg:pl-8 self-stretch w-[56px] lg:w-[72px]">
-              {/* This space mirrors the left dots for balance, could be used for other elements */}
+              )}
             </div>
           </div>
-        </Container>
 
-        {/* Bottom Bar */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 bg-black/10 backdrop-blur-sm py-3">
-          <Container className="flex justify-center items-center">
-            <Link href={activeSlide.buttonLink} className="flex items-center text-xs sm:text-sm font-medium text-white hover:underline hover:opacity-100 opacity-75 transition-opacity">
-              {activeSlide.buttonText} <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+          {/* Bottom Right Link */}
+          <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 z-20">
+            <Link href="/search" className="text-xs sm:text-sm text-white/80 hover:text-white hover:underline flex items-center transition-colors">
+              View Products <ArrowUpRight className="ml-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Link>
-          </Container>
-        </div>
+          </div>
+        </Container>
       </section>
 
       {/* Featured Categories */}
@@ -291,18 +238,9 @@ export default function HomePage() {
           <NewsletterSignup />
         </Container>
       </section>
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideInRight {
-          from { opacity: 0; transform: translateX(50px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        .animate-fadeIn { animation: fadeIn 0.8s ease-out forwards; }
-        .animate-slideInRight { animation: slideInRight 0.8s ease-out forwards; }
-      `}</style>
+      {/* Removed custom keyframe animations as they are not present in the target style */}
     </div>
   );
 }
+
+    
