@@ -15,48 +15,48 @@ import { useState, useEffect } from 'react';
 
 const slides = [
   {
-    mainImage: "https://placehold.co/600x400.png?slide=1main",
+    mainImage: "/images/home_board_image/shoes.png",
     mainImageHint: "yellow sneaker",
     stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=1strip1', hint: 'shoe detail texture', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=1strip2', hint: 'denim fashion style', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=1strip3', hint: 'fashion clothing fabric', z: '10', w: '30%' },
+      { offset: '5%', image: '/images/home_board_image/hude.jpg', hint: 'shoe detail texture', z: '10', w: '30%' },
+      { offset: '30%', image: 'images/home_board_image/shoeswithpant.png', hint: 'denim fashion style', z: '20', w: '30%' },
+      { offset: '55%', image: '/images/home_board_image/summer.jpg', hint: 'fashion clothing fabric', z: '10', w: '30%' },
     ]
   },
   {
-    mainImage: "https://placehold.co/600x400.png?slide=2main",
+    mainImage: "/images/home_board_image/shoes.png",
     mainImageHint: "running shoe",
      stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=2strip1', hint: 'sport fabric weave', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=2strip2', hint: 'active lifestyle', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=2strip3', hint: 'modern footwear', z: '10', w: '30%' },
+      { offset: '5%', image: '/images/home_board_image/hude.jpg', hint: 'shoe detail texture', z: '10', w: '30%' },
+      { offset: '30%', image: 'images/home_board_image/shoeswithpant.png', hint: 'denim fashion style', z: '20', w: '30%' },
+      { offset: '55%', image: '/images/home_board_image/summer.jpg', hint: 'fashion clothing fabric', z: '10', w: '30%' },
     ]
   },
   {
-    mainImage: "https://placehold.co/600x400.png?slide=3main",
+    mainImage: "/images/home_board_image/shoes.png",
     mainImageHint: "classic sneaker",
     stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=3strip1', hint: 'leather texture', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=3strip2', hint: 'street style', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=3strip3', hint: 'casual fashion', z: '10', w: '30%' },
+      { offset: '5%', image: '/images/home_board_image/hude.jpg', hint: 'shoe detail texture', z: '10', w: '30%' },
+      { offset: '30%', image: 'images/home_board_image/shoeswithpant.png', hint: 'denim fashion style', z: '20', w: '30%' },
+      { offset: '55%', image: '/images/home_board_image/summer.jpg', hint: 'fashion clothing fabric', z: '10', w: '30%' },
     ]
   },
   {
-    mainImage: "https://placehold.co/600x400.png?slide=4main",
+    mainImage: "/images/home_board_image/shoes.png",
     mainImageHint: "vintage sneaker",
     stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=4strip1', hint: 'retro design', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=4strip2', hint: 'tennis style', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=4strip3', hint: 'white leather', z: '10', w: '30%' },
+      { offset: '5%', image: '/images/home_board_image/hude.jpg', hint: 'shoe detail texture', z: '10', w: '30%' },
+      { offset: '30%', image: 'images/home_board_image/shoeswithpant.png', hint: 'denim fashion style', z: '20', w: '30%' },
+      { offset: '55%', image: '/images/home_board_image/summer.jpg', hint: 'fashion clothing fabric', z: '10', w: '30%' },
     ]
   },
   {
-    mainImage: "https://placehold.co/600x400.png?slide=5main",
+    mainImage: "/images/home_board_image/shoes.png",
     mainImageHint: "lifestyle sneaker",
     stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=5strip1', hint: 'suede mesh', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=5strip2', hint: 'comfort shoe', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=5strip3', hint: 'everyday wear', z: '10', w: '30%' },
+      { offset: '5%', image: '/images/home_board_image/hude.jpg', hint: 'shoe detail texture', z: '10', w: '30%' },
+      { offset: '30%', image: 'images/home_board_image/shoeswithpant.png', hint: 'denim fashion style', z: '20', w: '30%' },
+      { offset: '55%', image: '/images/home_board_image/summer.jpg', hint: 'fashion clothing fabric', z: '10', w: '30%' },
     ]
   },
 ];
@@ -86,7 +86,7 @@ export default function HomePage() {
 
   const featuredProducts = mockProducts.slice(0, 8);
   const newArrivals = [...mockProducts].reverse().slice(0, 8);
-  const featuredCategories = mockCategories.slice(0, 4);
+  const featuredCategories = mockCategories.slice(0, 12);
   const blogHighlights = mockArticles.slice(0, 2);
 
   return (
@@ -132,13 +132,14 @@ export default function HomePage() {
                       </div>
                     ))}
                     {/* Main Shoe Image */}
-                    <div className="absolute right-[-10%] sm:right-[-5%] md:right-[-20%] lg:right-[-25%] top-1/2 transform -translate-y-1/2 z-30 w-[50%] sm:w-[45%] md:w-[250px] lg:w-[300px] xl:w-[380px]">
+                    {/* Main Shoe Image - Right Aligned & Smaller */}
+                    <div className="absolute right-[-80] top-1/2 transform -translate-y-1/2 z-30 w-[30%] min-w-[150px] max-w-[220px]">
                       <Image
                         key={activeSlide.mainImage} 
                         src={activeSlide.mainImage}
                         alt="Featured Shoe"
-                        width={600}
-                        height={400}
+                        width={300}
+                        height={200}
                         className="object-contain"
                         data-ai-hint={activeSlide.mainImageHint}
                         priority={currentSlide === 0} 

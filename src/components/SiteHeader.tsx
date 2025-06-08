@@ -23,9 +23,9 @@ export default function SiteHeader() {
   const mainNavLinks = [
     { href: '/', label: 'Home' },
     { href: '/shoe-store', label: 'Shoe Store' },
-    { href: '/help', label: 'Help Center' },
   ];
 
+  // Define these first
   const productCategories = mockCategories.slice(0, 3).map(cat => ({
     href: `/search?category=${cat.id}`,
     label: cat.name,
@@ -35,6 +35,25 @@ export default function SiteHeader() {
     href: `/blog/${article.slug}`,
     label: article.title,
   }));
+
+  // Now use them in dynamicNavLinks
+  const dynamicNavLinks = [
+    {
+      type: 'dropdown',
+      label: 'Products',
+      href: '/search',
+      subLinks: productCategories, // Now defined
+      allLink: { href: '/search', label: 'All Products' }
+    },
+    {
+      type: 'dropdown',
+      label: 'Blog',
+      href: '/blog',
+      subLinks: blogHighlights, // Now defined
+      allLink: { href: '/blog', label: 'All Articles' }
+    },
+    { type: 'link', href: '/help', label: 'Help Center' }, // Help Center now at the end
+  ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -96,6 +115,13 @@ export default function SiteHeader() {
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
+                 {/* Help Center in mobile menu */}
+                 <Link
+                    href="/help"
+                    className="block py-3 transition-colors hover:text-primary text-base font-medium rounded-md hover:bg-muted px-2"
+                  >
+                    Help Center
+                  </Link>
               </nav>
 
               {/* Mobile Menu: Actions */}
@@ -136,40 +162,43 @@ export default function SiteHeader() {
               {link.label}
             </Link>
           ))}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="px-3 py-2 text-sm font-medium hover:text-primary data-[state=open]:text-primary data-[state=open]:bg-muted">
-                Products <ChevronDown className="ml-1 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem asChild>
-                <Link href="/search">All Products</Link>
-              </DropdownMenuItem>
-              {productCategories.map(cat => (
-                <DropdownMenuItem key={cat.label} asChild>
-                  <Link href={cat.href}>{cat.label}</Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="px-3 py-2 text-sm font-medium hover:text-primary data-[state=open]:text-primary data-[state=open]:bg-muted">
-                Blog <ChevronDown className="ml-1 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem asChild>
-                <Link href="/blog">All Articles</Link>
-              </DropdownMenuItem>
-              {blogHighlights.map(article => (
-                <DropdownMenuItem key={article.label} asChild>
-                  <Link href={article.href}>{article.label}</Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {dynamicNavLinks.map((item) => {
+            if (item.type === 'dropdown' && item.subLinks) {
+              return (
+                <DropdownMenu key={item.label}>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="px-3 py-2 text-sm font-medium hover:text-primary data-[state=open]:text-primary data-[state=open]:bg-muted">
+                      {item.label} <ChevronDown className="ml-1 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    {item.allLink && (
+                      <DropdownMenuItem asChild>
+                        <Link href={item.allLink.href}>{item.allLink.label}</Link>
+                      </DropdownMenuItem>
+                    )}
+                    {item.subLinks.map(subLink => (
+                      <DropdownMenuItem key={subLink.label} asChild>
+                        <Link href={subLink.href}>{subLink.label}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              );
+            }
+            if (item.type === 'link') {
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="px-3 py-2 transition-colors hover:text-primary rounded-md flex items-center"
+                >
+                  {item.label}
+                </Link>
+              );
+            }
+            return null;
+          })}
         </nav>
 
         {/* Right: Search, Cart, Account */}

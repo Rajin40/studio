@@ -66,7 +66,7 @@ export const mockCategories: Category[] = [
     name: 'Electronics',
     slug: 'electronics',
     description: 'Gadgets, devices, and more.',
-    imageUrl: '/images/products/electronics_accessories/electronics.png',
+    imageUrl: '/images/Shop_by_Category/electronics.jpg',
     aiHint: 'tech gadgets'
   },
   {
@@ -74,24 +74,24 @@ export const mockCategories: Category[] = [
     name: 'Fashion',
     slug: 'fashion',
     description: 'Latest trends in apparel and accessories.',
-    imageUrl: 'https://placehold.co/400x300.png',
+    imageUrl: '/images/Shop_by_Category/hude.jpg',
     aiHint: 'stylish clothing'
   },
   {
-    id: 'home-decor',
-    name: 'Home Decor',
-    slug: 'home-decor',
+    id: 'shoes',
+    name: 'Shoes',
+    slug: 'shoes',
     description: 'Furnishings and decor for your home.',
-    imageUrl: 'https://placehold.co/400x300.png',
+    imageUrl: '/images/Shop_by_Category/shoe.jpg',
     aiHint: 'modern interior',
     parentCategoryId: 'home-garden'
   },
   {
-    id: 'books',
-    name: 'Books',
+    id: 'watch',
+    name: 'Watch',
     slug: 'books',
     description: 'A wide range of books for all ages.',
-    imageUrl: 'https://placehold.co/400x300.png',
+    imageUrl: '/images/Shop_by_Category/watch.jpg',
     aiHint: 'library books'
   },
   {
@@ -154,6 +154,70 @@ export const mockCategories: Category[] = [
     imageUrl: 'https://placehold.co/400x300.png',
     aiHint: 'running sport shoes'
   },
+  {
+    id: 'sports-outdoors',
+    name: 'Sports & Outdoors',
+    slug: 'sports-outdoors',
+    description: 'Equipment and gear for sports and outdoor activities.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'sports equipment outdoor gear'
+  },
+  {
+    id: 'beauty',
+    name: 'Beauty',
+    slug: 'beauty',
+    description: 'Cosmetics, skincare, and beauty products.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'makeup skincare beauty'
+  },
+  {
+    id: 'toys-games',
+    name: 'Toys & Games',
+    slug: 'toys-games',
+    description: 'Fun for all ages with our toy and game selection.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'toys board games'
+  },
+  {
+    id: 'pet-supplies',
+    name: 'Pet Supplies',
+    slug: 'pet-supplies',
+    description: 'Everything for your furry friends.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'pet dog cat supplies'
+  },
+  {
+    id: 'automotive',
+    name: 'Automotive',
+    slug: 'automotive',
+    description: 'Car accessories and maintenance products.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'car accessories auto parts'
+  },
+  {
+    id: 'office',
+    name: 'Office Supplies',
+    slug: 'office-supplies',
+    description: 'Products for your home or business office.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'office stationery supplies'
+  },
+  {
+    id: 'jewelry',
+    name: 'Jewelry',
+    slug: 'jewelry',
+    description: 'Beautiful jewelry pieces for every occasion.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'jewelry accessories'
+  },
+  {
+    id: 'health',
+    name: 'Health & Wellness',
+    slug: 'health-wellness',
+    description: 'Products for your health and wellbeing.',
+    imageUrl: 'https://placehold.co/400x300.png',
+    aiHint: 'health wellness supplements'
+  }
 ];
 
 export const mockProducts: Product[] = [
