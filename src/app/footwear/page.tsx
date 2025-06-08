@@ -36,8 +36,6 @@ export default function FootwearPage() {
     description: "All kinds of shoes for every occasion.",
     mainImageUrl: "https://placehold.co/700x450.png", // Placeholder for the main red shoe
     mainImageAiHint: "red woven sneaker modern",
-    sideImageUrl: "https://placehold.co/300x450.png", // Placeholder for the shoe peeking from right
-    sideImageAiHint: "white sneaker detail",
     buttonText: "VIEW PRODUCT",
   };
 
@@ -89,19 +87,6 @@ export default function FootwearPage() {
             </div>
           </div>
         </Container>
-        {/* Side Peeking Image - visual only */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[150px] h-[300px] sm:w-[200px] sm:h-[400px] md:w-[250px] md:h-[500px] opacity-50 md:opacity-100 z-0 animate-slideInRightSlightlyDelayed">
-            <div className="relative w-full h-full">
-                 <Image
-                    src={heroData.sideImageUrl}
-                    alt="Side shoe detail"
-                    fill
-                    style={{ objectFit: "contain" }}
-                    data-ai-hint={heroData.sideImageAiHint}
-                    className="transform scale-x-[-1]" // Flip if needed
-                />
-            </div>
-        </div>
       </section>
 
       {/* Product Grid Section */}
@@ -126,13 +111,8 @@ export default function FootwearPage() {
           from { opacity: 0; transform: translateX(50px); }
           to { opacity: 1; transform: translateX(0); }
         }
-        @keyframes slideInRightSlightlyDelayed {
-          from { opacity: 0; transform: translateX(30px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
         .animate-fadeIn { animation: fadeIn 0.8s ease-out forwards; }
         .animate-slideInRight { animation: slideInRight 0.8s ease-out forwards; }
-        .animate-slideInRightSlightlyDelayed { animation: slideInRightSlightlyDelayed 1s ease-out forwards; }
       `}</style>
     </div>
   );
