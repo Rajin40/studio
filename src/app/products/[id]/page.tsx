@@ -147,10 +147,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
       return <Container className="py-12 text-center">Loading images...</Container>;
   }
 
-
-  const allImages = [product.imageUrl, ...(product.images || [])].filter(Boolean) as string[];
-  const displayThumbnails = Array.from(new Set(allImages)).slice(0, 5);
-
   return (
     <Container className="py-8 md:py-12">
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
@@ -177,31 +173,7 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
                    </div>
               )}
             </div>
-            {displayThumbnails.length > 1 && (
-              <div className={`grid grid-cols-${Math.min(displayThumbnails.length, 5)} gap-2 sm:gap-3`}>
-                {displayThumbnails.map((img, idx) => (
-                  <div 
-                    key={idx} 
-                    className={`aspect-square relative w-full rounded-md overflow-hidden border-2 cursor-pointer transition-all duration-150 ease-in-out
-                                ${selectedImageUrl === img ? 'border-primary shadow-md scale-105' : 'border-border hover:border-muted-foreground/50'}`}
-                    onClick={() => setSelectedImageUrl(img)}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`View image ${idx + 1}`}
-                    onKeyDown={(e) => e.key === 'Enter' && setSelectedImageUrl(img)}
-                  >
-                    <Image 
-                      src={img} 
-                      alt={`${product.name} thumbnail ${idx + 1}`} 
-                      fill 
-                      style={{ objectFit: "cover" }} 
-                      data-ai-hint={product.aiHint || `thumbnail ${idx + 1}`} 
-                      sizes="10vw"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+            {/* Thumbnail images section removed */}
           </div>
         </div>
 
@@ -375,3 +347,4 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
 //     description: product.description.substring(0, 160),
 //   };
 // }
+
