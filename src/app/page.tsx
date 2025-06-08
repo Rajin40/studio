@@ -10,157 +10,90 @@ import ArticleCard from '@/components/ArticleCard';
 import { TrustBadgesSection } from '@/components/TrustBadge';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import { mockProducts, mockCategories, mockArticles } from '@/lib/data';
-import { ChevronRight, ArrowUpRight, ChevronLeft } from 'lucide-react';
-import { useState } from 'react';
+import { ChevronRight, ArrowUpRight } from 'lucide-react';
+// Removed useState as carousel is no longer used
 
-const slides = [
-  {
-    mainImage: "https://placehold.co/600x400.png?slide=1main",
-    mainImageHint: "yellow sneaker",
-    stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=1strip1', hint: 'shoe detail texture', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=1strip2', hint: 'denim fashion style', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=1strip3', hint: 'fashion clothing fabric', z: '10', w: '30%' },
-    ]
-  },
-  {
-    mainImage: "https://placehold.co/600x400.png?slide=2main",
-    mainImageHint: "running shoe",
-     stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=2strip1', hint: 'sport fabric weave', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=2strip2', hint: 'active lifestyle', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=2strip3', hint: 'modern footwear', z: '10', w: '30%' },
-    ]
-  },
-  {
-    mainImage: "https://placehold.co/600x400.png?slide=3main",
-    mainImageHint: "classic sneaker",
-    stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=3strip1', hint: 'leather texture', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=3strip2', hint: 'street style', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=3strip3', hint: 'casual fashion', z: '10', w: '30%' },
-    ]
-  },
-  {
-    mainImage: "https://placehold.co/600x400.png?slide=4main",
-    mainImageHint: "vintage sneaker",
-    stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=4strip1', hint: 'retro design', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=4strip2', hint: 'tennis style', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=4strip3', hint: 'white leather', z: '10', w: '30%' },
-    ]
-  },
-  {
-    mainImage: "https://placehold.co/600x400.png?slide=5main",
-    mainImageHint: "lifestyle sneaker",
-    stripImages: [
-      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=5strip1', hint: 'suede mesh', z: '10', w: '30%' },
-      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=5strip2', hint: 'comfort shoe', z: '20', w: '30%' },
-      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=5strip3', hint: 'everyday wear', z: '10', w: '30%' },
-    ]
-  },
-];
-const totalSlides = slides.length;
-
+// Removed slides array and totalSlides constant
 
 export default function HomePage() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const handleNext = () => {
-    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
-  };
-
-  const handlePrev = () => {
-    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
-  };
-
-  const activeSlide = slides[currentSlide];
+  // Removed currentSlide, handleNext, handlePrev, activeSlide as carousel is removed
 
   const featuredProducts = mockProducts.slice(0, 8);
   const newArrivals = [...mockProducts].reverse().slice(0, 8);
   const featuredCategories = mockCategories.slice(0, 4);
   const blogHighlights = mockArticles.slice(0, 2);
 
+  const heroShoeImages = [
+    {
+      href: "/sneakers",
+      src: "https://placehold.co/400x300.png?text=Sneakers",
+      alt: "Stylish Sneakers",
+      aiHint: "sneakers lifestyle",
+      label: "Shop Sneakers"
+    },
+    {
+      href: "/formal-shoes",
+      src: "https://placehold.co/400x300.png?text=Formal+Shoes",
+      alt: "Elegant Formal Shoes",
+      aiHint: "formal shoes leather",
+      label: "Shop Formal Shoes"
+    },
+    {
+      href: "/running-shoes",
+      src: "https://placehold.co/400x300.png?text=Running+Shoes",
+      alt: "Performance Running Shoes",
+      aiHint: "running shoes sport",
+      label: "Shop Running Shoes"
+    }
+  ];
+
   return (
     <div className="bg-background">
-      {/* Hero Banner */}
+      {/* Hero Banner - Simplified */}
       <section className="bg-emerald-800 text-white relative overflow-hidden min-h-[calc(100vh-4rem)] md:min-h-screen flex items-center justify-center">
         <Container className="relative z-10 h-full py-12 md:py-16 w-full">
-          <div className="flex flex-col h-full justify-between min-h-[75vh] md:min-h-[80vh]">
+          <div className="flex flex-col h-full justify-center min-h-[75vh] md:min-h-[80vh] items-center text-center">
             
-            <div className="grid grid-cols-12 gap-x-4 items-center flex-grow">
-              {/* Left Vertical Elements */}
-              <div className="col-span-1 hidden md:flex flex-col items-center justify-between self-stretch py-8">
-                {/* Brand name removed here */}
-                <div className="flex-grow"></div> {/* Add a spacer to push controls down if brand was the only top element */}
-                <div className="flex flex-col items-center space-y-3 text-xs opacity-75">
-                  <span>{currentSlide + 1} / {totalSlides}</span>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white" onClick={handlePrev}><ChevronLeft className="h-4 w-4"/></Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white" onClick={handleNext}><ChevronRight className="h-4 w-4"/></Button>
-                  <div className="flex flex-col space-y-1 pt-2">
-                    {slides.map((_, index) => (
-                       <span key={index} className={`h-1.5 w-1.5 rounded-full ${currentSlide === index ? 'bg-white' : 'bg-white/50'}`}></span>
-                    ))}
-                  </div>
-                </div>
+            {/* Main Content Area - Title and New Images */}
+            <div className="relative flex flex-col justify-center items-center text-center h-full py-10">
+              {/* Text Content */}
+              <div className="relative z-20">
+                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold tracking-tighter leading-none drop-shadow-md">
+                  DESIGN
+                </h1>
+                <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-none mt-[-0.1em] sm:mt-[-0.15em] drop-shadow-md">
+                  & HIGH QUALITY
+                </p>
               </div>
 
-              {/* Main Content Area - Title and Images */}
-              <div className="col-span-12 md:col-span-11 relative flex flex-col justify-center items-center text-center md:items-start md:text-left h-full">
-                {/* Image Composition */}
-                <div className="absolute inset-0 flex justify-center items-center opacity-30 md:opacity-100">
-                  <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-2xl h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
-                    {activeSlide.stripImages.map((strip, index) => (
-                      <div
-                        key={index}
-                        className="absolute top-0 h-full transform -skew-x-[15deg] overflow-hidden"
-                        style={{ left: strip.offset, zIndex: parseInt(strip.z), width: strip.w }}
-                      >
-                        <div
-                          className="absolute inset-[-15px] transform skew-x-[15deg] bg-cover bg-center"
-                          style={{ backgroundImage: `url(${strip.image})` }}
-                          data-ai-hint={strip.hint}
-                        ></div>
-                      </div>
-                    ))}
-                    {/* Main Shoe Image */}
-                    <div className="absolute right-[-10%] sm:right-[-5%] md:right-[-20%] lg:right-[-25%] top-1/2 transform -translate-y-1/2 z-30 w-[50%] sm:w-[45%] md:w-[250px] lg:w-[300px] xl:w-[380px]">
+              {/* Three New Images Below Text */}
+              <div className="mt-10 sm:mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-4xl w-full px-4">
+                {heroShoeImages.map((shoe, index) => (
+                  <Link key={index} href={shoe.href} className="group block">
+                    <div className="aspect-square relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
                       <Image
-                        key={activeSlide.mainImage} 
-                        src={activeSlide.mainImage}
-                        alt="Featured Shoe"
-                        width={600}
-                        height={400}
-                        className="object-contain"
-                        data-ai-hint={activeSlide.mainImageHint}
-                        priority={currentSlide === 0} 
+                        src={shoe.src}
+                        alt={shoe.alt}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        data-ai-hint={shoe.aiHint}
+                        className="group-hover:scale-105 transition-transform duration-300"
+                        sizes="(max-width: 640px) 90vw, (max-width: 1024px) 30vw, 250px"
                       />
+                      <div className="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-all flex items-center justify-center p-2">
+                        <span className="text-sm sm:text-base font-semibold text-white text-center">{shoe.label}</span>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                
-                {/* Text Content */}
-                <div className="relative z-20 mt-8 md:mt-0">
-                  <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold tracking-tighter leading-none drop-shadow-md">
-                    DESIGN
-                  </h1>
-                  <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-none mt-[-0.1em] sm:mt-[-0.15em] drop-shadow-md">
-                    & HIGH QUALITY
-                  </p>
-                </div>
+                  </Link>
+                ))}
               </div>
             </div>
 
             {/* Bottom Bar */}
-            <div className="grid grid-cols-12 gap-x-4 items-center pt-8 md:pt-4 pb-4">
-              <div className="col-span-1 hidden md:block"></div> {/* Spacer for left nav */}
-              <div className="col-span-12 md:col-span-11 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-                {/* Product name removed here */}
-                <div className="flex-grow"></div> {/* Add a spacer if product name was the only left element */}
-                <Link href="/search" className="flex items-center text-xs sm:text-sm hover:underline hover:opacity-100 opacity-75">
-                  View Products <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                </Link>
-              </div>
+            <div className="w-full flex justify-center items-center pt-8 md:pt-12 pb-4">
+              <Link href="/search" className="flex items-center text-xs sm:text-sm hover:underline hover:opacity-100 opacity-75">
+                View All Products <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              </Link>
             </div>
           </div>
         </Container>
@@ -177,8 +110,8 @@ export default function HomePage() {
                   <Image
                     src={category.imageUrl}
                     alt={category.name}
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    style={{ objectFit: "cover" }}
                     data-ai-hint={category.aiHint}
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-50 transition-all">
@@ -262,3 +195,4 @@ export default function HomePage() {
     </div>
   );
 }
+
