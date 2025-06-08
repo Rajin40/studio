@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect, useActionState, use } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data';
 import { mockProducts, mockCategories } from '@/lib/data'; // Import mockCategories
@@ -10,13 +9,14 @@ import { Button } from '@/components/ui/button';
 import { Star, ShoppingCart, Heart } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from '@/components/ui/badge'; // Keep Badge for stock status
+import { Badge } from '@/components/ui/badge';
 import Container from '@/components/Container';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ProductImageGallery from '@/components/ProductImageGallery'; // Import the new component
 
 async function getProduct(id: string): Promise<Product | undefined> {
   return mockProducts.find(p => p.id === id);
@@ -24,21 +24,18 @@ async function getProduct(id: string): Promise<Product | undefined> {
 
 async function getRelatedShoeProducts(currentProductId: string, currentProductCategory: string, count: number = 4): Promise<Product[]> {
   const allProducts = mockProducts;
-  // Using category names from mockCategories that are children of 'footwear' or 'footwear' itself
   const shoeCategoryNames = mockCategories
     .filter(cat => cat.id === 'footwear' || cat.parentCategoryId === 'footwear')
     .map(cat => cat.name);
 
   let recommendedProductsList: Product[] = [];
 
-  // Prioritize shoes from the same specific sub-category if it's a shoe category
   if (currentProductCategory && shoeCategoryNames.includes(currentProductCategory)) {
     recommendedProductsList = allProducts.filter(
       p => p.id !== currentProductId && p.category === currentProductCategory && shoeCategoryNames.includes(p.category)
     );
   }
 
-  // If not enough, get from other shoe categories
   if (recommendedProductsList.length < count) {
     const existingIds = new Set(recommendedProductsList.map(p => p.id));
     existingIds.add(currentProductId);
@@ -50,7 +47,6 @@ async function getRelatedShoeProducts(currentProductId: string, currentProductCa
     recommendedProductsList.push(...otherShoeProducts.slice(0, needed));
   }
   
-  // Fallback: if still not enough shoe products, fill with any other products (less ideal for a shoe page)
   if (recommendedProductsList.length < count) {
     const existingIds = new Set(recommendedProductsList.map(p => p.id));
     existingIds.add(currentProductId);
@@ -95,13 +91,31 @@ async function submitReviewAction(prevState: SubmitReviewResponse | null, formDa
   return { success: true, message: "Review submitted successfully! It will be reviewed shortly." };
 }
 
+const getImageGallerySources = (product: Product | null): string[] => {
+  if (!product) return [];
+  const sources: string[] = [];
+  
+  if (typeof product.imageUrl === 'string' && product.imageUrl.trim() !== '') {
+    sources.push(product.imageUrl);
+  }
+  
+  if (Array.isArray(product.images)) {
+    product.images.forEach(img => {
+      if (typeof img === 'string' && img.trim() !== '') {
+        sources.push(img);
+      }
+    });
+  }
+  return Array.from(new Set(sources));
+};
+
 
 export default function ShoeProductPage({ params: paramsFromProps }: { params: { id: string } }) {
   const params = use(paramsFromProps as any); 
 
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
-  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -109,19 +123,19 @@ export default function ShoeProductPage({ params: paramsFromProps }: { params: {
   const [reviewFormState, reviewFormAction] = useActionState(submitReviewAction, reviewInitialState);
   const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
 
-  const availableSizes = ['38', '40', '42', '44'];
+  const availableSizes = ['38', '40', '42', '44', '46']; // Example sizes
 
   useEffect(() => {
     async function loadData(id: string) { 
         const fetchedProduct = await getProduct(id);
         if (fetchedProduct) {
           setProduct(fetchedProduct);
-          setSelectedImageUrl(fetchedProduct.imageUrl); 
+          setGalleryImages(getImageGallerySources(fetchedProduct));
           const fetchedRelatedProducts = await getRelatedShoeProducts(id, fetchedProduct.category, 4);
           setRelatedProducts(fetchedRelatedProducts);
         } else {
           setProduct(null);
-          setSelectedImageUrl(null);
+          setGalleryImages([]);
         }
     }
     if (params?.id) {
@@ -153,43 +167,32 @@ export default function ShoeProductPage({ params: paramsFromProps }: { params: {
     return <Container className="py-12 text-center">Loading shoe details or shoe not found...</Container>;
   }
   
-  if (product && !selectedImageUrl) {
-    setSelectedImageUrl(product.imageUrl); 
+  if (product && galleryImages.length === 0 && product.imageUrl) {
+     setGalleryImages([product.imageUrl]);
   }
-  if (!selectedImageUrl && product) { 
+
+  if (galleryImages.length === 0) { 
       return <Container className="py-12 text-center">Loading images...</Container>;
   }
+
 
   return (
     <Container className="py-8 md:py-12">
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-        {/* Left Column: Image Gallery - SHOE SPECIFIC STYLE */}
-        <div className="space-y-4">
-          <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden shadow-xl bg-gradient-to-br from-slate-50 to-slate-200 dark:from-slate-800 dark:to-slate-900 p-2 sm:p-4 md:p-6">
-            <div className="relative h-full w-full flex items-center justify-center">
-              {selectedImageUrl && (
-                <Image
-                  src={selectedImageUrl}
-                  alt={product.name}
-                  width={700} 
-                  height={525} 
-                  style={{ objectFit: "contain", maxHeight: '100%', maxWidth: '100%' }}
-                  className="transform transition-transform duration-300 ease-in-out hover:scale-105"
-                  data-ai-hint={product.aiHint || 'shoe image'}
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
-                />
-              )}
+        {/* Left Column: Image Gallery */}
+        <div>
+          <ProductImageGallery 
+            images={galleryImages}
+            productName={product.name}
+            aiHint={product.aiHint}
+          />
+          {product.isFeatured && ( 
+            <div className="mt-4">
+                <span className="bg-white text-black text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-md shadow-lg">
+                    New Arrival
+                </span>
             </div>
-            {product.isFeatured && ( 
-                 <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10">
-                    <span className="bg-white text-black text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-md shadow-lg">
-                        New Arrival
-                    </span>
-                 </div>
-            )}
-          </div>
-          {/* Thumbnail images section removed */}
+           )}
         </div>
 
         {/* Right Column: Product Information */}
@@ -248,6 +251,7 @@ export default function ShoeProductPage({ params: paramsFromProps }: { params: {
                   variant={selectedSize === size ? 'default' : 'outline'}
                   onClick={() => setSelectedSize(size)}
                   className="px-4 py-2 rounded-md"
+                  size="sm"
                 >
                   {size}
                 </Button>
@@ -351,4 +355,3 @@ export default function ShoeProductPage({ params: paramsFromProps }: { params: {
     </Container>
   );
 }
-

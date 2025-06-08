@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect, useActionState, use } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ProductImageGallery from '@/components/ProductImageGallery'; // Import the new component
 
 // Helper function to get product (replace with actual data fetching)
 async function getProduct(id: string): Promise<Product | undefined> {
@@ -84,13 +84,31 @@ async function submitReviewAction(prevState: SubmitReviewResponse | null, formDa
   return { success: true, message: "Review submitted successfully! It will be reviewed shortly." };
 }
 
+const getImageGallerySources = (product: Product | null): string[] => {
+  if (!product) return [];
+  const sources: string[] = [];
+  
+  if (typeof product.imageUrl === 'string' && product.imageUrl.trim() !== '') {
+    sources.push(product.imageUrl);
+  }
+  
+  if (Array.isArray(product.images)) {
+    product.images.forEach(img => {
+      if (typeof img === 'string' && img.trim() !== '') {
+        sources.push(img);
+      }
+    });
+  }
+  return Array.from(new Set(sources));
+};
+
 
 export default function ProductPage({ params: paramsFromProps }: { params: { id: string } }) {
   const resolvedParams = use(paramsFromProps as any); 
 
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
-  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const { toast } = useToast();
 
   const reviewInitialState: SubmitReviewResponse | null = null;
@@ -102,12 +120,12 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         const fetchedProduct = await getProduct(id);
         if (fetchedProduct) {
           setProduct(fetchedProduct);
-          setSelectedImageUrl(fetchedProduct.imageUrl); 
+          setGalleryImages(getImageGallerySources(fetchedProduct));
           const fetchedRelatedProducts = await getRelatedProducts(id, fetchedProduct.category, 4);
           setRelatedProducts(fetchedRelatedProducts);
         } else {
           setProduct(null);
-          setSelectedImageUrl(null);
+          setGalleryImages([]);
         }
     }
     if (resolvedParams?.id) {
@@ -123,7 +141,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
           description: reviewFormState.message,
         });
         setIsReviewFormVisible(false);
-        // Consider resetting form or refetching reviews if they were displayed
       } else {
         if (!reviewFormState.errors || Object.keys(reviewFormState.errors).length === 0) {
           toast({
@@ -140,41 +157,33 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
     return <Container className="py-12 text-center">Loading product details or product not found...</Container>;
   }
   
-  if (product && !selectedImageUrl) {
-    setSelectedImageUrl(product.imageUrl); 
+  if (product && galleryImages.length === 0 && product.imageUrl) {
+     // Fallback if getImageGallerySources somehow returned empty but imageUrl exists
+     setGalleryImages([product.imageUrl]);
   }
-  if (!selectedImageUrl && product) { 
+  
+  if (galleryImages.length === 0) { 
       return <Container className="py-12 text-center">Loading images...</Container>;
   }
+
 
   return (
     <Container className="py-8 md:py-12">
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
         {/* Left Column: Image Gallery */}
         <div>
-          <div className="space-y-4">
-            <div className="aspect-square relative w-full rounded-lg overflow-hidden shadow-lg bg-muted/30">
-              {selectedImageUrl && (
-                <Image
-                  src={selectedImageUrl}
-                  alt={product.name}
-                  fill
-                  style={{ objectFit: "contain" }}
-                  data-ai-hint={product.aiHint || 'product image'}
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              )}
-              {product.isFeatured && ( 
-                   <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-                      <Badge variant="default" className="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm px-2.5 py-1 sm:px-3 shadow-md">
-                          New Arrival
-                      </Badge>
-                   </div>
-              )}
-            </div>
-            {/* Thumbnail images section removed */}
-          </div>
+          <ProductImageGallery 
+            images={galleryImages}
+            productName={product.name}
+            aiHint={product.aiHint}
+          />
+           {product.isFeatured && ( 
+             <div className="mt-4">
+                <Badge variant="default" className="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm px-2.5 py-1 sm:px-3 shadow-md">
+                    New Arrival
+                </Badge>
+             </div>
+           )}
         </div>
 
         {/* Right Column: Product Information */}
@@ -263,7 +272,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         </div>
       </div>
 
-      {/* You Might Also Like Section - Full width */}
       {relatedProducts.length > 0 && (
         <section className="py-12 mt-12 border-t">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-8 text-center">You Might Also Like</h2>
@@ -275,7 +283,6 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
         </section>
       )}
 
-      {/* Customer Reviews Section - Full width */}
       <section className="py-12 mt-12 border-t">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline mb-6">Customer Reviews</h2>
         <div className="p-6 bg-card rounded-lg shadow">
@@ -322,29 +329,3 @@ export default function ProductPage({ params: paramsFromProps }: { params: { id:
     </Container>
   );
 }
-
-// The `generateStaticParams` function is used by Next.js to pre-render
-// pages at build time if you are using static generation for dynamic routes.
-// export async function generateStaticParams() {
-//   const data = await import('@/lib/data');
-//   return data.mockProducts.map(product => ({
-//     id: product.id,
-//   }));
-// }
-
-// Metadata generation is typically done in Server Components.
-// Since this is a Client Component, metadata would be handled differently
-// or by a parent Server Component.
-// export async function generateMetadata({ params }: { params: { id: string } }) {
-//   const product = await getProduct(params.id);
-//   if (!product) {
-//     return {
-//       title: "Product Not Found",
-//     };
-//   }
-//   return {
-//     title: product.name,
-//     description: product.description.substring(0, 160),
-//   };
-// }
-
