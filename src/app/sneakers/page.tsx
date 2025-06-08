@@ -32,7 +32,7 @@ export default function SneakersPage() {
     title: "Sneakers",
     description: "Comfortable and stylish sneakers for everyday wear.",
     buttonText: "Explore Sneakers",
-    imageUrl: "https://placehold.co/600x450.png",
+    imageUrl: "/images/shoe_store/Footwear/Sneakers.png",
     imageAiHint: "orange sneaker dynamic",
   };
 
@@ -70,7 +70,7 @@ export default function SneakersPage() {
 
             {/* Right Column: Image */}
             <div className="relative w-full h-[300px] sm:h-[350px] md:h-[450px] flex items-center justify-center">
-              <div className="relative w-full max-w-lg aspect-[4/3] animate-float">
+              <div className="relative w-full max-w-lg aspect-[7/9] animate-float">
                 <Image
                   src={heroContent.imageUrl}
                   alt={heroContent.title}

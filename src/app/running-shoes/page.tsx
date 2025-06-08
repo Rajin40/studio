@@ -27,17 +27,17 @@ const getProductsForStyle = (styleName: string): Product[] => {
 
 const heroSlidesData = [
   {
-    imageUrl: "https://storage.googleapis.com/idx-dev-01-ai-project-image-model-output/user_1UqXoDRiFhM8FqL6a6TcgOl7g5I2/1720772449799-3.png",
+    imageUrl: "/images/shoe_store/running/running.jpeg",
     aiHint: "white sneaker laces",
     alt: "White sneaker with untied laces"
   },
   {
-    imageUrl: "https://placehold.co/700x500.png?text=Runners+Action&style=action",
+    imageUrl: "/images/shoe_store/running/running1.jpeg",
     aiHint: "action shot running",
     alt: "Dynamic Running Shoe Model - Action Shot"
   },
   {
-    imageUrl: "https://placehold.co/700x500.png?text=Runners+Pair&style=sleek",
+    imageUrl: "/images/shoe_store/running/running2.jpeg",
     aiHint: "sleek running shoes",
     alt: "Pair of Sleek Running Shoes"
   }
@@ -99,7 +99,7 @@ export default function RunningShoesPage() {
 
         {/* Right Image Area (with its own background for the blue tint) */}
         <div className="w-full md:w-7/12 bg-sky-50 dark:bg-sky-900/20 flex items-center justify-center p-6 sm:p-8 order-1 md:order-2 relative min-h-[300px] xxs:min-h-[350px] xs:min-h-[400px] sm:min-h-[450px] md:min-h-full">
-          <div className="relative w-full max-w-md sm:max-w-lg lg:max-w-xl xl:max-w-2xl aspect-[4/3]">
+          <div className="relative w-full max-w-md sm:max-w-lg lg:max-w-xl xl:max-w-2xl aspect-[7/9]">
             {heroSlidesData.map((slide, index) => (
               <div
                 key={slide.imageUrl} // Unique key for each image div

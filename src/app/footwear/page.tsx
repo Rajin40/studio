@@ -34,7 +34,7 @@ export default function FootwearPage() {
     titlePrimary: "Footwear",
     titleSecondary: "Shoes",
     description: "All kinds of shoes for every occasion.",
-    mainImageUrl: "https://placehold.co/700x450.png", // Placeholder for the main red shoe
+    mainImageUrl: "/images/shoe_store/Footwear/foot.png", // Placeholder for the main red shoe
     mainImageAiHint: "red woven sneaker modern",
     buttonText: "VIEW PRODUCT",
   };
@@ -67,9 +67,9 @@ export default function FootwearPage() {
             </div>
 
             {/* Right Column: Image Composition */}
-            <div className="relative w-full h-[300px] sm:h-[400px] md:h-auto md:min-h-[calc(100vh-10rem)] flex items-center justify-center order-1 md:order-2 animate-slideInRight">
+            <div className="flex justify-center items-center order-1 md:order-2 p-4 md:p-0">
               {/* Main Shoe Image */}
-              <div className="relative w-[70%] sm:w-[60%] md:w-[80%] max-w-xl aspect-[7/5] z-10">
+              <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl aspect-[7/9]">
                 <Image
                   src={heroData.mainImageUrl}
                   alt="Featured Shoe"

@@ -39,21 +39,21 @@ export default function FormalShoesPage() {
 
   const heroSlidesData = [
     {
-      imageUrl: categoryDetails?.imageUrl || "https://placehold.co/600x450.png?text=Elegant+Footwear",
+      imageUrl: "/images/shoe_store/Formal/formal.png",
       aiHint: categoryDetails?.aiHint || "formal shoes business",
       preTitle: "Style Destination",
       title: "Formal Shoes",
       description: categoryDetails?.description || "Discover elegance and sophistication with our premium formal shoe collection.",
     },
     {
-      imageUrl: "https://placehold.co/600x450.png?text=Classic+Oxfords&style=formal1",
+      imageUrl: "/images/shoe_store/Formal/formal1.jpeg",
       aiHint: "classic oxfords leather",
       preTitle: "Timeless Classics",
       title: "Formal Shoes",
       description: "Refined footwear for the discerning gentleman.",
     },
     {
-      imageUrl: "https://placehold.co/600x450.png?text=Elegant+Loafers&style=formal2",
+      imageUrl: "/images/shoe_store/Formal/formal2.jpeg",
       aiHint: "elegant loafers suede",
       preTitle: "Modern Sophistication",
       title: "Formal Shoes",
@@ -109,7 +109,7 @@ export default function FormalShoesPage() {
               </div>
 
               {/* Main Image */}
-              <div className="relative w-full max-w-md lg:max-w-lg aspect-[4/3] z-20 animate-slideInRight">
+              <div className="relative w-full max-w-md lg:max-w-lg aspect-[7/9] z-20 animate-slideInRight">
                 <Image
                   key={activeSlide.imageUrl} // Key change for transition
                   src={activeSlide.imageUrl}
@@ -129,7 +129,7 @@ export default function FormalShoesPage() {
             variant="ghost" 
             size="icon" 
             onClick={handlePrev} 
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 bg-white/50 hover:bg-white/80 text-foreground rounded-full shadow-md"
+            className="absolute left-2 sm:left-[-90] top-1/2 -translate-y-1/2 z-30 bg-white/50 hover:bg-white/80 text-foreground rounded-full shadow-md"
             aria-label="Previous image"
           >
             <ChevronLeft className="h-6 w-6" />

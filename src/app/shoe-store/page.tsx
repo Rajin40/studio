@@ -11,11 +11,11 @@ import NewsletterSignup from '@/components/NewsletterSignup';
 import { mockProducts, mockCategories, type Category } from '@/lib/data';
 
 const heroData = {
-  preTitle: "NEW PRODUCT",
-  title: "Cool Air Shoes",
+  preTitle: "OUR PRODUCT",
+  title: "Cool Shoes",
   buttonText: "Checkout",
   buttonLink: "/cart",
-  imageUrl: "https://placehold.co/800x600.png",
+  imageUrl: "/images/shoe_store/shoes.jpg",
   imageAlt: "Cool Air Shoes",
   imageAiHint: "yellow sneaker black",
 };
@@ -80,7 +80,7 @@ export default function ShoeStorePage() {
       {/* Featured Shoe Categories - Reverted to 4-card grid */}
       <section className="py-12 md:py-16">
         <Container>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">Shop Shoe Styles</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">Shoe Branch</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {shoeStyleCategories.map((category) => (
               <Link key={category.id} href={`/${category.slug}`} className="group block">
