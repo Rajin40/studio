@@ -22,10 +22,11 @@ const heroData = {
 };
 
 export default function ShoeStorePage() {
-  const shoeCategories = mockCategories.filter(
-    cat => cat.id === 'footwear' || // Include the parent "Footwear" category
-           (cat.parentCategoryId === 'footwear' && ['sneakers', 'formal-shoes', 'running-shoes'].includes(cat.slug)) // Include specific children
-  ).slice(0, 4); // Ensure we still only take up to 4 for this display
+  // Select specific categories for the "3 big images" section
+  const featuredStyleSlugs = ['sneakers', 'formal-shoes', 'running-shoes'];
+  const threeBigStyleCategories = mockCategories.filter(
+    cat => featuredStyleSlugs.includes(cat.slug) && cat.parentCategoryId === 'footwear'
+  );
 
   const shoeProducts = mockProducts.filter(
     product => mockCategories.find(cat => cat.name === product.category && (cat.id === 'footwear' || cat.parentCategoryId === 'footwear'))
@@ -73,24 +74,29 @@ export default function ShoeStorePage() {
         </Container>
       </section>
 
-      {/* Featured Shoe Categories */}
+      {/* Featured Shoe Categories - Redesigned for 3 Big Images */}
       <section className="py-12 md:py-16">
         <Container>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">Shop Shoe Styles</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {shoeCategories.map((category) => (
-              // Update links to point to new dedicated style pages
-              <Link key={category.id} href={`/${category.slug}`} className="group block">
-                <div className="aspect-square relative rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-shadow">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {threeBigStyleCategories.map((category) => (
+              <Link key={category.id} href={`/${category.slug}`} className="group block aspect-[3/4] sm:aspect-[4/3] md:aspect-[3/4] lg:aspect-[4/3] xl:aspect-[1/1] 2xl:aspect-[4/3]">
+                <div className="relative w-full h-full rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform group-hover:scale-105">
                   <Image
                     src={category.imageUrl}
                     alt={category.name}
                     fill
                     style={{ objectFit: "cover" }}
-                    data-ai-hint={category.aiHint || 'category image'}
+                    data-ai-hint={category.aiHint || 'shoe style image'}
+                    className="transition-transform duration-300 ease-in-out"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-50 transition-all">
-                    <h3 className="text-xl font-semibold text-white font-headline">{category.name}</h3>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent flex flex-col items-start justify-end p-6">
+                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-headline mb-1 drop-shadow-md">{category.name}</h3>
+                    {category.description && <p className="text-xs sm:text-sm text-white/90 mb-3 line-clamp-2 drop-shadow-sm">{category.description}</p>}
+                    <Button variant="outline" size="sm" className="bg-white/20 text-white border-white/40 hover:bg-white/30 backdrop-blur-sm mt-auto group-hover:bg-white/30 group-hover:border-white/60 transition-colors">
+                      Explore {category.name}
+                    </Button>
                   </div>
                 </div>
               </Link>
@@ -162,3 +168,4 @@ export default function ShoeStorePage() {
     </div>
   );
 }
+
