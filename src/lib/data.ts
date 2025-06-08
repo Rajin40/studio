@@ -66,7 +66,7 @@ export const mockCategories: Category[] = [
     name: 'Electronics',
     slug: 'electronics',
     description: 'Gadgets, devices, and more.',
-    imageUrl: 'https://placehold.co/400x300.png',
+    imageUrl: 'https://placehold.co/400x300.png', // Updated to a valid placeholder URL
     aiHint: 'tech gadgets'
   },
   {
