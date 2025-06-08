@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -11,32 +10,58 @@ import ArticleCard from '@/components/ArticleCard';
 import { TrustBadgesSection } from '@/components/TrustBadge';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import { mockProducts, mockCategories, mockArticles } from '@/lib/data';
-import { ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
+import { ChevronRight, ArrowUpRight, ChevronLeft } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 const slides = [
   {
-    mainImageUrl: "https://placehold.co/800x600.png?text=Product+Showcase+1",
-    mainImageAiHint: "modern product design",
+    mainImage: "https://placehold.co/600x400.png?slide=1main",
+    mainImageHint: "yellow sneaker",
+    stripImages: [
+      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=1strip1', hint: 'shoe detail texture', z: '10', w: '30%' },
+      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=1strip2', hint: 'denim fashion style', z: '20', w: '30%' },
+      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=1strip3', hint: 'fashion clothing fabric', z: '10', w: '30%' },
+    ]
   },
   {
-    mainImageUrl: "https://placehold.co/800x600.png?text=Product+Showcase+2",
-    mainImageAiHint: "elegant lifestyle item",
+    mainImage: "https://placehold.co/600x400.png?slide=2main",
+    mainImageHint: "running shoe",
+     stripImages: [
+      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=2strip1', hint: 'sport fabric weave', z: '10', w: '30%' },
+      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=2strip2', hint: 'active lifestyle', z: '20', w: '30%' },
+      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=2strip3', hint: 'modern footwear', z: '10', w: '30%' },
+    ]
   },
   {
-    mainImageUrl: "https://placehold.co/800x600.png?text=Product+Showcase+3",
-    mainImageAiHint: "innovative tech gadget",
+    mainImage: "https://placehold.co/600x400.png?slide=3main",
+    mainImageHint: "classic sneaker",
+    stripImages: [
+      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=3strip1', hint: 'leather texture', z: '10', w: '30%' },
+      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=3strip2', hint: 'street style', z: '20', w: '30%' },
+      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=3strip3', hint: 'casual fashion', z: '10', w: '30%' },
+    ]
   },
   {
-    mainImageUrl: "https://placehold.co/800x600.png?text=Product+Showcase+4",
-    mainImageAiHint: "stylish fashion accessory",
+    mainImage: "https://placehold.co/600x400.png?slide=4main",
+    mainImageHint: "vintage sneaker",
+    stripImages: [
+      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=4strip1', hint: 'retro design', z: '10', w: '30%' },
+      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=4strip2', hint: 'tennis style', z: '20', w: '30%' },
+      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=4strip3', hint: 'white leather', z: '10', w: '30%' },
+    ]
   },
   {
-    mainImageUrl: "https://placehold.co/800x600.png?text=Product+Showcase+5",
-    mainImageAiHint: "unique home decor",
+    mainImage: "https://placehold.co/600x400.png?slide=5main",
+    mainImageHint: "lifestyle sneaker",
+    stripImages: [
+      { offset: '5%', image: 'https://placehold.co/300x500.png?slide=5strip1', hint: 'suede mesh', z: '10', w: '30%' },
+      { offset: '30%', image: 'https://placehold.co/300x500.png?slide=5strip2', hint: 'comfort shoe', z: '20', w: '30%' },
+      { offset: '55%', image: 'https://placehold.co/300x500.png?slide=5strip3', hint: 'everyday wear', z: '10', w: '30%' },
+    ]
   },
 ];
-
 const totalSlides = slides.length;
+
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -50,13 +75,15 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const intervalId = setInterval(() => {
       handleNext();
-    }, 7000); // Change slide every 7 seconds
-    return () => clearInterval(timer);
-  }, [currentSlide]);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, [totalSlides]); // Re-run effect if totalSlides changes (though it's constant here)
 
   const activeSlide = slides[currentSlide];
+
   const featuredProducts = mockProducts.slice(0, 8);
   const newArrivals = [...mockProducts].reverse().slice(0, 8);
   const featuredCategories = mockCategories.slice(0, 4);
@@ -64,83 +91,85 @@ export default function HomePage() {
 
   return (
     <div className="bg-background">
-      {/* Hero Banner - Styled like the provided image */}
-      <section className="bg-emerald-800 text-white relative overflow-hidden min-h-screen flex items-center">
-        <Container className="relative z-10 w-full h-full flex flex-col justify-between py-8 md:py-12">
-          <div className="grid md:grid-cols-2 gap-8 items-center flex-grow">
-            {/* Left Column: Text and Navigation */}
-            <div className="flex flex-col justify-center text-center md:text-left h-full">
-              <div className="mb-auto md:mb-0"> {/* Pushes text to top, allows nav to be at bottom of this column part */}
-                <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold font-headline tracking-tight leading-none drop-shadow-md">
-                  DESIGN
-                </h1>
-                <p className="text-4xl sm:text-5xl md:text-6xl font-semibold font-headline mt-[-0.2em] sm:mt-[-0.15em] drop-shadow-md">
-                  & HIGH QUALITY
-                </p>
+      {/* Hero Banner */}
+      <section className="bg-emerald-800 text-white relative overflow-hidden min-h-[calc(100vh-4rem)] md:min-h-screen flex items-center justify-center">
+        <Container className="relative z-10 h-full py-12 md:py-16 w-full">
+          <div className="flex flex-col h-full justify-between min-h-[75vh] md:min-h-[80vh]">
+            
+            <div className="grid grid-cols-12 gap-x-4 items-center flex-grow">
+              {/* Left Vertical Elements */}
+              <div className="col-span-1 hidden md:flex flex-col items-center justify-between self-stretch py-8">
+                {/* Brand name removed here */}
+                <div className="flex-grow"></div> {/* Add a spacer to push controls down if brand was the only top element */}
+                <div className="flex flex-col items-center space-y-3 text-xs opacity-75">
+                  <span>{currentSlide + 1} / {totalSlides}</span>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white" onClick={handlePrev}><ChevronLeft className="h-4 w-4"/></Button>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white" onClick={handleNext}><ChevronRight className="h-4 w-4"/></Button>
+                  <div className="flex flex-col space-y-1 pt-2">
+                    {slides.map((_, index) => (
+                       <span key={index} className={`h-1.5 w-1.5 rounded-full ${currentSlide === index ? 'bg-white' : 'bg-white/50'}`}></span>
+                    ))}
+                  </div>
+                </div>
               </div>
-              
-              {/* Carousel Navigation Controls */}
-              <div className="mt-10 md:mt-16 space-y-3 self-center md:self-start">
-                <div className="text-sm opacity-80">
-                  <span>{String(currentSlide + 1).padStart(2, '0')}</span> / {String(totalSlides).padStart(2, '0')}
+
+              {/* Main Content Area - Title and Images */}
+              <div className="col-span-12 md:col-span-11 relative flex flex-col justify-center items-center text-center md:items-start md:text-left h-full">
+                {/* Image Composition */}
+                <div className="absolute inset-0 flex justify-center items-center opacity-30 md:opacity-100">
+                  <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-2xl h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
+                    {activeSlide.stripImages.map((strip, index) => (
+                      <div
+                        key={index}
+                        className="absolute top-0 h-full transform -skew-x-[15deg] overflow-hidden"
+                        style={{ left: strip.offset, zIndex: parseInt(strip.z), width: strip.w }}
+                      >
+                        <div
+                          className="absolute inset-[-15px] transform skew-x-[15deg] bg-cover bg-center"
+                          style={{ backgroundImage: `url(${strip.image})` }}
+                          data-ai-hint={strip.hint}
+                        ></div>
+                      </div>
+                    ))}
+                    {/* Main Shoe Image */}
+                    <div className="absolute right-[-10%] sm:right-[-5%] md:right-[-20%] lg:right-[-25%] top-1/2 transform -translate-y-1/2 z-30 w-[50%] sm:w-[45%] md:w-[250px] lg:w-[300px] xl:w-[380px]">
+                      <Image
+                        key={activeSlide.mainImage} 
+                        src={activeSlide.mainImage}
+                        alt="Featured Shoe"
+                        width={600}
+                        height={400}
+                        className="object-contain"
+                        data-ai-hint={activeSlide.mainImageHint}
+                        priority={currentSlide === 0} 
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="flex space-x-3">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={handlePrev} 
-                    aria-label="Previous slide" 
-                    className="text-white/70 hover:text-white hover:bg-white/10 rounded-full w-8 h-8"
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={handleNext} 
-                    aria-label="Next slide" 
-                    className="text-white/70 hover:text-white hover:bg-white/10 rounded-full w-8 h-8"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </Button>
-                </div>
-                <div className="flex space-x-1.5">
-                  {slides.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentSlide(index)}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 focus:outline-none
-                                  ${currentSlide === index ? 'bg-white scale-110' : 'bg-white/40 hover:bg-white/70'}`}
-                      aria-label={`Go to slide ${index + 1}`}
-                    />
-                  ))}
+                
+                {/* Text Content */}
+                <div className="relative z-20 mt-8 md:mt-0">
+                  <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold tracking-tighter leading-none drop-shadow-md">
+                    DESIGN
+                  </h1>
+                  <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-none mt-[-0.1em] sm:mt-[-0.15em] drop-shadow-md">
+                    & HIGH QUALITY
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Image */}
-            <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center">
-              {activeSlide && (
-                <Image
-                  key={activeSlide.mainImageUrl} // Key change for transition
-                  src={activeSlide.mainImageUrl}
-                  alt="DESIGN & HIGH QUALITY Product Showcase"
-                  fill
-                  style={{ objectFit: "contain" }}
-                  className="drop-shadow-2xl transition-opacity duration-700 ease-in-out"
-                  data-ai-hint={activeSlide.mainImageAiHint}
-                  priority={currentSlide === 0}
-                  sizes="(max-width: 768px) 90vw, 45vw"
-                />
-              )}
+            {/* Bottom Bar */}
+            <div className="grid grid-cols-12 gap-x-4 items-center pt-8 md:pt-4 pb-4">
+              <div className="col-span-1 hidden md:block"></div> {/* Spacer for left nav */}
+              <div className="col-span-12 md:col-span-11 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+                {/* Product name removed here */}
+                <div className="flex-grow"></div> {/* Add a spacer if product name was the only left element */}
+                <Link href="/search" className="flex items-center text-xs sm:text-sm hover:underline hover:opacity-100 opacity-75">
+                  View Products <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                </Link>
+              </div>
             </div>
-          </div>
-
-          {/* Bottom Right Link */}
-          <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 z-20">
-            <Link href="/search" className="text-xs sm:text-sm text-white/80 hover:text-white hover:underline flex items-center transition-colors">
-              View Products <ArrowUpRight className="ml-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            </Link>
           </div>
         </Container>
       </section>
@@ -156,9 +185,10 @@ export default function HomePage() {
                   <Image
                     src={category.imageUrl}
                     alt={category.name}
-                    fill
-                    style={{ objectFit: "cover" }}
+                    fill // Changed from layout="fill" objectFit="cover" to fill
+                    style={{ objectFit: "cover" }} // Added for fill
                     data-ai-hint={category.aiHint}
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 230px" // Example sizes
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-50 transition-all">
                     <h3 className="text-xl font-semibold text-white font-headline">{category.name}</h3>
@@ -238,9 +268,6 @@ export default function HomePage() {
           <NewsletterSignup />
         </Container>
       </section>
-      {/* Removed custom keyframe animations as they are not present in the target style */}
     </div>
   );
 }
-
-    

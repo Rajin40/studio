@@ -66,7 +66,7 @@ export const mockCategories: Category[] = [
     name: 'Electronics',
     slug: 'electronics',
     description: 'Gadgets, devices, and more.',
-    imageUrl: '/images/categories/electronics.png',
+    imageUrl: '/images/products/electronics_accessories/electronics.png',
     aiHint: 'tech gadgets'
   },
   {
