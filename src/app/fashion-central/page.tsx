@@ -28,7 +28,7 @@ export default function FashionCentralPage() {
     title: "Fashion Central",
     description: "Discover the latest trends and timeless styles in clothing and accessories.",
     buttonText: "Explore Collection",
-    imageUrl: "https://placehold.co/1200x500.png", 
+    imageUrl: "/images/fasion/header1.jpeg", 
     imageAiHint: "fashion models", 
   };
 
