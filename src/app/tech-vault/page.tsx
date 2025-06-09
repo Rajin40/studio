@@ -19,7 +19,7 @@ const electronicsSubCategories = [
   { name: "Chargers", slug: "chargers", icon: <BatteryCharging className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "charger cable tech", pageLink: "/chargers" },
   { name: "Power Banks", slug: "power-banks", icon: <Power className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "power bank portable", pageLink: "/power-banks" },
   { name: "Bluetooth Devices", slug: "bluetooth-devices", icon: <Bluetooth className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "bluetooth speaker wireless", pageLink: "/bluetooth-devices" },
-  { name: "Smart Gadgets", slug: "smart-gadgets", icon: <Router className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "smart home device", pageLink: "/search?category=electronics&subcategory=smart-gadgets" },
+  { name: "Smart Gadgets", slug: "smart-gadgets", icon: <Router className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "smart home device", pageLink: "/smart-gadgets" },
 ];
 
 export default function TechVaultPage() {
