@@ -13,6 +13,14 @@ const getFashionProducts = (): Product[] => {
   return mockProducts.filter(product => product.category === 'Fashion');
 };
 
+const fashionSubCategories = [
+  { name: "Shirts", slug: "shirts" },
+  { name: "Pants", slug: "pants" },
+  { name: "T-Shirts", slug: "t-shirts" },
+  { name: "Cargo Pants", slug: "cargo-pants" },
+  { name: "Dropshoulder T-Shirts", slug: "dropshoulder-t-shirts" },
+];
+
 export default function FashionCentralPage() {
   const fashionProducts = getFashionProducts();
 
@@ -38,7 +46,7 @@ export default function FashionCentralPage() {
               <p className="text-lg sm:text-xl text-gray-700 max-w-lg mx-auto md:mx-0 mb-8">
                 {heroContent.description}
               </p>
-              <Link href="#fashion-product-grid" passHref scroll={false}>
+              <Link href={`/fashion-central#${fashionSubCategories[0]?.slug || 'fashion-products'}`} passHref scroll={false}>
                 <Button 
                   variant="default" 
                   size="lg" 
@@ -56,7 +64,7 @@ export default function FashionCentralPage() {
                   src={heroContent.imageUrl}
                   alt={heroContent.title}
                   fill
-                  style={{ objectFit: "cover" }} // Changed to cover for banner style
+                  style={{ objectFit: "cover" }}
                   data-ai-hint={heroContent.imageAiHint}
                   priority
                   className="rounded-lg shadow-xl"
@@ -66,21 +74,32 @@ export default function FashionCentralPage() {
         </Container>
       </section>
 
-      {/* Product Grid Section */}
-      <Container className="py-12 md:py-16">
-        <h2 id="fashion-product-grid" className="text-2xl sm:text-3xl font-bold font-headline text-center mb-10 scroll-mt-20">
-          Shop Fashion
-        </h2>
-        {fashionProducts.length > 0 ? (
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-6">
-            {fashionProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-center text-muted-foreground text-xl py-10">No fashion products available at the moment.</p>
-        )}
-      </Container>
+      {/* Product Grid Sections by Sub-Category */}
+      {fashionSubCategories.map((subCategory) => (
+        <Container key={subCategory.slug} className="py-12 md:py-16">
+          <h2 id={subCategory.slug} className="text-2xl sm:text-3xl font-bold font-headline text-center mb-10 scroll-mt-20">
+            Shop {subCategory.name}
+          </h2>
+          {fashionProducts.length > 0 ? (
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-6">
+              {fashionProducts.map((product) => (
+                // Later, you would filter fashionProducts here if they had a subCategory field
+                // For now, we display all fashion products under each sub-category heading
+                <ProductCard key={product.id + '-' + subCategory.slug} product={product} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground text-xl py-10">No {subCategory.name.toLowerCase()} available at the moment.</p>
+          )}
+           {/* Add a "View More" button or link for each sub-category if desired */}
+           <div className="text-center mt-10">
+             <Button variant="outline" asChild>
+               <Link href={`/search?category=fashion&subcategory=${subCategory.slug}`}>View More {subCategory.name}</Link>
+             </Button>
+           </div>
+        </Container>
+      ))}
+
        <style jsx global>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(20px); }
