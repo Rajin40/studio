@@ -77,16 +77,21 @@ export default function HomePage() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       handleNext();
-    }, 5000); // Change slide every 5 seconds
+    }, 5000); 
 
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
-  }, [totalSlides]); // Re-run effect if totalSlides changes (though it's constant here)
+    return () => clearInterval(intervalId); 
+  }, []); 
 
   const activeSlide = slides[currentSlide];
 
   const featuredProducts = mockProducts.slice(0, 8);
   const newArrivals = [...mockProducts].reverse().slice(0, 8);
-  const featuredCategories = mockCategories.slice(0, 12);
+  
+  const allFeaturedCategories = mockCategories.slice(0, 12);
+  const categoriesPhase1 = allFeaturedCategories.slice(0, 4);
+  const categoriesPhase2 = allFeaturedCategories.slice(4, 8);
+  const categoriesPhase3 = allFeaturedCategories.slice(8, 12);
+
   const blogHighlights = mockArticles.slice(0, 2);
 
   return (
@@ -99,8 +104,7 @@ export default function HomePage() {
             <div className="grid grid-cols-12 gap-x-4 items-center flex-grow">
               {/* Left Vertical Elements */}
               <div className="col-span-1 hidden md:flex flex-col items-center justify-between self-stretch py-8">
-                {/* Brand name removed here */}
-                <div className="flex-grow"></div> {/* Add a spacer to push controls down if brand was the only top element */}
+                <div className="flex-grow"></div> 
                 <div className="flex flex-col items-center space-y-3 text-xs opacity-75">
                   <span>{currentSlide + 1} / {totalSlides}</span>
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-white/75 hover:bg-white/10 hover:text-white" onClick={handlePrev}><ChevronLeft className="h-4 w-4"/></Button>
@@ -131,8 +135,6 @@ export default function HomePage() {
                         ></div>
                       </div>
                     ))}
-                    {/* Main Shoe Image */}
-                    {/* Main Shoe Image - Right Aligned & Smaller */}
                     <div className="absolute right-[-80] top-1/2 transform -translate-y-1/2 z-30 w-[30%] min-w-[150px] max-w-[220px]">
                       <Image
                         key={activeSlide.mainImage} 
@@ -148,7 +150,6 @@ export default function HomePage() {
                   </div>
                 </div>
                 
-                {/* Text Content */}
                 <div className="relative z-20 mt-8 md:mt-0">
                   <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold tracking-tighter leading-none drop-shadow-md">
                     DESIGN
@@ -160,12 +161,10 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Bottom Bar */}
             <div className="grid grid-cols-12 gap-x-4 items-center pt-8 md:pt-4 pb-4">
-              <div className="col-span-1 hidden md:block"></div> {/* Spacer for left nav */}
+              <div className="col-span-1 hidden md:block"></div> 
               <div className="col-span-12 md:col-span-11 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-                {/* Product name removed here */}
-                <div className="flex-grow"></div> {/* Add a spacer if product name was the only left element */}
+                <div className="flex-grow"></div> 
                 <Link href="/search" className="flex items-center text-xs sm:text-sm hover:underline hover:opacity-100 opacity-75">
                   View Products <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Link>
@@ -175,24 +174,79 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Featured Categories */}
+      {/* Phase 1 Categories */}
       <section className="py-12 md:py-16">
         <Container>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">Shop by Category</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">Phase 1 Categories</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {featuredCategories.map((category) => (
+            {categoriesPhase1.map((category) => (
               <Link key={category.id} href={`/search?category=${category.id}`} className="group block">
-                <div className="aspect-square relative rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-shadow">
+                <div className="aspect-[4/3] relative rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-shadow duration-300">
                   <Image
                     src={category.imageUrl}
                     alt={category.name}
-                    fill // Changed from layout="fill" objectFit="cover" to fill
-                    style={{ objectFit: "cover" }} // Added for fill
-                    data-ai-hint={category.aiHint}
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 230px" // Example sizes
+                    fill
+                    style={{ objectFit: "cover" }}
+                    className="group-hover:scale-105 transition-transform duration-300 ease-in-out"
+                    data-ai-hint={category.aiHint || 'category image'}
+                    sizes="(max-width: 768px) 50vw, 25vw"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-50 transition-all">
-                    <h3 className="text-xl font-semibold text-white font-headline">{category.name}</h3>
+                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-50 transition-all duration-300">
+                    <h3 className="text-xl font-semibold text-white font-headline text-center px-2">{category.name}</h3>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </Container>
+      </section>
+      
+      {/* Phase 2 Categories */}
+      <section className="py-12 md:py-16 bg-muted/10">
+        <Container>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">Phase 2 Categories</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {categoriesPhase2.map((category) => (
+              <Link key={category.id} href={`/search?category=${category.id}`} className="group block">
+                <div className="aspect-[4/3] relative rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-shadow duration-300">
+                  <Image
+                    src={category.imageUrl}
+                    alt={category.name}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    className="group-hover:scale-105 transition-transform duration-300 ease-in-out"
+                    data-ai-hint={category.aiHint || 'category image'}
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-50 transition-all duration-300">
+                    <h3 className="text-xl font-semibold text-white font-headline text-center px-2">{category.name}</h3>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Phase 3 Categories */}
+      <section className="py-12 md:py-16">
+        <Container>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline text-center mb-10">Phase 3 Categories</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {categoriesPhase3.map((category) => (
+              <Link key={category.id} href={`/search?category=${category.id}`} className="group block">
+                <div className="aspect-[4/3] relative rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-shadow duration-300">
+                  <Image
+                    src={category.imageUrl}
+                    alt={category.name}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    className="group-hover:scale-105 transition-transform duration-300 ease-in-out"
+                    data-ai-hint={category.aiHint || 'category image'}
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-50 transition-all duration-300">
+                    <h3 className="text-xl font-semibold text-white font-headline text-center px-2">{category.name}</h3>
                   </div>
                 </div>
               </Link>
