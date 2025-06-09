@@ -39,6 +39,7 @@ export default function SiteHeader() {
   const storeLinks = [
     { href: '/shoe-store', label: 'Shoe Store' },
     { href: '/fashion-central', label: 'Fashion Central' },
+    { href: '/tech-vault', label: 'Tech Vault' },
   ];
 
   // Now use them in dynamicNavLinks
