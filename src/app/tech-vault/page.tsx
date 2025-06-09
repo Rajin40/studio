@@ -15,7 +15,7 @@ const getElectronicsProducts = (): Product[] => {
 
 const electronicsSubCategories = [
   { name: "Headphones", slug: "headphones", icon: <Headphones className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "headphones audio tech", pageLink: "/headphones" },
-  { name: "Phone Covers", slug: "phone-covers", icon: <Smartphone className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "phone case accessory", pageLink: "/search?category=electronics&subcategory=phone-covers" },
+  { name: "Phone Covers", slug: "phone-covers", icon: <Smartphone className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "phone case accessory", pageLink: "/phone-covers" },
   { name: "Chargers", slug: "chargers", icon: <BatteryCharging className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "charger cable tech", pageLink: "/search?category=electronics&subcategory=chargers" },
   { name: "Power Banks", slug: "power-banks", icon: <Power className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "power bank portable", pageLink: "/search?category=electronics&subcategory=power-banks" },
   { name: "Bluetooth Devices", slug: "bluetooth-devices", icon: <Bluetooth className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "bluetooth speaker wireless", pageLink: "/search?category=electronics&subcategory=bluetooth-devices" },
@@ -114,7 +114,7 @@ export default function TechVaultPage() {
           )}
            <div className="text-center mt-10">
              <Button variant="outline" asChild>
-               <Link href={`/search?category=electronics&subcategory=${subCategory.slug}`}>View More {subCategory.name}</Link>
+               <Link href={subCategory.pageLink.startsWith('/') ? subCategory.pageLink : `/search?category=electronics&subcategory=${subCategory.slug}`}>View More {subCategory.name}</Link>
              </Button>
            </div>
         </Container>
