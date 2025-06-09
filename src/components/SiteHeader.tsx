@@ -22,7 +22,7 @@ import { mockCategories, mockArticles } from '@/lib/data'; // Assuming these are
 export default function SiteHeader() {
   const mainNavLinks = [
     { href: '/', label: 'Home' },
-    { href: '/shoe-store', label: 'Shoe Store' },
+    // { href: '/shoe-store', label: 'Shoe Store' }, // Removed as it's now in the Store dropdown
   ];
 
   // Define these first
@@ -36,23 +36,34 @@ export default function SiteHeader() {
     label: article.title,
   }));
 
+  const storeLinks = [
+    { href: '/shoe-store', label: 'Shoe Store' },
+    { href: '/fashion-central', label: 'Fashion Central' },
+  ];
+
   // Now use them in dynamicNavLinks
   const dynamicNavLinks = [
     {
       type: 'dropdown',
       label: 'Products',
       href: '/search',
-      subLinks: productCategories, // Now defined
+      subLinks: productCategories,
       allLink: { href: '/search', label: 'All Products' }
+    },
+    {
+      type: 'dropdown',
+      label: 'Store',
+      href: '#', // Can be a general /stores page in the future
+      subLinks: storeLinks,
     },
     {
       type: 'dropdown',
       label: 'Blog',
       href: '/blog',
-      subLinks: blogHighlights, // Now defined
+      subLinks: blogHighlights,
       allLink: { href: '/blog', label: 'All Articles' }
     },
-    { type: 'link', href: '/help', label: 'Help Center' }, // Help Center now at the end
+    { type: 'link', href: '/help', label: 'Help Center' },
   ];
 
   return (
@@ -83,7 +94,7 @@ export default function SiteHeader() {
                     href={link.href}
                     className="block py-3 transition-colors hover:text-primary text-base font-medium rounded-md hover:bg-muted px-2"
                   >
-                    {link.label === 'Shoe Store' && <Package className="inline-block mr-2 h-4 w-4 align-text-bottom" /> /* Placeholder icon */}
+                    {/* Icon logic for mainNavLinks can be adjusted if needed */}
                     {link.label}
                   </Link>
                 ))}
@@ -97,6 +108,18 @@ export default function SiteHeader() {
                       {productCategories.map(cat => (
                         <Link key={cat.label} href={cat.href} className="block py-2 text-sm hover:text-primary hover:bg-muted px-2 rounded-md">
                           {cat.label}
+                        </Link>
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="store-mobile">
+                    <AccordionTrigger className="py-3 text-base font-medium hover:text-primary hover:no-underline hover:bg-muted px-2 rounded-md [&[data-state=open]>svg]:text-primary">
+                      Store
+                    </AccordionTrigger>
+                    <AccordionContent className="pl-4">
+                      {storeLinks.map(storeLink => (
+                        <Link key={storeLink.label} href={storeLink.href} className="block py-2 text-sm hover:text-primary hover:bg-muted px-2 rounded-md truncate">
+                          {storeLink.label}
                         </Link>
                       ))}
                     </AccordionContent>
@@ -131,12 +154,12 @@ export default function SiteHeader() {
                   <Input type="search" placeholder="Search products..." className="pl-10 h-9 w-full" />
                 </div>
                 <Button variant="outline" className="w-full justify-start" asChild>
-                  <Link href="/cart"> {/* Assuming /cart page exists or will be created */}
+                  <Link href="/cart">
                     <ShoppingCart className="mr-2 h-4 w-4" /> My Cart
                   </Link>
                 </Button>
                 <Button variant="outline" className="w-full justify-start" asChild>
-                   <Link href="/account"> {/* Assuming /account page exists or will be created */}
+                   <Link href="/account">
                     <User className="mr-2 h-4 w-4" /> My Account
                   </Link>
                 </Button>
@@ -158,7 +181,7 @@ export default function SiteHeader() {
               href={link.href}
               className="px-3 py-2 transition-colors hover:text-primary rounded-md flex items-center"
             >
-              {link.label === 'Shoe Store' && <Package className="mr-1.5 h-4 w-4" /> /* Placeholder icon */}
+              {/* Icon logic for mainNavLinks can be adjusted if needed */}
               {link.label}
             </Link>
           ))}
@@ -208,12 +231,12 @@ export default function SiteHeader() {
             <Input type="search" placeholder="Search products..." className="pl-10 h-9 w-48 lg:w-64" />
           </div>
           <Button variant="ghost" size="icon" aria-label="Shopping Cart" asChild>
-            <Link href="/cart"> {/* Assuming /cart page exists or will be created */}
+            <Link href="/cart">
               <ShoppingCart className="h-5 w-5" />
             </Link>
           </Button>
           <Button variant="ghost" size="icon" aria-label="My Account" asChild>
-            <Link href="/account"> {/* Assuming /account page exists or will be created */}
+            <Link href="/account">
              <User className="h-5 w-5" />
             </Link>
           </Button>
