@@ -8,7 +8,8 @@ import {
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { mockFaqs, shippingPolicy, returnPolicy } from '@/lib/data';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, Bot, MessageSquare } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function HelpPage() {
   return (
@@ -75,8 +76,20 @@ export default function HelpPage() {
                   <p className="text-muted-foreground">123 Shopstream Lane, Commerce City, CC 54321</p>
                 </div>
               </div>
-              {/* Placeholder for Live Chat and Contact Form */}
-              <p className="text-muted-foreground pt-4 border-t">Live chat and contact form options will be available soon.</p>
+              <div className="pt-6 mt-6 border-t">
+                <h3 className="text-lg font-semibold mb-3 flex items-center">
+                  <Bot className="h-6 w-6 text-primary mr-2" /> AI Powered Chat Support
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  Have a quick question? Our AI assistant is here to help you 24/7.
+                </p>
+                <Button variant="outline">
+                  <MessageSquare className="mr-2 h-4 w-4" /> Start Chat with AI
+                </Button>
+                <p className="text-xs text-muted-foreground mt-3">
+                  (This is a placeholder for your AI chatbot integration)
+                </p>
+              </div>
             </div>
           </div>
         </TabsContent>
