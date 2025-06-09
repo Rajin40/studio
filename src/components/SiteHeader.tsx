@@ -15,7 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Menu as MenuIcon, Search, ShoppingCart, User, BookOpen, ChevronDown, Package /* Replaced Shoe with Package as a placeholder */ } from 'lucide-react';
+import { Menu as MenuIcon, Search, ShoppingCart, User, BookOpen, ChevronDown, Package, ShieldCheck } from 'lucide-react';
 import Container from '@/components/Container';
 import { mockCategories, mockArticles } from '@/lib/data'; // Assuming these are available and have some data
 
@@ -67,6 +67,7 @@ export default function SiteHeader() {
       allLink: { href: '/blog', label: 'All Articles' }
     },
     { type: 'link', href: '/help', label: 'Help Center' },
+    { type: 'link', href: '/admin/dashboard', label: 'Admin', icon: ShieldCheck },
   ];
 
   return (
@@ -141,12 +142,18 @@ export default function SiteHeader() {
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
-                 {/* Help Center in mobile menu */}
+                 {/* Help Center & Admin in mobile menu */}
                  <Link
                     href="/help"
                     className="block py-3 transition-colors hover:text-primary text-base font-medium rounded-md hover:bg-muted px-2"
                   >
                     Help Center
+                  </Link>
+                  <Link
+                    href="/admin/dashboard"
+                    className="flex items-center py-3 transition-colors hover:text-primary text-base font-medium rounded-md hover:bg-muted px-2"
+                  >
+                    <ShieldCheck className="mr-2 h-4 w-4" /> Admin
                   </Link>
               </nav>
 
@@ -184,7 +191,6 @@ export default function SiteHeader() {
               href={link.href}
               className="px-3 py-2 transition-colors hover:text-primary rounded-md flex items-center"
             >
-              {/* Icon logic for mainNavLinks can be adjusted if needed */}
               {link.label}
             </Link>
           ))}
@@ -219,6 +225,7 @@ export default function SiteHeader() {
                   href={item.href}
                   className="px-3 py-2 transition-colors hover:text-primary rounded-md flex items-center"
                 >
+                  {item.icon && <item.icon className="mr-2 h-4 w-4" />}
                   {item.label}
                 </Link>
               );
