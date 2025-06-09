@@ -14,12 +14,12 @@ const getElectronicsProducts = (): Product[] => {
 };
 
 const electronicsSubCategories = [
-  { name: "Headphones", slug: "headphones", icon: <Headphones className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "headphones audio tech" },
-  { name: "Phone Covers", slug: "phone-covers", icon: <Smartphone className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "phone case accessory" },
-  { name: "Chargers", slug: "chargers", icon: <BatteryCharging className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "charger cable tech" },
-  { name: "Power Banks", slug: "power-banks", icon: <Power className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "power bank portable" },
-  { name: "Bluetooth Devices", slug: "bluetooth-devices", icon: <Bluetooth className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "bluetooth speaker wireless" },
-  { name: "Smart Gadgets", slug: "smart-gadgets", icon: <Router className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "smart home device" },
+  { name: "Headphones", slug: "headphones", icon: <Headphones className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "headphones audio tech", pageLink: "/headphones" },
+  { name: "Phone Covers", slug: "phone-covers", icon: <Smartphone className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "phone case accessory", pageLink: "/search?category=electronics&subcategory=phone-covers" },
+  { name: "Chargers", slug: "chargers", icon: <BatteryCharging className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "charger cable tech", pageLink: "/search?category=electronics&subcategory=chargers" },
+  { name: "Power Banks", slug: "power-banks", icon: <Power className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "power bank portable", pageLink: "/search?category=electronics&subcategory=power-banks" },
+  { name: "Bluetooth Devices", slug: "bluetooth-devices", icon: <Bluetooth className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "bluetooth speaker wireless", pageLink: "/search?category=electronics&subcategory=bluetooth-devices" },
+  { name: "Smart Gadgets", slug: "smart-gadgets", icon: <Router className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "smart home device", pageLink: "/search?category=electronics&subcategory=smart-gadgets" },
 ];
 
 export default function TechVaultPage() {
@@ -78,7 +78,7 @@ export default function TechVaultPage() {
         <h2 className="text-3xl sm:text-4xl font-bold font-headline text-center mb-12">Explore Our Tech Categories</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {electronicsSubCategories.map((subCategory, index) => (
-            <Link key={subCategory.slug} href={`/search?category=electronics&subcategory=${subCategory.slug}`} passHref>
+            <Link key={subCategory.slug} href={subCategory.pageLink} passHref>
               <div 
                 className="bg-card p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 group animate-categorySlideUp"
                 style={{ animationDelay: `${index * 0.1 + 0.2}s`}}
@@ -148,4 +148,3 @@ export default function TechVaultPage() {
     </div>
   );
 }
-
