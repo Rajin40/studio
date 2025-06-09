@@ -1,6 +1,7 @@
 
 "use client";
 
+import * as React from 'react'; // Added React import
 import Container from '@/components/Container';
 import ProductCard from '@/components/ProductCard';
 import { mockProducts, type Product } from '@/lib/data';
@@ -135,3 +136,4 @@ export default function TimepieceGalleryPage() {
     </div>
   );
 }
+
