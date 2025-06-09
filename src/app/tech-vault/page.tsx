@@ -18,7 +18,7 @@ const electronicsSubCategories = [
   { name: "Phone Covers", slug: "phone-covers", icon: <Smartphone className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "phone case accessory", pageLink: "/phone-covers" },
   { name: "Chargers", slug: "chargers", icon: <BatteryCharging className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "charger cable tech", pageLink: "/chargers" },
   { name: "Power Banks", slug: "power-banks", icon: <Power className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "power bank portable", pageLink: "/power-banks" },
-  { name: "Bluetooth Devices", slug: "bluetooth-devices", icon: <Bluetooth className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "bluetooth speaker wireless", pageLink: "/search?category=electronics&subcategory=bluetooth-devices" },
+  { name: "Bluetooth Devices", slug: "bluetooth-devices", icon: <Bluetooth className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "bluetooth speaker wireless", pageLink: "/bluetooth-devices" },
   { name: "Smart Gadgets", slug: "smart-gadgets", icon: <Router className="h-8 w-8 mb-2 text-primary" />, imageAiHint: "smart home device", pageLink: "/search?category=electronics&subcategory=smart-gadgets" },
 ];
 
