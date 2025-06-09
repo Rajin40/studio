@@ -40,6 +40,7 @@ export default function SiteHeader() {
     { href: '/shoe-store', label: 'Shoe Store' },
     { href: '/fashion-central', label: 'Fashion Central' },
     { href: '/tech-vault', label: 'Tech Vault' },
+    { href: '/timepiece-gallery', label: 'Timepiece Gallery' },
   ];
 
   // Now use them in dynamicNavLinks
