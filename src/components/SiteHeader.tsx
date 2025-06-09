@@ -41,6 +41,7 @@ export default function SiteHeader() {
     { href: '/fashion-central', label: 'Fashion Central' },
     { href: '/tech-vault', label: 'Tech Vault' },
     { href: '/timepiece-gallery', label: 'Timepiece Gallery' },
+    { href: '/cultural-threads', label: 'Cultural Threads' },
   ];
 
   // Now use them in dynamicNavLinks
@@ -247,3 +248,4 @@ export default function SiteHeader() {
     </header>
   );
 }
+
