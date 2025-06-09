@@ -6,7 +6,7 @@ import Container from '@/components/Container';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, ShoppingBag, Store, Settings, ListOrdered, BarChart2, CreditCard, Package, DollarSign, Edit3, Heart, Briefcase, Image as ImageIcon, Tag, Layers, PlusCircle } from 'lucide-react';
+import { User, ShoppingBag, Store, Settings, ListOrdered, BarChart2, CreditCard, Package, DollarSign, Edit3, Heart, Briefcase, Image as ImageIcon, Tag, Layers, PlusCircle, LogOut } from 'lucide-react';
 import { mockCategories, type Product, mockProducts as initialMockProducts } from '@/lib/data'; 
 
 import {
@@ -231,6 +231,18 @@ async function updateProductAction(prevState: UpdateProductResponse | null, form
 
 export default function AccountPage() {
   const [currentView, setCurrentView] = useState<AccountView>('buyer');
+  const { toast } = useToast();
+
+  const handleSignOut = () => {
+    // Simulate sign out
+    console.log("User signed out (simulated).");
+    toast({
+      title: "Signed Out",
+      description: "You have been signed out successfully.",
+    });
+    // In a real app, you would call Firebase signOut and redirect, e.g.:
+    // firebase.auth().signOut().then(() => router.push('/login'));
+  };
 
   return (
     <Container className="py-12 md:py-16">
@@ -245,12 +257,15 @@ export default function AccountPage() {
                     <CardTitle className="text-2xl sm:text-3xl font-headline">My Account</CardTitle>
                     <CardDescription>Manage your {currentView === 'buyer' ? 'profile, orders, and settings.' : 'store, products, and earnings.'}</CardDescription>
                 </div>
-                <div className="mt-4 sm:mt-0 flex space-x-2">
+                <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                     <Button variant={currentView === 'buyer' ? 'default' : 'outline'} onClick={() => setCurrentView('buyer')}>
                         <ShoppingBag className="mr-2 h-4 w-4" /> Buyer View
                     </Button>
                     <Button variant={currentView === 'seller' ? 'default' : 'outline'} onClick={() => setCurrentView('seller')}>
                         <Briefcase className="mr-2 h-4 w-4" /> Seller View
+                    </Button>
+                     <Button variant="destructive" onClick={handleSignOut} className="mt-2 sm:mt-0">
+                        <LogOut className="mr-2 h-4 w-4" /> Sign Out
                     </Button>
                 </div>
             </div>
