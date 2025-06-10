@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -132,6 +133,13 @@ const slides = [
   },
 ];
 const totalSlides = slides.length;
+
+const categoryPageLinks: Record<string, string> = {
+  electronics: '/tech-vault',
+  fashion: '/fashion-central',
+  shoes: '/shoe-store',
+  watch: '/timepiece-gallery',
+};
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -289,7 +297,10 @@ export default function HomePage() {
           >
             {categoriesPhase1.map((category, index) => (
               <motion.div key={category.id} variants={itemVariants}>
-                <Link href={`/search?category=${category.id}`} className="group block">
+                <Link 
+                  href={categoryPageLinks[category.id] || `/search?category=${category.id}`} 
+                  className="group block"
+                >
                   <motion.div 
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
