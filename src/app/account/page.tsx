@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useActionState } from 'react';
-import { useRouter } from 'next/navigation'; // Added
+import { useRouter } from 'next/navigation';
 import Container from '@/components/Container';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,16 +21,16 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import {
-  AlertDialog, // Added
-  AlertDialogAction, // Added
-  AlertDialogCancel, // Added
-  AlertDialogContent, // Added
-  AlertDialogDescription, // Added
-  AlertDialogFooter, // Added
-  AlertDialogHeader, // Added
-  AlertDialogTitle, // Added
-  AlertDialogTrigger, // Added
-} from "@/components/ui/alert-dialog"; // Added
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from '@/components/ui/textarea';
@@ -244,9 +244,9 @@ async function updateProductAction(prevState: UpdateProductResponse | null, form
 export default function AccountPage() {
   const [currentView, setCurrentView] = useState<AccountView>('buyer');
   const { toast } = useToast();
-  const router = useRouter(); // Added
+  const router = useRouter();
+  const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
 
-  // This is the function that will be called AFTER confirmation
   const handleConfirmSignOut = () => {
     console.log("User signed out (simulated).");
     toast({
@@ -256,19 +256,11 @@ export default function AccountPage() {
     router.push('/'); // Redirect to homepage
     // In a real app, you would also call Firebase signOut here.
     // e.g., firebase.auth().signOut().then(() => router.push('/'));
+    setShowSignOutConfirm(false); // Close the dialog
   };
 
-  // This function will be modified in the next step to open the dialog
-  const handleSignOut = () => {
-    // For now, it does what it used to do. 
-    // In the next step, this will trigger the AlertDialog.
-    console.log("User signed out (simulated).");
-    toast({
-      title: "Signed Out",
-      description: "You have been signed out successfully.",
-    });
-    // In a real app, you would call Firebase signOut and redirect, e.g.:
-    // firebase.auth().signOut().then(() => router.push('/login'));
+  const handleSignOutClick = () => {
+    setShowSignOutConfirm(true); // Open the dialog
   };
 
   return (
@@ -291,9 +283,25 @@ export default function AccountPage() {
                     <Button variant={currentView === 'seller' ? 'default' : 'outline'} onClick={() => setCurrentView('seller')}>
                         <Briefcase className="mr-2 h-4 w-4" /> Seller View
                     </Button>
-                     <Button variant="destructive" onClick={handleSignOut} className="mt-2 sm:mt-0">
-                        <LogOut className="mr-2 h-4 w-4" /> Sign Out
-                    </Button>
+                    <AlertDialog open={showSignOutConfirm} onOpenChange={setShowSignOutConfirm}>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="destructive" onClick={handleSignOutClick} className="mt-2 sm:mt-0">
+                                <LogOut className="mr-2 h-4 w-4" /> Sign Out
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                            <AlertDialogTitle>Confirm Sign Out</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Are you sure you want to sign out?
+                            </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                            <AlertDialogCancel onClick={() => setShowSignOutConfirm(false)}>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleConfirmSignOut}>Confirm</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </div>
             </div>
           </CardHeader>
@@ -788,3 +796,5 @@ function DashboardSection({ title, icon, children }: DashboardSectionProps) {
     )
 }
 
+
+    
