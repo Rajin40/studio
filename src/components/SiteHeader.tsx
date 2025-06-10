@@ -1,5 +1,8 @@
 
+"use client";
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation'; // Added
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -15,17 +18,18 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Menu as MenuIcon, Search, ShoppingCart, User, BookOpen, ChevronDown, Package, ShieldCheck } from 'lucide-react';
+import { Menu as MenuIcon, Search, ShoppingCart, User, BookOpen, ChevronDown, Package, ShieldCheck, LogIn } from 'lucide-react'; // Added LogIn
 import Container from '@/components/Container';
-import { mockCategories, mockArticles } from '@/lib/data'; // Assuming these are available and have some data
+import { mockCategories, mockArticles } from '@/lib/data';
 
 export default function SiteHeader() {
+  const pathname = usePathname(); // Added
+  const isLoggedIn = pathname.startsWith('/account'); // Simulated logged-in state
+
   const mainNavLinks = [
     { href: '/', label: 'Home' },
-    // { href: '/shoe-store', label: 'Shoe Store' }, // Removed as it's now in the Store dropdown
   ];
 
-  // Define these first
   const productCategories = mockCategories.slice(0, 3).map(cat => ({
     href: `/search?category=${cat.id}`,
     label: cat.name,
@@ -44,7 +48,6 @@ export default function SiteHeader() {
     { href: '/cultural-threads', label: 'Cultural Threads' },
   ];
 
-  // Now use them in dynamicNavLinks
   const dynamicNavLinks = [
     {
       type: 'dropdown',
@@ -56,7 +59,7 @@ export default function SiteHeader() {
     {
       type: 'dropdown',
       label: 'Store',
-      href: '#', // Can be a general /stores page in the future
+      href: '#', 
       subLinks: storeLinks,
     },
     {
@@ -98,7 +101,6 @@ export default function SiteHeader() {
                     href={link.href}
                     className="block py-3 transition-colors hover:text-primary text-base font-medium rounded-md hover:bg-muted px-2"
                   >
-                    {/* Icon logic for mainNavLinks can be adjusted if needed */}
                     {link.label}
                   </Link>
                 ))}
@@ -142,7 +144,6 @@ export default function SiteHeader() {
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
-                 {/* Help Center & Admin in mobile menu */}
                  <Link
                     href="/help"
                     className="block py-3 transition-colors hover:text-primary text-base font-medium rounded-md hover:bg-muted px-2"
@@ -168,11 +169,19 @@ export default function SiteHeader() {
                     <ShoppingCart className="mr-2 h-4 w-4" /> My Cart
                   </Link>
                 </Button>
-                <Button variant="outline" className="w-full justify-start" asChild>
-                   <Link href="/account">
-                    <User className="mr-2 h-4 w-4" /> My Account
-                  </Link>
-                </Button>
+                {isLoggedIn ? (
+                  <Button variant="outline" className="w-full justify-start" asChild>
+                    <Link href="/account">
+                      <User className="mr-2 h-4 w-4" /> My Account
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button variant="default" className="w-full justify-start" asChild>
+                    <Link href="/login">
+                      <LogIn className="mr-2 h-4 w-4" /> Sign In
+                    </Link>
+                  </Button>
+                )}
               </div>
             </SheetContent>
           </Sheet>
@@ -234,7 +243,7 @@ export default function SiteHeader() {
           })}
         </nav>
 
-        {/* Right: Search, Cart, Account */}
+        {/* Right: Search, Cart, Account/Sign In */}
         <div className="hidden md:flex items-center space-x-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -245,14 +254,19 @@ export default function SiteHeader() {
               <ShoppingCart className="h-5 w-5" />
             </Link>
           </Button>
-          <Button variant="ghost" size="icon" aria-label="My Account" asChild>
-            <Link href="/account">
-             <User className="h-5 w-5" />
-            </Link>
-          </Button>
+          {isLoggedIn ? (
+            <Button variant="ghost" size="icon" aria-label="My Account" asChild>
+              <Link href="/account">
+               <User className="h-5 w-5" />
+              </Link>
+            </Button>
+          ) : (
+            <Button variant="outline" asChild size="sm">
+              <Link href="/login">Sign In</Link>
+            </Button>
+          )}
         </div>
       </Container>
     </header>
   );
 }
-
