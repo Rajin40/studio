@@ -4,6 +4,7 @@ export interface Product {
   name: string;
   slug: string;
   category: string; // Corresponds to Category Name for mock simplicity
+  subcategory?: string; // Added for more specific product types
   brand?: string;
   price: number;
   originalPrice?: number;
@@ -263,6 +264,7 @@ export const mockProducts: Product[] = [
     name: 'Organic Cotton T-Shirt',
     slug: 'organic-cotton-t-shirt',
     category: 'Fashion',
+    subcategory: 'T-Shirts',
     brand: 'EcoThreads',
     price: 29.99,
     imageUrl: 'https://placehold.co/600x600.png',
@@ -315,6 +317,7 @@ export const mockProducts: Product[] = [
     name: 'Vintage Leather Satchel',
     slug: 'vintage-leather-satchel',
     category: 'Fashion',
+    subcategory: 'Bags',
     brand: 'Heritage Bags',
     price: 120.00,
     imageUrl: 'https://placehold.co/600x600.png',
@@ -349,6 +352,7 @@ export const mockProducts: Product[] = [
     name: 'Stylish Winter Coat',
     slug: 'stylish-winter-coat',
     category: 'Fashion',
+    subcategory: 'Coats',
     brand: 'ArcticWarmth',
     price: 189.75,
     originalPrice: 250.00,
@@ -634,4 +638,3 @@ export const returnPolicy = `
 <h3 class="text-xl font-headline mt-4 mb-2">Refunds:</h3>
 <p>Once we receive and inspect your return, we will notify you of the approval or rejection of your refund. If approved, your refund will be processed, and a credit will automatically be applied to your original method of payment within a certain number of days.</p>
 `;
-
