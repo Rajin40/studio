@@ -34,7 +34,6 @@ export default function FormalShoesPage() {
   const categoryDetails = getCategoryDetails(styleSlug);
   const products = getProductsForStyle("Formal Shoes"); 
 
-  // Two distinct color schemes that will alternate
   const colorSchemes = [
     {
       name: "classic",
@@ -82,7 +81,6 @@ export default function FormalShoesPage() {
   const [currentColorScheme, setCurrentColorScheme] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Auto-rotate slides and color schemes
   useEffect(() => {
     const interval = setInterval(() => {
       setIsTransitioning(true);
@@ -90,7 +88,7 @@ export default function FormalShoesPage() {
         setCurrentSlide(prev => (prev === heroSlidesData.length - 1 ? 0 : prev + 1));
         setCurrentColorScheme(prev => (prev === colorSchemes.length - 1 ? 0 : prev + 1));
         setIsTransitioning(false);
-      }, 500); // Matches transition duration
+      }, 500);
     }, 6000);
 
     return () => clearInterval(interval);
@@ -111,8 +109,9 @@ export default function FormalShoesPage() {
 
   return (
     <div className="bg-background">
+      {/* Hero Section - Mobile Optimized */}
       <section 
-        className={`relative ${activeColorScheme.bgGradient} ${activeColorScheme.textColor} py-12 md:py-16 lg:py-20 overflow-hidden min-h-[70vh] md:min-h-[80vh] flex items-center transition-all duration-1000`}
+        className={`relative ${activeColorScheme.bgGradient} ${activeColorScheme.textColor} py-12 md:py-16 lg:py-20 overflow-hidden min-h-[60vh] md:min-h-[80vh] flex items-center transition-all duration-1000`}
       >
         {/* Decorative floating elements */}
         <div className="absolute inset-0 overflow-hidden">
@@ -133,24 +132,24 @@ export default function FormalShoesPage() {
         </div>
 
         <Container className="relative z-10 w-full">
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
-            {/* Left Column: Text Content */}
-            <div className={`text-center md:text-left order-2 md:order-1 transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
+            {/* Left Column: Text Content - Mobile First */}
+            <div className={`text-center md:text-left order-2 transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
               {activeSlide.preTitle && (
-                <p className="text-sm uppercase tracking-wider mb-2 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
-                  <span className="bg-white/20 px-3 py-1 rounded-full">
+                <p className="text-xs sm:text-sm uppercase tracking-wider mb-2 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
+                  <span className="bg-white/20 px-2 py-1 sm:px-3 rounded-full">
                     {activeSlide.preTitle}
                   </span>
                 </p>
               )}
               <h1 
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold font-headline mb-4 md:mb-6 animate-fadeInUp" 
+                className="text-3xl sm:text-4xl md:text-5xl font-bold font-headline mb-3 md:mb-6 animate-fadeInUp" 
                 style={{ animationDelay: '0.2s' }}
               >
                 {activeSlide.title}
               </h1>
               <p 
-                className="text-base sm:text-lg max-w-md mx-auto md:mx-0 mb-6 md:mb-8 animate-fadeInUp" 
+                className="text-sm sm:text-base max-w-md mx-auto md:mx-0 mb-4 md:mb-8 animate-fadeInUp" 
                 style={{ animationDelay: '0.3s', opacity: 0.9 }}
               >
                 {activeSlide.description}
@@ -159,7 +158,7 @@ export default function FormalShoesPage() {
                 <Button 
                   size="lg" 
                   variant={activeColorScheme.buttonVariant}
-                  className={`rounded-full px-8 py-3 text-base font-semibold transition-all duration-300 hover:scale-105 animate-fadeInUp ${activeColorScheme.buttonClass}`}
+                  className={`rounded-full px-6 py-2 sm:px-8 sm:py-3 text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 animate-fadeInUp ${activeColorScheme.buttonClass}`}
                   style={{ animationDelay: '0.4s' }}
                 >
                   Explore Now
@@ -167,20 +166,20 @@ export default function FormalShoesPage() {
               </Link>
             </div>
 
-            {/* Right Column: Image and Decorative Elements */}
-            <div className="relative order-1 md:order-2 flex justify-center items-center h-[300px] sm:h-[350px] md:h-[450px] lg:h-[500px]">
-              {/* Decorative Circle */}
+            {/* Right Column: Image - Mobile Optimized */}
+            <div className="relative order-1 md:order-2 flex justify-center items-center h-[250px] sm:h-[300px] md:h-[450px] mb-6 md:mb-0">
+              {/* Decorative Circle - Smaller on mobile */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className={`w-[80%] h-[80%] md:w-[90%] md:h-[90%] rounded-full opacity-50 blur-sm animate-pulse-slow ${activeColorScheme.decorativeColor}`}></div>
+                <div className={`w-[70%] h-[70%] md:w-[90%] md:h-[90%] rounded-full opacity-50 blur-sm animate-pulse-slow ${activeColorScheme.decorativeColor}`}></div>
               </div>
               
-              {/* Decorative Wavy Lines */}
-              <div className="absolute top-4 right-4 md:top-6 md:right-6 z-10 opacity-60 animate-float">
+              {/* Decorative Wavy Lines - Smaller on mobile */}
+              <div className="absolute top-2 right-2 md:top-6 md:right-6 z-10 opacity-60 animate-float">
                 <WavyLinesSVG />
               </div>
 
-              {/* Main Image */}
-              <div className={`relative w-full max-w-md lg:max-w-lg aspect-[7/9] z-20 transition-all duration-500 ease-in-out ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+              {/* Main Image - Mobile Optimized */}
+              <div className={`relative w-full max-w-xs md:max-w-md aspect-square md:aspect-[7/9] z-20 transition-all duration-500 ease-in-out ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
                 <Image
                   src={activeSlide.imageUrl}
                   alt={activeSlide.title}
@@ -188,19 +187,19 @@ export default function FormalShoesPage() {
                   style={{ objectFit: "contain" }}
                   data-ai-hint={activeSlide.aiHint}
                   priority={currentSlide === 0}
-                  className="drop-shadow-2xl"
+                  className="drop-shadow-xl md:drop-shadow-2xl"
                 />
               </div>
             </div>
           </div>
 
-          {/* Carousel Navigation Dots Only */}
-          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-30">
+          {/* Carousel Navigation Dots - Smaller on mobile */}
+          <div className="absolute bottom-4 md:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-30">
             {heroSlidesData.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === index ? 'bg-white w-6' : 'bg-white/50'}`}
+                className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${currentSlide === index ? 'bg-white md:w-6' : 'bg-white/50'}`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
@@ -208,8 +207,9 @@ export default function FormalShoesPage() {
         </Container>
       </section>
 
-      <Container className="py-8 md:py-12">
-        <h2 id="formal-product-grid" className="text-2xl sm:text-3xl font-bold font-headline text-center mb-10 scroll-mt-20 animate-fadeIn">
+      {/* Product Grid - Mobile Optimized */}
+      <Container className="py-6 md:py-12">
+        <h2 id="formal-product-grid" className="text-xl sm:text-2xl md:text-3xl font-bold font-headline text-center mb-6 md:mb-10 scroll-mt-20 animate-fadeIn">
           Shop Formal Shoes
         </h2>
         {products.length > 0 ? (
@@ -225,7 +225,7 @@ export default function FormalShoesPage() {
             ))}
           </div>
         ) : (
-          <p className="text-center text-muted-foreground text-xl py-10 animate-fadeIn">
+          <p className="text-center text-muted-foreground text-lg md:text-xl py-8 md:py-10 animate-fadeIn">
             No formal shoes found in this style yet.
           </p>
         )}
@@ -236,19 +236,19 @@ export default function FormalShoesPage() {
           to { opacity: 1; }
         }
         @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(20px); }
+          from { opacity: 0; transform: translateY(15px); }
           to { opacity: 1; transform: translateY(0); }
         }
         @keyframes float {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
+          50% { transform: translateY(-15px); }
         }
         @keyframes pulse-slow {
           0%, 100% { opacity: 0.5; }
           50% { opacity: 0.2; }
         }
-        .animate-fadeIn { animation: fadeIn 0.7s ease-out forwards; }
-        .animate-fadeInUp { animation: fadeInUp 0.7s ease-out forwards; }
+        .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
+        .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; }
         .animate-float { animation: float 3s ease-in-out infinite; }
         .animate-pulse-slow { animation: pulse-slow 6s ease-in-out infinite; }
       `}</style>

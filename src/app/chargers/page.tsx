@@ -1,4 +1,3 @@
-
 "use client";
 
 import Container from '@/components/Container';
@@ -8,10 +7,30 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { BatteryCharging, ChevronRight } from 'lucide-react';
+import { useRef } from 'react';
+import { useInView } from 'framer-motion';
 
 const getChargerProducts = (): Product[] => {
-  // For now, show all electronics. Later, refine if subcategories are added.
   return mockProducts.filter(product => product.category === 'Electronics');
+};
+
+const AnimatedSection = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px 0px' });
+
+  return (
+    <section
+      ref={ref}
+      className={className}
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(30px)',
+        transition: 'all 0.5s cubic-bezier(0.17, 0.55, 0.55, 1) 0.2s',
+      }}
+    >
+      {children}
+    </section>
+  );
 };
 
 export default function ChargersPage() {
@@ -29,8 +48,8 @@ export default function ChargersPage() {
   return (
     <div className="bg-background text-foreground">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-green-500 via-lime-500 to-emerald-500 text-white overflow-hidden">
-         <div className="absolute inset-0 opacity-20">
+      <AnimatedSection className="relative bg-gradient-to-r from-green-500 via-lime-500 to-emerald-500 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
           <Image
             src={heroContent.imageUrl}
             alt="Abstract chargers background"
@@ -39,65 +58,82 @@ export default function ChargersPage() {
             data-ai-hint={heroContent.imageAiHint}
             priority
             className="opacity-40"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-           <div className="absolute inset-0 bg-black/30"></div> {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black/30"></div>
         </div>
-        <Container className="relative z-10 py-16 md:py-24 lg:py-32 min-h-[60vh] md:min-h-[70vh] flex items-center">
+        <Container className="relative z-10 py-12 md:py-24 lg:py-32 min-h-[50vh] md:min-h-[70vh] flex items-center">
           <div className="text-center md:text-left max-w-2xl">
-            <BatteryCharging className="h-12 w-12 md:h-16 md:w-16 mb-4 text-white/80 mx-auto md:mx-0" />
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-headline mb-3 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
+            <BatteryCharging className="h-10 w-10 md:h-16 md:w-16 mb-4 text-white/80 mx-auto md:mx-0 animate-charge" />
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-headline mb-3">
               {heroContent.subTitle}
             </h1>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-6 text-green-100 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4 md:mb-6 text-green-100">
               {heroContent.title}
             </h2>
-            <p className="text-base sm:text-lg text-slate-100 mb-8 animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
+            <p className="text-sm sm:text-base md:text-lg text-slate-100 mb-6 md:mb-8">
               {heroContent.description}
             </p>
             <Link href="#charger-products-grid" passHref scroll={false}>
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="border-white text-white hover:bg-white hover:text-green-600 transition-colors duration-300 px-8 py-3 text-base font-semibold group animate-fadeInUp"
-                style={{ animationDelay: '0.4s' }}
+                className="border-white text-white hover:bg-white hover:text-green-600 transition-colors duration-300 px-6 md:px-8 py-2 md:py-3 text-sm md:text-base font-semibold group"
               >
                 {heroContent.buttonText}
-                <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                <ChevronRight className="ml-2 h-4 w-4 md:h-5 md:w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
           </div>
         </Container>
-      </section>
+      </AnimatedSection>
 
       {/* Product Grid Section */}
-      <Container id="charger-products-grid" className="py-12 md:py-16 scroll-mt-20">
-        <h2 className="text-2xl sm:text-3xl font-bold font-headline text-center mb-10">
-          Our Charger Selection
-        </h2>
-        {chargerProducts.length > 0 ? (
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-6">
-            {chargerProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-center text-muted-foreground text-xl py-10">No chargers available at the moment.</p>
-        )}
-         <div className="text-center mt-10">
-           <Button variant="default" asChild>
-             <Link href="/search?category=electronics&subcategory=chargers">View All Chargers</Link>
-           </Button>
-         </div>
-      </Container>
+      <AnimatedSection>
+        <section id="charger-products-grid" className="scroll-mt-16">
+          <Container className="py-8 md:py-16">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-headline text-center mb-6 md:mb-10">
+              Our Charger Selection
+            </h2>
+            {chargerProducts.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 md:gap-6">
+                {chargerProducts.map((product, index) => (
+                  <div 
+                    key={product.id}
+                    className="opacity-0 animate-fadeIn"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-muted-foreground text-lg py-10">No chargers available at the moment.</p>
+            )}
+            <div className="text-center mt-8 md:mt-10">
+              <Button variant="default" asChild className="px-6 md:px-8 py-2 md:py-3">
+                <Link href="/search?category=electronics&subcategory=chargers">View All Chargers</Link>
+              </Button>
+            </div>
+          </Container>
+        </section>
+      </AnimatedSection>
 
-       <style jsx global>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(25px); }
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fadeInUp { 
-          animation: fadeInUp 0.6s ease-out forwards; 
-          opacity: 0; /* Start hidden for animation */
+        .animate-fadeIn {
+          animation: fadeIn 0.6s ease-out forwards;
+        }
+        @keyframes charge {
+          0% { transform: scale(1); opacity: 0.8; }
+          50% { transform: scale(1.1); opacity: 1; }
+          100% { transform: scale(1); opacity: 0.8; }
+        }
+        .animate-charge {
+          animation: charge 2s ease-in-out infinite;
         }
       `}</style>
     </div>
