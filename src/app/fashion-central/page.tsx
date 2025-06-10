@@ -1,4 +1,3 @@
-
 "use client";
 
 import Container from '@/components/Container';
@@ -81,18 +80,15 @@ export default function FashionCentralPage() {
             Shop {subCategory.name}
           </h2>
           {fashionProducts.length > 0 ? (
-            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-6 animate-fadeIn">
               {fashionProducts.map((product) => (
-                // Later, you would filter fashionProducts here if they had a subCategory field
-                // For now, we display all fashion products under each sub-category heading
                 <ProductCard key={product.id + '-' + subCategory.slug} product={product} />
               ))}
             </div>
           ) : (
             <p className="text-center text-muted-foreground text-xl py-10">No {subCategory.name.toLowerCase()} available at the moment.</p>
           )}
-           {/* Add a "View More" button or link for each sub-category if desired */}
-           <div className="text-center mt-10">
+           <div className="text-center mt-10 animate-fadeIn">
              <Button variant="outline" asChild>
                <Link href={`/search?category=fashion&subcategory=${subCategory.slug}`}>View More {subCategory.name}</Link>
              </Button>
@@ -100,7 +96,7 @@ export default function FashionCentralPage() {
         </Container>
       ))}
 
-       <style jsx global>{`
+      <style jsx global>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
@@ -109,8 +105,12 @@ export default function FashionCentralPage() {
           from { opacity: 0; transform: translateX(50px) scale(0.95); }
           to { opacity: 1; transform: translateX(0) scale(1); }
         }
-        .animate-fadeIn { animation: fadeIn 0.7s ease-out forwards; }
-        .animate-slideInRight { animation: slideInRight 0.7s ease-out forwards; }
+        .animate-fadeIn {
+          animation: fadeIn 0.8s ease-out both;
+        }
+        .animate-slideInRight {
+          animation: slideInRight 0.8s ease-out both;
+        }
       `}</style>
     </div>
   );

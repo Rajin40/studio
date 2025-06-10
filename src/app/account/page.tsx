@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect, useActionState } from 'react';
+import { useRouter } from 'next/navigation'; // Added
 import Container from '@/components/Container';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,17 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog, // Added
+  AlertDialogAction, // Added
+  AlertDialogCancel, // Added
+  AlertDialogContent, // Added
+  AlertDialogDescription, // Added
+  AlertDialogFooter, // Added
+  AlertDialogHeader, // Added
+  AlertDialogTitle, // Added
+  AlertDialogTrigger, // Added
+} from "@/components/ui/alert-dialog"; // Added
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from '@/components/ui/textarea';
@@ -232,9 +244,24 @@ async function updateProductAction(prevState: UpdateProductResponse | null, form
 export default function AccountPage() {
   const [currentView, setCurrentView] = useState<AccountView>('buyer');
   const { toast } = useToast();
+  const router = useRouter(); // Added
 
+  // This is the function that will be called AFTER confirmation
+  const handleConfirmSignOut = () => {
+    console.log("User signed out (simulated).");
+    toast({
+      title: "Signed Out",
+      description: "You have been signed out successfully.",
+    });
+    router.push('/'); // Redirect to homepage
+    // In a real app, you would also call Firebase signOut here.
+    // e.g., firebase.auth().signOut().then(() => router.push('/'));
+  };
+
+  // This function will be modified in the next step to open the dialog
   const handleSignOut = () => {
-    // Simulate sign out
+    // For now, it does what it used to do. 
+    // In the next step, this will trigger the AlertDialog.
     console.log("User signed out (simulated).");
     toast({
       title: "Signed Out",
