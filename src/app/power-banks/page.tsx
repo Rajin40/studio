@@ -41,7 +41,7 @@ export default function PowerBanksPage() {
     subTitle: "Power Banks Collection",
     description: "Stay charged wherever you are with our reliable and high-capacity power banks. Never miss a moment.",
     buttonText: "Shop All Power Banks",
-    imageUrl: "https://placehold.co/1200x500.png", 
+    imageUrl: "/images/tech-vault/power-banks.jpeg", 
     imageAiHint: "power bank portable energy", 
   };
 

@@ -47,7 +47,7 @@ export default function TimepieceGalleryPage() {
     subTitle: "Timeless Elegance, Modern Precision",
     description: "Explore our curated collection of fine timepieces, from classic luxury to cutting-edge smartwatches.",
     buttonText: "Discover Our Collections",
-    imageUrl: "https://placehold.co/1200x600.png", 
+    imageUrl: "/images/timepiece-gallery/timepiece-gallery.jpeg", 
     imageAiHint: "watches luxury timepieces", 
   };
 

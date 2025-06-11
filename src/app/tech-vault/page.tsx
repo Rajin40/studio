@@ -48,7 +48,7 @@ export default function TechVaultPage() {
     title: "Tech Vault",
     description: "Unlock the Future. Discover cutting-edge electronics and smart gadgets designed to elevate your digital life.",
     buttonText: "Explore Innovations",
-    imageUrl: "https://placehold.co/1200x600.png", 
+    imageUrl: "/images/tech-vault/tech-vault.jpeg", 
     imageAiHint: "abstract technology futuristic", 
   };
 

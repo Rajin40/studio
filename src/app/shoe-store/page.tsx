@@ -16,7 +16,7 @@ const heroData = {
   title: "Cool Shoes",
   buttonText: "Checkout",
   buttonLink: "/cart",
-  imageUrl: "/images/shoe_store/shoes.jpg",
+  imageUrl: "/images/shoe_store/shoesformainpage.png",
   imageAlt: "Cool Air Shoes",
   imageAiHint: "yellow sneaker black",
 };

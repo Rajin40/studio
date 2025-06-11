@@ -41,7 +41,7 @@ export default function SmartGadgetsPage() {
     subTitle: "Smart Gadgets Hub",
     description: "Automate your life with our collection of innovative smart gadgets. From smart home devices to personal tech, find the future here.",
     buttonText: "Explore Smart Tech",
-    imageUrl: "https://placehold.co/1200x500.png", 
+    imageUrl: "/images/tech-vault/smart-gadgets.jpeg", 
     imageAiHint: "smart home automation", 
   };
 

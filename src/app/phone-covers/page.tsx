@@ -41,7 +41,7 @@ export default function PhoneCoversPage() {
     subTitle: "Phone Covers Collection",
     description: "Find the perfect case to protect your smartphone and express your style. Durable, trendy, and functional designs.",
     buttonText: "Shop All Phone Covers",
-    imageUrl: "https://placehold.co/1200x500.png", 
+    imageUrl: "/images/tech-vault/phone-covers.jpeg",
     imageAiHint: "phone cases colorful", 
   };
 

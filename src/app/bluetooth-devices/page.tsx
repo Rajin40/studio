@@ -40,7 +40,7 @@ export default function BluetoothDevicesPage() {
     subTitle: "Bluetooth Devices",
     description: "Connect seamlessly with our range of Bluetooth speakers, earbuds, and accessories. High-quality audio, untethered.",
     buttonText: "Explore Bluetooth Gear",
-    imageUrl: "https://placehold.co/1200x500.png", 
+    imageUrl: "/images/tech-vault/headphones.jpeg", 
     imageAiHint: "bluetooth devices wireless", 
   };
 

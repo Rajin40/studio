@@ -41,7 +41,7 @@ export default function ChargersPage() {
     subTitle: "Chargers Collection",
     description: "Reliable and fast chargers for all your devices. Never run out of battery again.",
     buttonText: "Shop All Chargers",
-    imageUrl: "https://placehold.co/1200x500.png", 
+    imageUrl: "/images/tech-vault/charger.jpeg",
     imageAiHint: "chargers cables power", 
   };
 

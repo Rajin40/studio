@@ -40,7 +40,7 @@ export default function HeadphonesPage() {
     subTitle: "Headphones Collection",
     description: "Discover high-fidelity headphones for music, gaming, and calls. Crystal-clear sound, ultimate comfort.",
     buttonText: "Shop All Headphones",
-    imageUrl: "https://placehold.co/1200x500.png",
+    imageUrl: "/images/tech-vault/headphones.jpeg",
     imageAiHint: "headphones audio lifestyle", 
   };
 
